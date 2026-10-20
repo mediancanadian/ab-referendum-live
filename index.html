@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Alberta Referendum Live</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="120" height="120" rx="28" fill="%23C8102E"/%3E%3Cg fill="%23fff"%3E%3Crect x="22" y="62" width="12" height="30" rx="3"/%3E%3Crect x="38" y="44" width="12" height="48" rx="3"/%3E%3Crect x="54" y="22" width="12" height="70" rx="3"/%3E%3Crect x="70" y="44" width="12" height="48" rx="3"/%3E%3Crect x="86" y="62" width="12" height="30" rx="3"/%3E%3Crect x="57" y="86" width="6" height="18" rx="2"/%3E%3C/g%3E%3C/svg%3E">
 <meta name="description" content="Live unofficial results of Alberta's 2026 referendum, by question and by electoral division.">
 <style>
 :root{
@@ -43,6 +44,10 @@ button{font:inherit;color:inherit}
 h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .stamp{display:flex;align-items:center;gap:10px;font-size:.78rem;color:var(--muted)}
 .stamp b{color:var(--text);font-weight:600}
+.brandrow{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:800;letter-spacing:-.005em;margin-bottom:8px}
+.brandrow svg{width:22px;height:22px;display:block;flex:none}
+.foot .sig2{display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--text)}
+.foot .sig2 svg{width:18px;height:18px;flex:none}
 
 /* hero */
 .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,280px);gap:16px 32px;align-items:center}
@@ -452,6 +457,7 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
 <main>
   <header class="top">
     <div>
+      <div class="brandrow"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#C8102E"/><g fill="#fff"><rect x="22" y="62" width="12" height="30" rx="3"/><rect x="38" y="44" width="12" height="48" rx="3"/><rect x="54" y="22" width="12" height="70" rx="3"/><rect x="70" y="44" width="12" height="48" rx="3"/><rect x="86" y="62" width="12" height="30" rx="3"/><rect x="57" y="86" width="6" height="18" rx="2"/></g></svg>Canada Through Numbers</div>
       <span class="live" id="live"><i></i><span id="liveTxt">Live</span></span>
       <h1>Alberta Referendum 2026</h1>
     </div>
@@ -582,7 +588,7 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
     </details>
   </section>
 
-  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every 20 seconds. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Unofficial results are not final until official results are published on October 29, 2026.</div>
+  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every 20 seconds. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Unofficial results are not final until official results are published on October 29, 2026.<div class="sig2"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#C8102E"/><g fill="#fff"><rect x="22" y="62" width="12" height="30" rx="3"/><rect x="38" y="44" width="12" height="48" rx="3"/><rect x="54" y="22" width="12" height="70" rx="3"/><rect x="70" y="44" width="12" height="48" rx="3"/><rect x="86" y="62" width="12" height="30" rx="3"/><rect x="57" y="86" width="6" height="18" rx="2"/></g></svg><span><b>Canada Through Numbers</b> · Claude did the math. A human did the nagging.</span></div><div style="margin-top:6px">Text and charts: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, share and adapt with credit. Code: <a href="https://github.com/sjvadrevu/ab-referendum-live/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a>. Data belongs to its sources, listed in About this analysis.</div></div>
 </main>
 
 <script>

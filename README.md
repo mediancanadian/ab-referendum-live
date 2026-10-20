@@ -1,3 +1,10 @@
 # Alberta Referendum 2026 live dashboard
 
 Unofficial results from Elections Alberta, fetched every minute by GitHub Actions and published with GitHub Pages.
+
+## Licence
+
+Text, charts and images: CC BY 4.0 (see LICENSE-CONTENT.md). Code: MIT (see LICENSE).
+Data belongs to its publishers; see context/SOURCES.md.
+
+Canada Through Numbers. Claude did the math. A human did the nagging.
