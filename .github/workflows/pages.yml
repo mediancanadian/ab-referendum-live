@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ["index.html"]
+    paths: ["index.html", "map.json"]
 
 concurrency:
   group: pages
@@ -23,6 +23,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp page version
+        run: |
+          v=$(git log -1 --format=%h -- index.html map.json)
+          echo "$v" > version.txt
+          sed -i "s/__BUILD__/$v/" index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
