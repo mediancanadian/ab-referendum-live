@@ -238,7 +238,19 @@ sup .fn{color:var(--accent);text-decoration:none;font-size:.7em;margin-left:2px}
 .v1v{grid-column:1/-1;display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
 .lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.72rem;color:var(--muted);margin-bottom:4px}
 .lg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
-.chsvg{width:100%;height:auto;display:block}
+.chsvg{width:100%;height:auto;display:block;max-width:520px}
+#stDb{max-width:470px}
+.chsvg .dbn{font-size:9.5px;fill:var(--text)}
+.chsvg .dbn.hot{fill:var(--anti);font-weight:700}
+.chsvg .dbn.on{font-weight:700}
+.chsvg .dbv{font-size:9px;font-weight:700}
+.dbkey{max-width:470px;margin-bottom:6px}
+.dbk-ex{display:flex;align-items:center;width:100%;max-width:240px;margin:2px 0 0}
+.dbk-ex .d{flex:none;width:12px;height:12px;border-radius:50%}
+.dbk-ex .ln{flex:1;height:2px;background:var(--muted);opacity:.5}
+.dbk-lab{display:flex;justify-content:space-between;gap:12px;max-width:240px;font-size:.78rem;font-weight:700;margin-top:4px;line-height:1.25}
+.dbk-lab span:last-child{text-align:right}
+.dbk-note{margin:6px 0 0;font-size:.78rem;color:var(--muted);line-height:1.4}
 .chsvg .grid{stroke:var(--line);stroke-width:1}
 .chsvg .half{stroke:var(--text);stroke-width:1;stroke-dasharray:3 3;opacity:.6}
 .chsvg .ax{font-size:9.5px;fill:var(--muted)}
@@ -702,23 +714,28 @@ const seatsW = n => n === 0 ? "no seats" : n === 1 ? "one seat" : `${n} seats`;
 const moreW = (n, base) => base === 0 ? (n === 1 ? ` One seat is within ${TOSS} points.` : ` ${n} seats are within ${TOSS} points.`) : (n === 1 ? ` One more seat is within ${TOSS} points.` : ` Another ${n} are within ${TOSS} points.`);
 const clip = (t, n) => t.length > n ? t.slice(0, n-1) + "…" : t;
 
-/* chapter 2 chart: each UCP seat as a dumbbell, Referendum share now (red) to UCP share in 2023 (blue) */
+/* chapter 2 chart: each UCP seat as a row, named on the left; red dot = Referendum share now, blue dot = UCP share in 2023 */
 function chDumbbell(rows, mU, mR){
-  const W = 340, top = 22, rh = 10, L = 8, R = 332, n = rows.length, H = top + n*rh + 30;
+  const W = 300, top = 24, rh = 14, LBL = 118, L = 126, R = 292, n = rows.length, H = top + n*rh + 46;
   const X = v => L + v/100*(R-L);
   let g = "";
-  [0,25,50,75,100].forEach(v=>{ g += `<line x1="${X(v)}" x2="${X(v)}" y1="${top-3}" y2="${top+n*rh}" class="${v===50?"half":"grid"}"/><text x="${X(v)}" y="${top-7}" class="ax" text-anchor="${v===0?"start":v===100?"end":"middle"}">${v}%</text>`; });
-  rows.forEach((r,i)=>{ const y = top + i*rh + rh/2, on = r.w===STSEL;
+  [0,25,50,75,100].forEach(v=>{ g += `<line x1="${X(v)}" x2="${X(v)}" y1="${top-3}" y2="${top+n*rh}" class="${v===50?"half":"grid"}"/><text x="${X(v)}" y="${top-8}" class="ax" text-anchor="${v===0?"start":v===100?"end":"middle"}">${v}%</text>`; });
+  rows.forEach((r,i)=>{ const y = top + i*rh + rh/2, on = r.w===STSEL, hot = r.ref > 50;
+    const lo = Math.min(r.ref, r.ucp), hi = Math.max(r.ref, r.ucp), loC = r.ref <= r.ucp ? "--anti" : "--ucp", hiC = r.ref <= r.ucp ? "--ucp" : "--anti";
     g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${(y-rh/2).toFixed(1)}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, Referendum ${r.ref.toFixed(1)}% now</title></rect>
-      <line x1="${X(r.ref).toFixed(1)}" x2="${X(r.ucp).toFixed(1)}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" class="lnk"/>
-      <circle cx="${X(r.ucp).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?3.8:3}" fill="var(--ucp)"/><circle cx="${X(r.ref).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?3.8:3}" fill="var(--anti)"/>
-      ${(r.ref > 50 || on) ? (()=>{ const t = `${clip(r.name, 22)} ${r.ref.toFixed(0)}%`, tw = t.length*4.7, xr = X(Math.max(r.ucp, r.ref)) + 7;
-          return xr + tw <= W ? `<text x="${xr.toFixed(1)}" y="${(y+3).toFixed(1)}" class="ann${r.ref>50?" hot":" b"}">${esc(t)}</text>`
-                              : `<text x="${(X(Math.min(r.ucp, r.ref)) - 7).toFixed(1)}" y="${(y+3).toFixed(1)}" class="ann${r.ref>50?" hot":" b"}" text-anchor="end">${esc(t)}</text>`; })() : ""}</g>`; });
-  const yb = top + n*rh + 15;
-  g += `<text x="${X(mR)}" y="${yb}" class="ann b" text-anchor="middle" fill="var(--anti)">▲ typical seat ${mR.toFixed(0)}%</text><text x="${X(mU)}" y="${yb}" class="ann b" text-anchor="middle" fill="var(--ucp)">▲ ${mU.toFixed(0)}%</text>`;
-  return `<div class="lg"><span><i style="background:var(--ucp)"></i>UCP share, 2023</span><span><i style="background:var(--anti)"></i>Referendum share now</span><span class="dim">One row per seat the UCP won in 2023</span></div>
-    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="UCP seats: 2023 UCP share and Referendum share">${g}</svg>`;
+      <text x="${LBL}" y="${(y+3.3).toFixed(1)}" class="dbn${hot?" hot":""}${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text>
+      <line x1="${X(lo).toFixed(1)}" x2="${X(hi).toFixed(1)}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" class="lnk"/>
+      <circle cx="${X(r.ucp).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?4.2:3.4}" fill="var(--ucp)"/><circle cx="${X(r.ref).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?4.2:3.4}" fill="var(--anti)"/>
+      ${(on || hot) ? `<text x="${(X(lo)-6).toFixed(1)}" y="${(y+3.2).toFixed(1)}" class="dbv" text-anchor="end" fill="var(${loC})">${lo.toFixed(0)}%</text><text x="${(X(hi)+6).toFixed(1)}" y="${(y+3.2).toFixed(1)}" class="dbv" fill="var(${hiC})">${hi.toFixed(0)}%</text>` : ""}</g>`; });
+  const yb = top + n*rh + 14;
+  g += `<text x="${X(mR)+4}" y="${yb}" class="dbv" text-anchor="end" fill="var(--anti)">typical seat ${mR.toFixed(0)}% ▲</text><text x="${X(mU)-4}" y="${yb}" class="dbv" fill="var(--ucp)">▲ ${mU.toFixed(0)}%</text>`;
+  g += `<text x="${(L+R)/2}" y="${yb+18}" class="ax" text-anchor="middle">Share of the vote in each seat</text>`;
+  return `<div class="dbkey">
+      <div class="dbk-ex" aria-hidden="true"><span class="d" style="background:var(--anti)"></span><span class="ln"></span><span class="d" style="background:var(--ucp)"></span></div>
+      <div class="dbk-lab"><span style="color:var(--anti)">Referendum share, 2026</span><span style="color:var(--ucp)">UCP share, 2023 election</span></div>
+      <p class="dbk-note">Each row is a seat the UCP won in 2023, strongest UCP seat at the top. The grey line is the gap between the two.</p>
+    </div>
+    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: Referendum share and UCP share">${g}</svg>`;
 }
 
 /* chapter 3 data: seat ratings under the chosen scenario */
@@ -851,6 +868,8 @@ function renderInsights(){
       c.addEventListener("click", ()=>{ STSEAT = STSEAT === c.dataset.w ? null : c.dataset.w; renderInsights(); }); });
   }
   box.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click", ()=>goTo(b.dataset.go)));
+  if ($("stDb")) $("stDb").querySelectorAll("text.dbn").forEach(t=>{ const max = 114; let str = t.dataset.full || t.textContent;
+      if (t.getComputedTextLength() <= max) return; while (str.length > 4 && t.getComputedTextLength() > max){ str = str.slice(0, -1); t.textContent = str.trimEnd() + "…"; } });
   box.querySelectorAll("#stDb .dbr").forEach(g=>g.addEventListener("click", ()=>{ STSEL = STSEL === g.dataset.w ? null : g.dataset.w; renderInsights(); }));
   box.querySelectorAll("#stScn button").forEach(b=>b.addEventListener("click", ()=>{ STSCN = b.dataset.k; STSEAT = null; renderInsights(); }));
   box.querySelectorAll("#stPv .pvr").forEach(g=>g.addEventListener("click", ()=>{ const i = +g.dataset.i; STPOLL = STPOLL === i ? null : i; renderInsights(); }));
