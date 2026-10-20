@@ -1,132 +1,231 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Alberta Referendum Live</title>
+<meta name="description" content="Live unofficial results of Alberta's 2026 referendum, by question and by electoral division.">
 <style>
 :root{
   --bg:#f4f5f7; --panel:#ffffff; --panel2:#f7f8fa; --text:#1b2330; --muted:#677080; --line:#dfe3e8;
-  --pro:#2e7d4f; --anti:#b23b32; --n1:#4f5d72; --n2:#a3adbb; --accent:#4b6a8f; --track:#e6e9ee;
-  --glow:rgba(75,106,143,.18);
+  --pro:#2e7d4f; --anti:#b23b32; --accent:#4b6a8f; --track:#e6e9ee; --glow:rgba(75,106,143,.18); --locate:#4b6a8f;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
-    --pro:#5aa37a; --anti:#c8665c; --n1:#a9b4c4; --n2:#5f6c7e; --accent:#7f97b5; --track:#232a36;
-    --glow:rgba(127,151,181,.18);
+    --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
   }
 }
 :root[data-theme="dark"]{
   --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
-  --pro:#5aa37a; --anti:#c8665c; --n1:#a9b4c4; --n2:#5f6c7e; --accent:#7f97b5; --track:#232a36;
-  --glow:rgba(127,151,181,.18);
+  --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text)}
-body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.35}
 .num{font-variant-numeric:tabular-nums}
-main{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
+main{max-width:1060px;margin:0 auto;padding:20px 16px 48px}
+section{margin-top:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h2{font-size:1.05rem;margin:0}
+button{font:inherit;color:inherit}
 
 /* header */
-.top{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.brand .live{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-.brand .live i{width:7px;height:7px;border-radius:50%;background:#3fae6a}
-.brand .live.off{color:var(--muted)} .brand .live.off i{background:var(--muted);animation:none}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(209,69,59,.6)}70%{box-shadow:0 0 0 8px rgba(209,69,59,0)}100%{box-shadow:0 0 0 0 rgba(209,69,59,0)}}
-h1{font-size:clamp(1.4rem,4vw,2rem);margin:4px 0 2px;letter-spacing:-.02em}
-.sub{color:var(--muted);font-size:.85rem}
-.clock{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.ctrls{display:flex;gap:8px;align-items:center}
-.push{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);
-  font:inherit;font-weight:600;font-size:.9rem;padding:10px 16px;border-radius:12px;cursor:pointer}
-.push:hover{border-color:var(--accent)}
-.push:disabled{cursor:default;opacity:.85}
-.push svg{width:16px;height:16px}
-.push.busy svg{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.auto{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
-.auto input{appearance:none;width:38px;height:22px;border-radius:11px;background:var(--track);position:relative;margin:0;cursor:pointer;transition:background .2s}
-.auto input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--panel);transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
-.auto input:checked{background:var(--pro)}
-.auto input:checked::after{transform:translateX(16px)}
-.clock .meta{font-size:.78rem;color:var(--muted);text-align:right;line-height:1.5}
-.clock .meta b{color:var(--text);font-weight:600}
-.ringrow{display:flex;align-items:center;gap:10px}
-.ring{flex:none}
-.clock .msg{font-size:.75rem;color:var(--muted);text-align:right;max-width:280px;min-height:1em}
-@media (max-width:560px){.clock{align-items:flex-start}.clock .meta,.clock .msg{text-align:left}}
+.top{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--pro)}
+.live.off i{background:var(--muted)}
+h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
+.stamp{display:flex;align-items:center;gap:10px;font-size:.78rem;color:var(--muted)}
+.stamp b{color:var(--text);font-weight:600}
 
-/* reporting */
-.report{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
-.report .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
-.report .big{font-size:1.5rem;font-weight:700}
-.prog{height:10px;background:var(--track);border-radius:6px;overflow:hidden;margin-top:10px}
-.prog div{height:100%;background:var(--accent);border-radius:6px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,280px);gap:16px 32px;align-items:center}
+.hero .q{font-size:1rem;font-weight:600;margin:6px 0 14px;line-height:1.3}
+.side{margin-bottom:14px}
+.side .lab{font-size:.8rem;font-weight:700}
+.side .pct{font-size:clamp(2rem,9vw,3.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.02}
+.side .v{font-size:.78rem;color:var(--muted)}
+.bar{position:relative;display:flex;height:12px;border-radius:7px;overflow:hidden;background:var(--track)}
+.bar i{display:block;height:100%;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.bar .mid{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--panel)}
+.heroBar{grid-column:1/-1}
+.rep{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.rep b{color:var(--text)}
+.thin{height:4px;border-radius:3px;background:var(--track);overflow:hidden;margin-top:6px}
+.thin span{display:block;height:100%;background:var(--accent);transition:width .8s}
+.heroMap{cursor:pointer;display:block;width:100%;max-width:300px;justify-self:center}
+.heroMap svg{width:100%;height:auto;display:block}
+.heroMap svg path{stroke:var(--panel);stroke-width:.5;vector-effect:non-scaling-stroke}
+.heroMap figcaption{text-align:center;font-size:.72rem;color:var(--muted);margin-top:6px}
+
+/* explore */
+.exhd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{border:none;background:none;padding:7px 12px;border-radius:9px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--panel);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:12px -16px 0;padding:0 16px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:.8rem;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
+.chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.search{position:relative;margin-top:12px}
+.search svg{position:absolute;left:12px;top:50%;width:16px;height:16px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search input{width:100%;font:inherit;font-size:16px;padding:10px 12px 10px 36px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);-webkit-appearance:none;appearance:none}
+.search input:focus{outline:none;border-color:var(--accent)}
+.search ul{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);margin:0;padding:4px;list-style:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.search li{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:.9rem}
+.search li .n{color:var(--muted);font-size:.78rem;width:20px}
+.search li.on,.search li:hover{background:var(--panel2)}
+.ab{margin-top:12px}
+.maps{display:grid;grid-template-columns:minmax(0,340px) minmax(0,500px);justify-content:center;gap:16px;margin-top:12px;align-items:start}
+.mapwrap{position:relative}
+.maps svg{width:100%;height:auto;display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.maps svg.zoomed{touch-action:none;cursor:grab}
+.maps svg path{stroke:var(--panel);stroke-width:.6;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill-opacity .4s,fill .4s}
+.maps svg path.sel{stroke:var(--text);stroke-width:2.2}
+#mapAB{max-width:340px;margin:0 auto}
+#explore.dview .maps{grid-template-columns:minmax(0,260px) minmax(0,380px)}
+#explore.dview #mapAB{max-width:260px}
+@media (max-width:900px){#explore.dview .maps{grid-template-columns:1fr}}
+.insets{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.insets figure{margin:0;background:var(--panel2);border-radius:12px;padding:8px}
+.insets figcaption{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.zoomctl{position:absolute;right:6px;top:6px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.zoomctl button{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-size:1.1rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.zoomctl .reset{font-size:.78rem;padding:0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:.75rem;color:var(--muted);align-items:center}
+.legend .sw{display:inline-flex;gap:2px;margin-right:6px;vertical-align:middle}
+.legend .sw i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.hint{margin-top:12px;font-size:.8rem;color:var(--muted)}
+.callout,.score{margin-top:12px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.rise{animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dhd{display:flex;gap:10px;align-items:flex-start}
+.badge{flex:none;min-width:30px;height:30px;padding:0 6px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:.82rem;background:var(--panel);border:1px solid var(--line)}
+.dn{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.dn b{font-size:1rem}
+.dn span{font-size:.75rem;color:var(--muted)}
+.x{border:none;background:none;color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer;padding:0 4px}
+.link{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:none;background:none;color:var(--accent);font-weight:600;font-size:.85rem;cursor:pointer;padding:0}
+
+/* result rows (shared by Alberta list, scorecard, callout) */
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;grid-template-areas:"n t v" "n b b" "n s s";column-gap:8px;row-gap:5px;align-items:center;padding:10px 4px;border-top:1px solid var(--line)}
+.rows .row:first-child{border-top:none}
+.row .qn{grid-area:n;align-self:start;font-size:.72rem;font-weight:700;color:var(--muted);padding-top:2px}
+.row .qt{grid-area:t;font-size:.85rem;min-width:0}
+.row .qv{grid-area:v;font-size:.85rem;white-space:nowrap}
+.row .qv.none{color:var(--muted);font-weight:400}
+.row .bar{grid-area:b;height:8px}
+.row .sub{grid-area:s;display:flex;justify-content:space-between;gap:8px;font-size:.72rem;color:var(--muted)}
+.row.flash{animation:flash 1.4s}
+@keyframes flash{0%{background:var(--glow)}100%{background:transparent}}
+.bar .ref{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--text);border-radius:1px;transform:translateX(-1px)}
+.score .row,.callout .row{border-top-color:var(--line)}
+.refk{display:inline-block;width:2px;height:10px;background:var(--text);border-radius:1px;vertical-align:-1px;margin:0 2px}
+.row.big .bar{height:12px}
+.row.big .qv{font-size:1rem}
+.trunc .qt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+details.count summary{cursor:pointer;font-weight:600;font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.count summary::-webkit-details-marker{display:none}
+details.count summary::after{content:"+";color:var(--muted);font-size:1.2rem}
+details.count[open] summary::after{content:"\2212"}
 .types{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
 .types div{background:var(--panel2);border-radius:10px;padding:8px 10px;font-size:.75rem;color:var(--muted)}
 .types b{display:block;color:var(--text);font-size:.95rem}
-@media (max-width:560px){.types{grid-template-columns:repeat(2,1fr)}}
-
-.split{position:relative;display:flex;height:14px;border-radius:10px;overflow:hidden;background:var(--track);margin-top:14px}
-.split.big{height:26px}
-.split div{height:100%;transition:width .8s cubic-bezier(.2,.8,.2,1)}
-.split .mid{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--text);opacity:.55}
-.lead{margin-top:10px;font-size:.85rem;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-weight:700;font-size:.75rem;color:#fff}
-.delta{color:var(--muted);font-size:.75rem}
-.delta.up{color:var(--accent)}
-
-.tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-/* grid */
-.card.wide{grid-column:1/-1}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;transition:box-shadow .4s,border-color .4s}
-.card.flash,.hero.flash,.report.flash{box-shadow:0 0 0 2px var(--glow);border-color:var(--accent)}
-.card .hd{display:flex;gap:10px;align-items:flex-start}
-.qn{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:.85rem;background:var(--panel2);border:1px solid var(--line)}
-.card h3{margin:2px 0 0;font-size:.95rem;line-height:1.3}
-.yn{display:flex;justify-content:space-between;margin-top:12px;align-items:baseline}
-.yn .y{color:var(--ca)} .yn .n{color:var(--cb);text-align:right}
-.yn .p{font-size:1.9rem;font-weight:700;letter-spacing:-.02em}
-.yn small{display:block;font-size:.72rem;color:var(--muted);font-weight:600}
-details{margin-top:10px;font-size:.78rem;color:var(--muted)}
-summary{cursor:pointer;font-weight:600}
-details p{margin:6px 0 0;line-height:1.45}
-.banner{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:.82rem;background:var(--panel2);border:1px dashed var(--line);color:var(--muted);display:none}
-.banner.show{display:block}
-.foot{margin-top:20px;font-size:.75rem;color:var(--muted)}
+.foot{margin-top:20px;font-size:.75rem;color:var(--muted);line-height:1.5}
 .foot a{color:inherit}
+@media (max-width:900px){.maps{grid-template-columns:1fr}}
+@media (max-width:560px){.hero{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:12px}.types{grid-template-columns:repeat(2,1fr)}.hero .q{font-size:.92rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head><body>
-
 <main>
-  <div class="top">
-    <div class="brand">
-      <span class="live" id="live"><i style="background:var(--pro)"></i><span id="liveTxt">Live</span></span>
+  <header class="top">
+    <div>
+      <span class="live" id="live"><i></i><span id="liveTxt">Live</span></span>
       <h1>Alberta Referendum 2026</h1>
-      <div class="sub">Unofficial results</div>
     </div>
-    <div class="clock">
-      <div class="ringrow">
-        <svg class="ring" viewBox="0 0 40 40" width="40" height="40"><circle cx="20" cy="20" r="16" fill="none" stroke="var(--track)" stroke-width="4"/><circle id="arc" cx="20" cy="20" r="16" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="0" transform="rotate(-90 20 20)"/></svg>
-        <div class="meta">Results as of <b id="srcUpd">-</b><br><span id="age"></span></div>
-      </div>
+    <div class="stamp">
+      <svg viewBox="0 0 40 40" width="28" height="28" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="var(--track)" stroke-width="5"/><circle id="arc" cx="20" cy="20" r="16" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="100.53" transform="rotate(-90 20 20)"/></svg>
+      <div>Unofficial results as of <b id="srcUpd">-</b><br><span id="age"></span></div>
     </div>
-  </div>
-  <div class="banner" id="banner"></div>
+  </header>
 
-  <section class="report" id="report">
-    <div class="row">
-      <div><span class="tag">Voting places reporting</span><div class="big num" id="repPct">0%</div></div>
-      <div class="num" style="text-align:right"><div id="repCnt" style="font-weight:700">0 of 0</div><div class="delta" id="valid">0 valid ballots</div></div>
+  <!-- 1. Hero: the answer to "is Alberta staying?" -->
+  <section class="panel hero" id="hero">
+    <div>
+      <span class="tag">Question 10</span>
+      <div class="q">Remain in Canada, or start the process for a separation referendum?</div>
+      <div class="side"><div class="lab" style="color:var(--pro)">Remain</div><div class="pct num" id="hA" style="color:var(--pro)">-</div><div class="v num" id="hAv"></div></div>
+      <div class="side" style="margin-bottom:0"><div class="lab" style="color:var(--anti)">Referendum</div><div class="pct num" id="hB" style="color:var(--anti)">-</div><div class="v num" id="hBv"></div></div>
     </div>
-    <div class="prog"><div id="repBar" style="width:0"></div></div>
-    <div class="types" id="types"></div>
+    <figure class="heroMap" id="heroMap" role="button" tabindex="0" aria-label="Open the map">
+      <svg id="mapHero" aria-hidden="true"></svg>
+      <figcaption id="heroCap">Tap the map to explore</figcaption>
+    </figure>
+    <div class="bar heroBar"><i id="hBarA" style="background:var(--pro);width:50%"></i><i id="hBarB" style="background:var(--anti);width:50%"></i><span class="mid"></span></div>
+    <div class="rep"><span><b class="num" id="repN">-</b> voting places reporting</span><span class="num" id="repV"></span></div>
+    <div class="thin" style="grid-column:1/-1;margin-top:-6px"><span id="repBar" style="width:0"></span></div>
   </section>
 
+  <!-- 2. Explore: one lens at a time -->
+  <section class="panel" id="explore">
+    <div class="exhd">
+      <h2>Explore</h2>
+      <div class="seg" role="tablist">
+        <button type="button" role="tab" id="tabQ" class="on">By question</button>
+        <button type="button" role="tab" id="tabD">By division</button>
+      </div>
+    </div>
 
-  <div class="grid" id="grid"></div>
+    <div id="paneQ">
+      <div class="chips" id="chips"></div>
+      <div class="ab rows" id="abRow"></div>
+    </div>
+    <div id="paneD" hidden>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search a division or its number" autocomplete="off" aria-label="Search electoral divisions">
+        <ul id="sugg" role="listbox" hidden></ul>
+      </div>
+    </div>
 
-  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>. Percentages are Yes or No share of the votes cast on that question. Green is the status quo answer, red is the change. Official results: October 29, 2026.</div>
+    <div class="score" id="score" hidden></div>
+    <div class="maps">
+      <div class="mapwrap">
+        <svg id="mapAB" role="img" aria-label="Alberta map"></svg>
+        <div class="zoomctl">
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zout" aria-label="Zoom out">&minus;</button>
+          <button type="button" id="zreset" class="reset" hidden>Reset</button>
+        </div>
+      </div>
+      <div class="insets">
+        <figure><figcaption>Calgary</figcaption><svg id="mapCAL" role="img" aria-label="Calgary map"></svg></figure>
+        <figure><figcaption>Edmonton</figcaption><svg id="mapEDM" role="img" aria-label="Edmonton map"></svg></figure>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="hint" id="hint"></div>
+    <div class="callout" id="callout" hidden></div>
+  </section>
+
+  <!-- 3. All questions for Alberta -->
+  <section class="panel">
+    <span class="tag">All questions</span>
+    <h2 style="margin-top:4px">Alberta results</h2>
+    <div class="rows" id="allRows" style="margin-top:6px"></div>
+  </section>
+
+  <!-- 4. Counting details, closed by default -->
+  <section class="panel">
+    <details class="count">
+      <summary>Counting details</summary>
+      <div class="types" id="types"></div>
+    </details>
+  </section>
+
+  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every minute. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Official results: October 29, 2026.</div>
 </main>
 
 <script>
@@ -143,128 +242,261 @@ const SHORT = {
   9:"Provincial laws take priority over federal laws",
   10:"Remain in Canada, or start the process for a separation referendum"
 };
-const PRO_CANADA = {10:"a", 1:"b", 2:"b", 3:"b", 4:"b", 5:"b", 6:"b", 7:"b", 8:"b", 9:"b"};
+const QORDER = [10,1,2,3,4,5,6,7,8,9];
 const $ = id => document.getElementById(id);
-const fmt = n => (n==null?"-":Number(n).toLocaleString("en-CA"));
-const pct = (a,b) => (a+b>0 ? a/(a+b)*100 : 0);
-const tz = {timeZone:"America/Edmonton",hour:"numeric",minute:"2-digit",second:"2-digit"};
-const tfmt = iso => iso ? new Date(iso).toLocaleTimeString("en-CA",tz)+" MT" : "-";
+const fmt = n => (n==null ? "-" : Number(n).toLocaleString("en-CA"));
+const tfmt = iso => iso ? new Date(iso).toLocaleTimeString("en-CA",{timeZone:"America/Edmonton",hour:"numeric",minute:"2-digit"}) + " MT" : "-";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const labels = n => n===10 ? ["Remain","Referendum"] : ["Yes","No"];
+const proIdx = n => n===10 ? 0 : 1;               // index of the status quo answer
+const colA = n => proIdx(n)===0 ? "var(--pro)" : "var(--anti)";
+const colB = n => proIdx(n)===1 ? "var(--pro)" : "var(--anti)";
+const pair = v => { const t = v ? (v[0]||0)+(v[1]||0) : 0; return t ? {a:v[0]/t*100, b:v[1]/t*100, va:v[0], vb:v[1], t} : null; };
 
-let cur = null, prev = null;
+let cur = null, prev = null, MAP = null;
+const S = {view:"question", q:10, d:null};        // the one source of truth for what is shown
 
-/* count-up animation for numbers */
-function animateText(el, to, decimals, suffix){
-  const from = parseFloat(el.dataset.v || "0");
-  el.dataset.v = to;
-  if (from === to || matchMedia("(prefers-reduced-motion: reduce)").matches){ el.textContent = to.toFixed(decimals)+suffix; return; }
-  const t0 = performance.now(), d = 700;
-  const step = t => {
-    const k = Math.min(1,(t-t0)/d), e = 1-Math.pow(1-k,3);
-    el.textContent = (from+(to-from)*e).toFixed(decimals)+suffix;
-    if (k<1) requestAnimationFrame(step);
-  };
+/* ---------- shared row component ---------- */
+function rowHTML(n, v, opts = {}){
+  const p = pair(v), L = labels(n);
+  const title = opts.title !== false ? `<span class="qt">${esc(SHORT[n])}</span>` : `<span class="qt"></span>`;
+  if (!p) return `<div class="row ${opts.cls||""}" data-n="${n}"><span class="qn">Q${n}</span>${title}<span class="qv none">No results yet</span><span class="bar"><i style="width:100%;background:var(--track)"></i></span></div>`;
+  const lead = p.a >= p.b ? `<b style="color:${colA(n)}">${L[0]} ${p.a.toFixed(1)}%</b>` : `<b style="color:${colB(n)}">${L[1]} ${p.b.toFixed(1)}%</b>`;
+  const ref = opts.ref ? pair(opts.ref) : null;
+  const marker = ref ? `<span class="ref" style="left:${ref.a.toFixed(2)}%" title="Alberta"></span>` : "";
+  let sub = "";
+  if (opts.sub === "votes") sub = `<span class="sub num"><span>${L[0]} ${p.a.toFixed(1)}% · ${fmt(p.va)}</span><span>${L[1]} ${p.b.toFixed(1)}% · ${fmt(p.vb)}</span></span>`;
+  if (opts.sub === "ref" && ref) { const rl = ref.a >= ref.b ? `${L[0]} ${ref.a.toFixed(1)}%` : `${L[1]} ${ref.b.toFixed(1)}%`; sub = `<span class="sub num"><span>${fmt(p.t)} votes</span><span>Alberta ${rl} <i class="refk" aria-hidden="true"></i></span></span>`; }
+  return `<div class="row ${opts.cls||""}" data-n="${n}"><span class="qn">Q${n}</span>${title}<span class="qv num">${lead}</span>
+    <span class="bar"><i style="width:${p.a.toFixed(2)}%;background:${colA(n)}"></i><i style="width:${p.b.toFixed(2)}%;background:${colB(n)}"></i><span class="mid"></span>${marker}</span>${sub}</div>`;
+}
+const abV = n => { const q = (cur.questions||[]).find(x=>x.n===n); return q ? [q.yes, q.no] : null; };
+
+/* ---------- count-up for hero numbers ---------- */
+function countTo(el, to, dec, suf){
+  const from = parseFloat(el.dataset.v || "NaN"); el.dataset.v = to;
+  if (isNaN(from) || from===to || matchMedia("(prefers-reduced-motion: reduce)").matches){ el.textContent = to.toFixed(dec)+suf; return; }
+  const t0 = performance.now();
+  const step = t => { const k = Math.min(1,(t-t0)/700), e = 1-Math.pow(1-k,3); el.textContent = (from+(to-from)*e).toFixed(dec)+suf; if (k<1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
-function animateInt(el, to){
-  const from = parseFloat(el.dataset.v || "0"); el.dataset.v = to;
-  const base = el.dataset.suffix || "";
-  if (from === to){ el.textContent = fmt(to)+base; return; }
-  const t0 = performance.now(), d = 700;
-  const step = t => {
-    const k = Math.min(1,(t-t0)/d), e = 1-Math.pow(1-k,3);
-    el.textContent = fmt(Math.round(from+(to-from)*e))+base;
-    if (k<1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-function flash(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
 
-function buildGrid(){
-  const g = $("grid"); g.innerHTML = "";
-  for (const n of [10,1,2,3,4,5,6,7,8,9]){
-    const c = document.createElement("article");
-    c.className = "card"+(n===10?" wide":""); c.id = "c"+n;
-    const L = n===10 ? ["REMAIN","REFERENDUM"] : ["YES","NO"];
-    const f = PRO_CANADA[n];
-    c.style.setProperty("--ca", f==="a" ? "var(--pro)" : f==="b" ? "var(--anti)" : "var(--n1)");
-    c.style.setProperty("--cb", f==="b" ? "var(--pro)" : f==="a" ? "var(--anti)" : "var(--n2)");
-    c.innerHTML = `<div class="hd"><div class="qn">${n}</div><h3></h3></div>
-      <div class="yn"><div class="y"><small>${L[0]}</small><span class="p num" data-k="yp">0%</span></div>
-      <div class="n"><small>${L[1]}</small><span class="p num" data-k="np">0%</span></div></div>
-      <div class="split"><div data-k="yb" style="background:var(--ca);width:50%"></div><div data-k="nb" style="background:var(--cb);width:50%"></div><span class="mid"></span></div>
-      <div class="lead"><span class="delta num" data-k="tot"></span></div>
-      <details><summary>Full question text</summary><p></p></details>`;
-    c.querySelector("h3").textContent = SHORT[n];
-    c.querySelector("details p").textContent = QTEXT[n] || "";
-    g.appendChild(c);
-  }
-}
-
-function leadPill(aLab, aPct, bLab, bPct, aCol, bCol){
-  const diff = Math.abs(aPct-bPct);
-  if (aPct===0 && bPct===0) return "Waiting for results";
-  const win = aPct>=bPct ? [aLab,aCol] : [bLab,bCol];
-  return `<span class="pill" style="background:var(${win[1]})">${win[0]} leads</span> by <b class="num">${diff.toFixed(1)} pts</b>`;
-}
-
-function render(d){
-  if (!d) return;
-  const old = cur; cur = d;
-  const qmap = {}; (d.questions||[]).forEach(q=>qmap[q.n]=q);
-  const pmap = {}; ((old&&old.questions)||[]).forEach(q=>pmap[q.n]=q);
-
-  $("srcUpd").textContent = tfmt(d.sourceUpdated);
-
-  // reporting
-  const s = d.summary||{}; const rp = s.tot? s.rep/s.tot*100 : 0;
-  animateText($("repPct"), rp, 1, "%");
-  $("repCnt").textContent = `${fmt(s.rep)} of ${fmt(s.tot)}`;
-  $("valid").textContent = `${fmt(s.valid)} valid ballots`;
+/* ---------- render everything from cur + S ---------- */
+function render(){
+  if (!cur) return;
+  $("srcUpd").textContent = tfmt(cur.sourceUpdated);
+  // hero
+  const h = pair(abV(10));
+  if (h){ countTo($("hA"), h.a, 1, "%"); countTo($("hB"), h.b, 1, "%");
+    $("hAv").textContent = fmt(h.va)+" votes"; $("hBv").textContent = fmt(h.vb)+" votes";
+    $("hBarA").style.width = h.a+"%"; $("hBarB").style.width = h.b+"%"; }
+  const s = cur.summary || {}, rp = s.tot ? s.rep/s.tot*100 : 0;
+  $("repN").textContent = `${fmt(s.rep)} of ${fmt(s.tot)}`;
+  $("repV").textContent = `${rp.toFixed(1)}% · ${fmt(s.valid)} ballots`;
   $("repBar").style.width = rp+"%";
-  $("types").innerHTML = (d.types||[]).map(t=>`<div>${t.name}<b class="num">${fmt(t.valid)}</b>${fmt(t.rep)} of ${fmt(t.tot)} reporting</div>`).join("");
-  if (old && old.summary && old.summary.rep !== s.rep) flash($("report"));
-
-  // Q1-9
-  for (let n=1;n<=10;n++){
-    const q = qmap[n] || {yes:0,no:0}; const c = $("c"+n); const k = x=>c.querySelector(`[data-k="${x}"]`);
-    const yp = pct(q.yes,q.no), np = pct(q.no,q.yes), has = q.yes+q.no>0;
-    animateText(k("yp"), yp, 1, "%"); animateText(k("np"), np, 1, "%");
-    k("yb").style.width = (has?yp:50)+"%"; k("nb").style.width = (has?np:50)+"%";
-    k("yp").parentElement.classList.toggle("trail", has && yp<np); k("np").parentElement.classList.toggle("trail", has && np<yp);
-    const p = pmap[n]; const dv = p ? (q.yes+q.no)-(p.yes+p.no) : 0;
-    k("tot").textContent = `${fmt(q.yes+q.no)} votes` + (dv>0?` (+${fmt(dv)})`:"");
-    k("tot").className = "delta num"+(dv>0?" up":"");
-    if (dv>0) flash(c);
-  }
+  // Alberta list (Q1 to Q9; Q10 is the hero)
+  $("allRows").innerHTML = [1,2,3,4,5,6,7,8,9].map(n=>rowHTML(n, abV(n), {sub:"votes"})).join("");
+  if (prev) [1,2,3,4,5,6,7,8,9].forEach(n=>{ const a=pair(abV(n)), b=(prev.questions||[]).find(x=>x.n===n); if (a && b && a.t !== b.yes+b.no) document.querySelector(`#allRows .row[data-n="${n}"]`).classList.add("flash"); });
+  // counting details
+  $("types").innerHTML = (cur.types||[]).map(t=>`<div>${esc(t.name)}<b class="num">${fmt(t.valid)}</b>${fmt(t.rep)} of ${fmt(t.tot)} reporting</div>`).join("");
+  drawMaps();
+  drawExplore();
   tick();
 }
 
-/* poll data.json published by the GitHub Action */
-const POLL_MS = 30000;
-let nextPoll = Date.now() + POLL_MS;
-function ago(iso){ const m = Math.floor((Date.now()-Date.parse(iso))/60000); return m<1 ? "just now" : m===1 ? "1 min ago" : m<60 ? m+" min ago" : Math.floor(m/60)+" h ago"; }
+/* ---------- maps ---------- */
+const SHADES = [.32,.55,.78,1];
+const shade = m => m < 10 ? SHADES[0] : m < 25 ? SHADES[1] : m < 40 ? SHADES[2] : SHADES[3];
+function fillFor(n, v){
+  const p = pair(v); if (!p) return ["var(--track)", 1];
+  const win = p.a >= p.b ? 0 : 1;
+  return [win===proIdx(n) ? "var(--pro)" : "var(--anti)", shade(Math.abs(p.a-p.b))];
+}
+function drawMaps(){
+  if (!MAP || !cur || !cur.wards) return;
+  // hero map is always Q10
+  document.querySelectorAll("#mapHero path").forEach(p=>{ const w = cur.wards[p.dataset.w]; const [f,o] = fillFor(10, w && w.v[9]); p.style.fill = f; p.style.fillOpacity = o; });
+  const locate = S.view === "division";
+  document.querySelectorAll(".maps path").forEach(p=>{
+    const w = cur.wards[p.dataset.w], isSel = p.dataset.w === S.d;
+    p.classList.toggle("sel", isSel);
+    if (isSel) p.parentNode.appendChild(p);
+    if (locate){ p.style.fill = isSel ? "var(--locate)" : "var(--track)"; p.style.fillOpacity = 1; return; }
+    const [f,o] = fillFor(S.q, w && w.v[S.q-1]); p.style.fill = f; p.style.fillOpacity = o;
+  });
+  const L = labels(S.q);
+  const sw = c => `<span class="sw">${SHADES.map(o=>`<i style="background:${c};opacity:${o}"></i>`).join("")}</span>`;
+  $("legend").innerHTML = locate ? "" :
+    `<span>${sw(colA(S.q))}${L[0]} leads</span><span>${sw(colB(S.q))}${L[1]} leads</span><span><span class="sw"><i style="background:var(--track)"></i></span>No results</span><span>Stronger colour = bigger margin</span>`;
+  $("legend").hidden = locate;
+}
+
+/* ---------- explore panes ---------- */
+function drawExplore(){
+  if (!cur) return;
+  $("tabQ").classList.toggle("on", S.view==="question"); $("tabD").classList.toggle("on", S.view==="division");
+  $("tabQ").setAttribute("aria-selected", S.view==="question"); $("tabD").setAttribute("aria-selected", S.view==="division");
+  $("paneQ").hidden = S.view !== "question"; $("paneD").hidden = S.view !== "division";
+  $("explore").classList.toggle("dview", S.view === "division");
+  $("chips").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on", +b.dataset.q===S.q));
+  const w = S.d && cur.wards && cur.wards[S.d];
+  if (S.view === "question"){
+    $("abRow").innerHTML = S.q === 10 ? "" : rowHTML(S.q, abV(S.q), {sub:"votes"}).replace('class="row ', 'class="row big ');
+    $("abRow").hidden = S.q === 10;
+    $("score").hidden = true;
+    if (w){
+      $("hint").hidden = true;
+      const c = $("callout"), wasHidden = c.hidden;
+      c.innerHTML = `<div class="dhd"><span class="badge num">${S.d}</span><div class="dn"><b>${esc(MAP.names[S.d]||"")}</b><span class="num">${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span></div><button type="button" class="x" aria-label="Clear selection">&times;</button></div>
+        <div class="rows">${rowHTML(S.q, w.v[S.q-1], {sub:"ref", ref:abV(S.q), title:false})}</div>
+        <button type="button" class="link" id="toDiv">See all 10 questions for ${esc(MAP.names[S.d]||"")} <span aria-hidden="true">&rarr;</span></button>`;
+      c.hidden = false; if (wasHidden){ c.classList.remove("rise"); void c.offsetWidth; c.classList.add("rise"); }
+      c.querySelector(".x").onclick = () => setState({d:null});
+      $("toDiv").onclick = () => { setState({view:"division"}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); };
+    } else { $("callout").hidden = true; $("hint").hidden = false; $("hint").textContent = "Tap a division to see its result. Pinch or use + to zoom."; }
+  } else {
+    $("callout").hidden = true;
+    if (w){
+      $("hint").hidden = true;
+      const c = $("score"), wasHidden = c.hidden;
+      c.innerHTML = `<div class="dhd"><span class="badge num">${S.d}</span><div class="dn"><b>${esc(MAP.names[S.d]||"")}</b><span class="num">${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span><span class="thin"><span style="width:${w.t? (w.r/w.t*100).toFixed(1):0}%"></span></span></div><button type="button" class="x" aria-label="Clear selection">&times;</button></div>
+        <div class="rows trunc" style="margin-top:6px">${QORDER.map(n=>rowHTML(n, w.v[n-1], {sub:"ref", ref:abV(n)})).join("")}</div>
+        <div class="legend" style="margin-top:8px"><span><i class="refk" aria-hidden="true"></i> marks the Alberta result</span></div>`;
+      c.hidden = false; if (wasHidden){ c.classList.remove("rise"); void c.offsetWidth; c.classList.add("rise"); }
+      c.querySelector(".x").onclick = () => setState({d:null});
+      $("q").value = MAP.names[S.d] || "";
+    } else { $("score").hidden = true; $("hint").hidden = false; $("hint").textContent = "Search above, or tap the map, to see how a division voted on all 10 questions."; }
+  }
+  $("zreset").hidden = !(S.d || (VIEWS.mapAB && VIEWS.mapAB.isZoomed()));
+}
+
+/* ---------- state + shareable link ---------- */
+function setState(patch, {fly=true} = {}){
+  const prevD = S.d;
+  Object.assign(S, patch);
+  if (S.d !== prevD && S.d && fly && MAP) flyTo(S.d);
+  if ("d" in patch && !S.d) $("q").value = "";
+  writeHash(); drawMaps(); drawExplore();
+}
+function writeHash(){
+  const h = S.view === "division" ? `#view=division${S.d?`&d=${S.d}`:""}` : `#q=${S.q}${S.d?`&d=${S.d}`:""}`;
+  if (location.hash !== h) history.replaceState(null, "", h);
+}
+function readHash(){
+  const p = new URLSearchParams(location.hash.slice(1));
+  const st = {view: p.get("view")==="division" ? "division" : "question"};
+  const q = +p.get("q"); if (QORDER.includes(q)) st.q = q;
+  const d = (p.get("d")||"").padStart(2,"0"); st.d = MAP && MAP.names[d] ? d : null;
+  return st;
+}
+
+/* ---------- zoom / pan controller ---------- */
+const VIEWS = {};
+function makeView(svg, W, H){
+  const v = {W, H, x:0, y:0, w:W, h:H, anim:0}; const MIN = svg.id === "mapAB" ? W/45 : W/10;
+  const clamp = () => { v.w = Math.min(W, Math.max(MIN, v.w)); v.h = v.w*H/W; v.x = Math.min(W-v.w*.5, Math.max(-v.w*.5, v.x)); v.y = Math.min(H-v.h*.5, Math.max(-v.h*.5, v.y)); if (v.w >= W-.01){ v.x=0; v.y=0; } };
+  const apply = () => { clamp(); svg.setAttribute("viewBox", `${v.x.toFixed(2)} ${v.y.toFixed(2)} ${v.w.toFixed(2)} ${v.h.toFixed(2)}`); svg.classList.toggle("zoomed", v.isZoomed()); if (svg.id==="mapAB") $("zreset").hidden = !(S.d || v.isZoomed()); };
+  const toSvg = (cx, cy) => { const r = svg.getBoundingClientRect(); return [v.x+(cx-r.left)/r.width*v.w, v.y+(cy-r.top)/r.height*v.h]; };
+  v.isZoomed = () => v.w < W-.01;
+  v.zoomAt = (f, px, py) => { const nw = Math.min(W, Math.max(MIN, v.w/f)), k = nw/v.w; v.x = px-(px-v.x)*k; v.y = py-(py-v.y)*k; v.w = nw; apply(); };
+  v.animateTo = (tx, ty, tw) => { cancelAnimationFrame(v.anim); const sx=v.x, sy=v.y, sw=v.w, t0=performance.now(), d = matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420;
+    const step = t => { const k = d ? Math.min(1,(t-t0)/d) : 1, e = 1-Math.pow(1-k,3); v.x=sx+(tx-sx)*e; v.y=sy+(ty-sy)*e; v.w=sw+(tw-sw)*e; apply(); if (k<1) v.anim = requestAnimationFrame(step); };
+    v.anim = requestAnimationFrame(step); };
+  v.zoomCenter = f => { const nw = Math.min(W, Math.max(MIN, v.w/f)), cx = v.x+v.w/2, cy = v.y+v.h/2; v.animateTo(cx-nw/2, cy-nw*H/W/2, nw); };
+  v.fit = bb => { const a = W/H; let tw = Math.min(W, Math.max(bb.width*2.4, bb.height*2.4*a, MIN*1.2)); v.animateTo(bb.x+bb.width/2-tw/2, bb.y+bb.height/2-tw/a/2, tw); };
+  v.reset = () => v.animateTo(0, 0, W);
+  const pts = new Map(); let start = null, moved = false, lastTap = 0, pinch = null;
+  svg.addEventListener("pointerdown", e => {
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pts.size === 1){ start = {cx:e.clientX, cy:e.clientY, x:v.x, y:v.y, target:e.target}; moved = false; }
+    if (pts.size === 2){ const [a,b] = [...pts.values()]; pinch = {d:Math.hypot(a[0]-b[0],a[1]-b[1]), w:v.w, c:toSvg((a[0]+b[0])/2,(a[1]+b[1])/2)}; moved = true; }
+    if (v.isZoomed() || pts.size === 2) svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener("pointermove", e => {
+    if (!pts.has(e.pointerId)) return; pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pts.size === 2 && pinch){ const [a,b] = [...pts.values()], d = Math.hypot(a[0]-b[0],a[1]-b[1]); const nw = pinch.w*pinch.d/d, k = nw/v.w; v.x = pinch.c[0]-(pinch.c[0]-v.x)*k; v.y = pinch.c[1]-(pinch.c[1]-v.y)*k; v.w = nw; apply(); e.preventDefault(); return; }
+    if (pts.size === 1 && start){ const dx = e.clientX-start.cx, dy = e.clientY-start.cy; if (Math.hypot(dx,dy) > 6) moved = true;
+      if (moved && v.isZoomed()){ const r = svg.getBoundingClientRect(); v.x = start.x-dx/r.width*v.w; v.y = start.y-dy/r.height*v.h; apply(); e.preventDefault(); } }
+  });
+  svg.addEventListener("pointerup", e => {
+    const wasPinch = pts.size === 2; pts.delete(e.pointerId); if (pts.size < 2) pinch = null;
+    if (wasPinch){ start = null; return; }
+    if (pts.size === 0 && start && !moved){
+      const now = Date.now();
+      if (now-lastTap < 300){ const [px,py] = toSvg(e.clientX, e.clientY); v.zoomAt(2, px, py); lastTap = 0; }
+      else { lastTap = now; const w = start.target && start.target.dataset && start.target.dataset.w;
+        if (w) setState({d: S.d === w ? null : w}, {fly: svg.id !== "mapAB" || +w > 46}); }
+    }
+    if (pts.size === 0) start = null;
+  });
+  svg.addEventListener("pointercancel", e => { pts.delete(e.pointerId); pinch = null; start = null; });
+  svg.addEventListener("wheel", e => { if (!(e.ctrlKey || e.metaKey || v.isZoomed())) return; e.preventDefault(); const [px,py] = toSvg(e.clientX, e.clientY); v.zoomAt(Math.exp(-e.deltaY*(e.ctrlKey?.01:.002)), px, py); }, {passive:false});
+  apply(); return v;
+}
+function flyTo(w){
+  const p = document.querySelector(`#mapAB path[data-w="${w}"]`); if (p) VIEWS.mapAB.fit(p.getBBox());
+}
+
+/* ---------- search ---------- */
+function setupSearch(){
+  const q = $("q"), ul = $("sugg");
+  const all = Object.keys(MAP.names).sort().map(w=>({w, name:MAP.names[w], key:(w+" "+MAP.names[w]).toLowerCase()}));
+  let hits = [], active = 0;
+  const show = () => { const s = q.value.trim().toLowerCase();
+    hits = !s ? [] : all.filter(x => x.key.includes(s) || x.w === s.padStart(2,"0")).slice(0,7); active = 0;
+    ul.innerHTML = hits.map((x,i)=>`<li role="option" class="${i===0?"on":""}"><span class="n num">${x.w}</span>${esc(x.name)}</li>`).join("");
+    ul.querySelectorAll("li").forEach((li,i)=>li.addEventListener("pointerdown", e=>{ e.preventDefault(); pick(hits[i]); }));
+    ul.hidden = !hits.length; };
+  const pick = x => { ul.hidden = true; q.blur(); setState({d:x.w}); };
+  q.addEventListener("input", show); q.addEventListener("focus", ()=>{ q.select(); show(); });
+  q.addEventListener("blur", ()=>setTimeout(()=>ul.hidden = true, 120));
+  q.addEventListener("keydown", e=>{ if (!hits.length) return;
+    if (e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); active = (active+(e.key==="ArrowDown"?1:-1)+hits.length)%hits.length; ul.querySelectorAll("li").forEach((li,i)=>li.classList.toggle("on", i===active)); }
+    if (e.key==="Enter"){ e.preventDefault(); pick(hits[active]); }
+    if (e.key==="Escape") ul.hidden = true; });
+}
+
+/* ---------- build maps once ---------- */
+function buildMaps(){
+  const ns = "http://www.w3.org/2000/svg";
+  [["ab","mapHero"],["ab","mapAB"],["cal","mapCAL"],["edm","mapEDM"]].forEach(([k,id])=>{
+    const m = MAP[k], svg = $(id), g = document.createElementNS(ns,"g");
+    svg.setAttribute("viewBox", `0 0 ${m.w} ${m.h}`);
+    for (const [w,d] of Object.entries(m.d)){ const p = document.createElementNS(ns,"path"); p.setAttribute("d", d); p.dataset.w = w;
+      if (id !== "mapHero"){ const t = document.createElementNS(ns,"title"); t.textContent = w+" "+MAP.names[w]; p.appendChild(t); }
+      g.appendChild(p); }
+    svg.appendChild(g);
+    if (id !== "mapHero") VIEWS[id] = makeView(svg, m.w, m.h);
+  });
+  $("chips").innerHTML = QORDER.map(n=>`<button class="chip" type="button" data-q="${n}">Q${n}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click", ()=>setState({q:+b.dataset.q})));
+  $("tabQ").onclick = () => setState({view:"question"});
+  $("tabD").onclick = () => { setState({view:"division"}); if (!S.d) setTimeout(()=>$("q").focus(), 50); };
+  $("zin").onclick = () => VIEWS.mapAB.zoomCenter(1.8);
+  $("zout").onclick = () => VIEWS.mapAB.zoomCenter(1/1.8);
+  $("zreset").onclick = () => { Object.values(VIEWS).forEach(v=>v.reset()); setState({d:null}); };
+  const openMap = () => { setState({view:"question", q:10}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); };
+  $("heroMap").onclick = openMap; $("heroMap").onkeydown = e => { if (e.key==="Enter"||e.key===" "){ e.preventDefault(); openMap(); } };
+  setupSearch();
+  Object.assign(S, readHash());
+  if (S.d) setTimeout(()=>flyTo(S.d), 250);
+}
+window.addEventListener("hashchange", ()=>{ if (MAP){ const st = readHash(); const fly = st.d && st.d !== S.d; Object.assign(S, st); if (fly) flyTo(S.d); drawMaps(); drawExplore(); } });
+
+/* ---------- live data: poll data.json (written every minute by GitHub Actions) ---------- */
+const POLL_MS = 30000; let nextPoll = Date.now();
+function ago(iso){ const m = Math.floor((Date.now()-Date.parse(iso))/60000); return m<1 ? "checked just now" : m===1 ? "checked 1 min ago" : m<60 ? `checked ${m} min ago` : `checked ${Math.floor(m/60)} h ago`; }
 function tick(){
-  const d = cur; if (!d) return;
-  $("age").textContent = "checked " + ago(d.fetchedAt);
-  const fresh = Date.now()-Date.parse(d.fetchedAt) < 5*60000;
-  $("live").classList.toggle("off", !fresh);
-  $("liveTxt").textContent = fresh ? "Live" : "Snapshot";
-  const rem = Math.max(0, nextPoll - Date.now());
-  $("arc").style.strokeDashoffset = (100.53*(1-rem/POLL_MS)).toFixed(2);
+  if (cur){ $("age").textContent = ago(cur.fetchedAt); const fresh = Date.now()-Date.parse(cur.fetchedAt) < 5*60000; $("live").classList.toggle("off", !fresh); $("liveTxt").textContent = fresh ? "Live" : "Snapshot"; }
+  const rem = Math.max(0, nextPoll-Date.now()); $("arc").style.strokeDashoffset = (100.53*(1-rem/POLL_MS)).toFixed(2);
   if (rem === 0) poll();
 }
 async function poll(){
-  nextPoll = Date.now() + POLL_MS;
-  try {
-    const r = await fetch("data.json?t=" + Date.now(), {cache:"no-store"});
-    if (!r.ok) return;
-    const d = await r.json();
-    if (!cur || d.fetchedAt !== cur.fetchedAt) render(d);
-  } catch(e) {}
+  nextPoll = Date.now()+POLL_MS;
+  try { const r = await fetch("data.json?t="+Date.now(), {cache:"no-store"}); if (!r.ok) return; const d = await r.json();
+    if (!cur || d.fetchedAt !== cur.fetchedAt){ prev = cur; cur = d; render(); } } catch(e){}
 }
-buildGrid();
 setInterval(tick, 250);
-poll();
+fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMaps(); render(); }).catch(()=>{ document.querySelectorAll(".maps,#heroMap").forEach(e=>e.style.display="none"); });
 </script>
-
 </body></html>
