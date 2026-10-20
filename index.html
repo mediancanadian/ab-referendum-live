@@ -6,16 +6,19 @@
 :root{
   --bg:#f4f5f7; --panel:#ffffff; --panel2:#f7f8fa; --text:#1b2330; --muted:#677080; --line:#dfe3e8;
   --pro:#2e7d4f; --anti:#b23b32; --accent:#4b6a8f; --track:#e6e9ee; --glow:rgba(75,106,143,.18); --locate:#4b6a8f;
+  --mapPro:#1f7a45; --mapMid:#b9bfc9; --mapAnti:#b3332a;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
     --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
+    --mapPro:#4fb07a; --mapMid:#7c8494; --mapAnti:#d4655a;
   }
 }
 :root[data-theme="dark"]{
   --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
   --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
+    --mapPro:#4fb07a; --mapMid:#7c8494; --mapAnti:#d4655a;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -93,6 +96,10 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .zoomctl button{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-size:1.1rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .zoomctl .reset{font-size:.78rem;padding:0 10px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:.75rem;color:var(--muted);align-items:center}
+.grad{flex:1 1 100%;max-width:420px}
+.grad .strip{position:relative;height:10px;border-radius:5px}
+.grad .abtick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--text);border-radius:1px;transform:translateX(-1px)}
+.grad .ticks{display:flex;justify-content:space-between;margin-top:4px}
 .legend .sw{display:inline-flex;gap:2px;margin-right:6px;vertical-align:middle}
 .legend .sw i{width:12px;height:12px;border-radius:2px;display:inline-block}
 .hint{margin-top:12px;font-size:.8rem;color:var(--muted)}
@@ -140,6 +147,7 @@ details.count[open] summary::after{content:"\2212"}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><pattern id="nores" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--panel2)"/><rect width="2" height="6" fill="var(--line)"/></pattern></defs></svg>
 <main>
   <header class="top">
     <div>
@@ -308,13 +316,19 @@ function render(){
 }
 
 /* ---------- maps ---------- */
-const SHADES = [.32,.55,.78,1];
-const shade = m => m < 10 ? SHADES[0] : m < 25 ? SHADES[1] : m < 40 ? SHADES[2] : SHADES[3];
+/* continuous scale on the status quo share: 25% or less = full red, 50% = neutral grey, 75% or more = full green */
+const CAP = 25;
+let PAL = null;
+function hex(c){ c = c.trim().replace("#",""); return [0,2,4].map(i=>parseInt(c.slice(i,i+2),16)); }
+function readPal(){ const cs = getComputedStyle(document.documentElement); PAL = {pro:hex(cs.getPropertyValue("--mapPro")), mid:hex(cs.getPropertyValue("--mapMid")), anti:hex(cs.getPropertyValue("--mapAnti"))}; }
+function mix(a, b, t){ return "rgb(" + a.map((x,i)=>Math.round(x+(b[i]-x)*t)).join(",") + ")"; }
+function scaleColor(sq){ if (!PAL) readPal(); const t = Math.max(-1, Math.min(1, (sq-50)/CAP)); return t >= 0 ? mix(PAL.mid, PAL.pro, t) : mix(PAL.mid, PAL.anti, -t); }
+const sqShare = (n, p) => proIdx(n)===0 ? p.a : p.b;   // share of the status quo answer
 function fillFor(n, v){
-  const p = pair(v); if (!p) return ["var(--track)", 1];
-  const win = p.a >= p.b ? 0 : 1;
-  return [win===proIdx(n) ? "var(--pro)" : "var(--anti)", shade(Math.abs(p.a-p.b))];
+  const p = pair(v); if (!p) return ["url(#nores)", 1];
+  return [scaleColor(sqShare(n, p)), 1];
 }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>{ readPal(); drawMaps(); });
 function drawMaps(){
   if (!MAP || !cur || !cur.wards) return;
   // hero map is always Q10
@@ -328,9 +342,12 @@ function drawMaps(){
     const [f,o] = fillFor(S.q, w && w.v[S.q-1]); p.style.fill = f; p.style.fillOpacity = o;
   });
   const L = labels(S.q);
-  const sw = c => `<span class="sw">${SHADES.map(o=>`<i style="background:${c};opacity:${o}"></i>`).join("")}</span>`;
+  const ab = pair(abV(S.q)), sqL = L[proIdx(S.q)], chL = L[1-proIdx(S.q)];
+  const tickPos = ab ? Math.max(0, Math.min(100, (sqShare(S.q, ab) - (50-CAP)) / (2*CAP) * 100)) : null;
   $("legend").innerHTML = locate ? `<span><span class="sw"><i style="background:var(--locate)"></i></span>Selected division</span><span>Tap any division to see its results</span>` :
-    `<span>${sw(colA(S.q))}${L[0]} leads</span><span>${sw(colB(S.q))}${L[1]} leads</span><span><span class="sw"><i style="background:var(--track)"></i></span>No results</span><span>Stronger colour = bigger margin</span>`;
+    `<div class="grad"><div class="strip" style="background:linear-gradient(90deg,${scaleColor(50-CAP)},${scaleColor(50)},${scaleColor(50+CAP)})">${tickPos!==null?`<span class="abtick" style="left:${tickPos.toFixed(1)}%"></span>`:""}</div>
+      <div class="ticks num"><span>${chL} ${50+CAP}%+</span><span>50/50</span><span>${sqL} ${50+CAP}%+</span></div></div>
+     <span><span class="sw"><i style="background:repeating-linear-gradient(45deg,var(--line) 0 2px,var(--panel2) 2px 5px);border:1px solid var(--line)"></i></span>No results yet</span>${tickPos!==null?`<span><i class="refk" aria-hidden="true"></i> Alberta</span>`:""}`;
 }
 
 /* ---------- explore panes ---------- */
