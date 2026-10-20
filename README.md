@@ -7,4 +7,4 @@ Unofficial results from Elections Alberta, fetched every minute by GitHub Action
 Text, charts and images: CC BY 4.0 (see LICENSE-CONTENT.md). Code: MIT (see LICENSE).
 Data belongs to its publishers; see context/SOURCES.md.
 
-The Median Canadian. Claude did the math. A human did the nagging.
+The Median Canadian. A curious Canadian explaining Canada through numbers, every week.
