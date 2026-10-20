@@ -407,6 +407,7 @@ details.about2[open] summary::after{content:" \2212"}
 #scatter .trend{stroke:var(--text);stroke-width:1.5;opacity:.55}
 #scatter .ax{font-size:9px;fill:var(--muted)}
 #scatter .lab{font-size:10px;font-weight:600}
+#scatter .lbl{paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
 #scatter .dot{stroke:var(--panel);stroke-width:1;cursor:pointer}
 #scatter .dot.sel{stroke:var(--text);stroke-width:2}
 .scap{font-size:.82rem;margin-top:6px;line-height:1.45}
@@ -836,11 +837,11 @@ function renderInsights(){
   if (qs.length === 9){
     const g1 = qs.filter(x=>x.n<=5), g2 = qs.filter(x=>x.n>=6), ya = g => g.map(x=>x.p.a);
     const pass1 = g1.filter(x=>x.p.a > 50).length, lo1 = Math.min(...ya(g1)), hi1 = Math.max(...ya(g1)), lo2 = Math.min(...ya(g2)), hi2 = Math.max(...ya(g2));
-    const split = lo2 > 47 && hi2 < 53, back = lo2 >= 53, rej = hi2 <= 47;
+    const split = lo2 > 46 && hi2 < 54, back = lo2 >= 54, rej = hi2 <= 46;
     const h4 = pass1 === 5 ? (split ? "Albertans want tighter immigration rules but are split on changing the constitution"
                                : back ? "Albertans want tighter immigration rules and constitutional change"
                                : rej ? "Albertans want tighter immigration rules but reject constitutional change"
-                               : "Albertans want tighter immigration rules; the constitutional questions are mixed")
+                               : "Albertans want tighter immigration rules but are divided on the constitution")
              : pass1 === 0 ? "Albertans reject the immigration questions" : "Albertans are divided on immigration rules";
     const q9 = qs.find(x=>x.n===9), q9w = q9 ? shareWords(q9.p.t/res10.t*100) : "";
     ch.push({h:h4, chart:chQuestions(qs),
@@ -906,15 +907,18 @@ function drawPatterns(){
   let g = "";
   ticks(y0, y1, 4).forEach(v=>{ g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" class="grid"/><text x="${m.l-6}" y="${Y(v)+3}" class="ax" text-anchor="end">${v.toFixed(0)}%</text>`; });
   ticks(x0+px, x1-px, 3).forEach(v=>{ g += `<text x="${X(v)}" y="${H-m.b+14}" class="ax" text-anchor="middle">${fmtF(f, v)}</text>`; });
-  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(50)}" y2="${Y(50)}" class="half"/><text x="${W-m.r}" y="${Y(50)-4}" class="ax" text-anchor="end">50%</text>`;
+  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(50)}" y2="${Y(50)}" class="half"/>`;
+  let lbl = `<text x="${W-m.r}" y="${Y(50)-4}" class="ax lbl" text-anchor="end">50%</text>`;
   // least-squares trend line
   const n = xs.length, mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
   let sxy=0, sxx=0; for (let i=0;i<n;i++){ sxy += (xs[i]-mx)*(ys[i]-my); sxx += (xs[i]-mx)**2; }
   if (sxx){ const b = sxy/sxx, a = my - b*mx, ya = Math.max(y0, Math.min(y1, a+b*(x0+px))), yb = Math.max(y0, Math.min(y1, a+b*(x1-px)));
-    g += `<line x1="${X(x0+px)}" x2="${X(x1-px)}" y1="${Y(ya)}" y2="${Y(yb)}" class="trend"/><text x="${X(x1-px)}" y="${Y(yb)-5}" class="ax" text-anchor="end">trend</text>`; }
+    g += `<line x1="${X(x0+px)}" x2="${X(x1-px)}" y1="${Y(ya)}" y2="${Y(yb)}" class="trend"/>`;
+    let ty = Math.abs(Y(yb)-Y(50)) < 14 ? Math.min(Y(yb), Y(50))-12 : Y(yb)-5; if (ty < m.t+9) ty = Y(yb)+13;
+    lbl += `<text x="${X(x1-px)}" y="${ty}" class="ax lbl" text-anchor="end">trend</text>`; }
   const ord = pts.map(p=>({...p, x:f.g(CTX[p.w])})).filter(p=>p.x!=null).sort((a,b)=>(a.w===S.d)-(b.w===S.d));
   ord.forEach(p=>{ g += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.rem).toFixed(1)}" r="${p.w===S.d?7:4.5}" fill="${scaleColor(p.rem)}" class="dot${p.w===S.d?" sel":""}" data-w="${p.w}"><title>${esc(MAP.names[p.w]||"")}: ${fmtF(f,p.x)}, Remain ${p.rem.toFixed(1)}%</title></circle>`; });
-  g += `<text x="${(m.l+W-m.r)/2}" y="${H-2}" class="ax lab" text-anchor="middle">${esc(f.lab)}</text>`;
+  g += lbl + `<text x="${(m.l+W-m.r)/2}" y="${H-2}" class="ax lab" text-anchor="middle">${esc(f.lab)}</text>`;
   svg.innerHTML = g;
   svg.querySelectorAll(".dot").forEach(d=>d.addEventListener("click", ()=>{ setState({view:"division", d:d.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
   $("scap").innerHTML = c.r==null ? "" : `<b>${strength(c.r)[0].toUpperCase()+strength(c.r).slice(1)} link</b>: ${strengthHow(c.r)} (r = ${c.r.toFixed(2)}, on a scale from &minus;1 to +1; ${c.n} divisions). ${Math.abs(c.r) < .2 ? `The ${esc(f.ph)} tells you little about the Remain share.` : `The higher the ${esc(f.ph)}, the ${c.r<0?"lower":"higher"} the Remain share tends to be.`} Tap a dot to open that division.`;
