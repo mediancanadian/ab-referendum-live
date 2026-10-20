@@ -7,18 +7,21 @@
   --bg:#f4f5f7; --panel:#ffffff; --panel2:#f7f8fa; --text:#1b2330; --muted:#677080; --line:#dfe3e8;
   --pro:#2e7d4f; --anti:#b23b32; --accent:#4b6a8f; --track:#e6e9ee; --glow:rgba(75,106,143,.18); --locate:#4b6a8f;
   --mapPro:#1f7a45; --mapMid:#b9bfc9; --mapAnti:#b3332a;
+  --ucp:#1d4f91; --ndpc:#e07a1f; --modc:#7a93b8;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
     --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
     --mapPro:#4fb07a; --mapMid:#7c8494; --mapAnti:#d4655a;
+    --ucp:#5b8fd6; --ndpc:#f0954a; --modc:#9db3d3;
   }
 }
 :root[data-theme="dark"]{
   --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
   --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
     --mapPro:#4fb07a; --mapMid:#7c8494; --mapAnti:#d4655a;
+    --ucp:#5b8fd6; --ndpc:#f0954a; --modc:#9db3d3;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -133,6 +136,32 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .row.big .qv{font-size:1rem}
 .trunc .qt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+.seg.small button{padding:6px 10px;font-size:.8rem}
+.bfkey{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:10px;font-size:.72rem;color:var(--muted)}
+.bfkey i,.sclegend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+#bfly{margin-top:8px;display:flex;flex-direction:column}
+.bfh,.bfr{display:grid;grid-template-columns:minmax(0,38%) 1fr 1fr;align-items:center;column-gap:0}
+.bfh{font-size:.7rem;color:var(--muted);padding:0 0 4px}
+.bfh .l{text-align:right;padding-right:6px}.bfh .r{padding-left:6px}
+.bfr{border:none;background:none;padding:2px 0;cursor:pointer;text-align:left;border-radius:4px}
+.bfr.on{background:var(--panel2)}
+.bfn{font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px}
+.bfl,.bfrr{position:relative;height:12px;display:flex;align-items:center}
+.bfl{justify-content:flex-end;border-right:1px solid var(--muted)}
+.bfl i,.bfrr i{display:block;height:100%;border-radius:2px}
+.bfl i{border-radius:2px 0 0 2px}.bfrr i{border-radius:0 2px 2px 0}
+.bfl .v,.bfrr .v{position:absolute;font-size:.62rem;font-style:normal;color:var(--muted)}
+.bfl .v{left:2px}.bfrr .v{right:2px}
+.bfl::before,.bfrr::before{content:"";position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--line)}
+.bfl::before{left:50%}.bfrr::before{left:50%}
+.scdesc{font-size:.8rem;margin-top:10px;line-height:1.45}
+.schead{margin-top:8px;font-size:.9rem}.schead b{font-size:1.4rem}
+.grid87{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:10px;max-width:420px}
+.grid87 i{aspect-ratio:1;border-radius:3px;cursor:pointer;display:block}
+.grid87 i.was,.wasK{box-shadow:inset 0 0 0 2px var(--text)}
+.wasK{background:transparent}
+.sclegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:.75rem;color:var(--muted)}
+.sclegend b{color:var(--text)}
 .ins{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .ins li{position:relative;padding-left:16px;font-size:.88rem;line-height:1.45}
 .ins li::before{content:"";position:absolute;left:2px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
@@ -264,15 +293,37 @@ details.count[open] summary::after{content:"\2212"}
   <!-- 4. Patterns: what tracks the Remain vote -->
   <section class="panel" id="patterns">
     <span class="tag">Patterns</span>
-    <h2 style="margin-top:4px">What lines up with the Remain vote?</h2>
-    <div class="lead3">Each dot is a division: across, a factor from past elections or the census; up, its Remain share on Q10.</div>
-    <div class="chips" id="facChips"></div>
-    <svg id="scatter" viewBox="0 0 340 240" role="img" aria-label="Scatter chart of divisions"></svg>
-    <div class="scap" id="scap"></div>
-    <h3 class="h3">How strongly each factor lines up with Remain</h3>
-    <div class="lead3">From &minus;1 (higher factor, less Remain) to +1 (higher factor, more Remain). Tap a row to chart it.</div>
-    <div id="corrBars"></div>
-    <div class="insfoot">2025 federal results are estimated for each division from poll-by-poll results. Census figures are from 2021; unemployment was measured in May 2021, during COVID. These patterns describe divisions, not how any individual voted. Sources: Elections Alberta, Elections Canada, Statistics Canada via Alberta Office of Statistics and Information.</div>
+    <h2 style="margin-top:4px">The leave vote is about half the UCP vote</h2>
+    <div class="lead3" id="bfHead"></div>
+    <div class="seg small" id="bfTabs" style="margin-top:10px">
+      <button type="button" data-k="ucp" class="on">UCP seats</button><button type="button" data-k="ndp">NDP seats</button><button type="button" data-k="all">All 87</button>
+    </div>
+    <div class="bfkey"><span><i style="background:var(--ucp)"></i>UCP share 2023 (seat won by UCP)</span><span><i style="background:var(--ndpc)"></i>UCP share 2023 (seat won by NDP)</span><span><i style="background:var(--anti)"></i>Referendum share now</span></div>
+    <div id="bfly"></div>
+  </section>
+
+  <section class="panel" id="seatsPanel">
+    <span class="tag">Hypothetical</span>
+    <h2 style="margin-top:4px">If the UCP ran on separation</h2>
+    <div class="lead3">Each square is one of the 87 seats, outlined if the UCP won it in 2023. A what-if built on today's referendum shares, not a forecast.</div>
+    <div class="seg small" id="scTabs" style="margin-top:10px">
+      <button type="button" data-k="A">Straight fight</button><button type="button" data-k="B" class="on">Three-way race</button>
+    </div>
+    <div id="seats"></div>
+  </section>
+
+  <section class="panel">
+    <details class="count" id="moreFactors">
+      <summary>More patterns: census and federal factors</summary>
+      <div class="lead3" style="margin-top:8px">Each dot is a division: across, a factor; up, its Remain share on Q10.</div>
+      <div class="chips" id="facChips"></div>
+      <svg id="scatter" viewBox="0 0 340 240" role="img" aria-label="Scatter chart of divisions"></svg>
+      <div class="scap" id="scap"></div>
+      <h3 class="h3">How strongly each factor lines up with Remain</h3>
+      <div class="lead3">From &minus;1 (higher factor, less Remain) to +1 (higher factor, more Remain). Tap a row to chart it.</div>
+      <div id="corrBars"></div>
+    </details>
+    <div class="insfoot">2023 results: Elections Alberta. 2025 federal results are estimated per division from Elections Canada poll results. Census 2021 via Alberta Office of Statistics and Information; unemployment was measured in May 2021, during COVID. These patterns describe divisions, not how any individual voted. Seat scenarios are hypothetical.</div>
   </section>
 
   <!-- 5. All questions for Alberta -->
@@ -367,6 +418,8 @@ function render(){
   drawMaps();
   drawExplore();
   renderInsights();
+  drawButterfly();
+  drawSeats();
   drawPatterns();
   tick();
 }
@@ -432,12 +485,15 @@ function renderInsights(){
   // 4 to 6. patterns, only once enough is counted
   const pts = remainPoints();
   if (CTX && rp >= MINREP && pts.length >= 60){
-    const party = ["ucp23","cpc25","ndp23","lpc25"].map(k=>({f:facBy(k), ...corrFor(facBy(k), pts)})).filter(x=>x.r!=null).sort((a,b)=>Math.abs(b.r)-Math.abs(a.r))[0];
-    if (party && Math.abs(party.r) >= .5)
-      items.push(`Remain is following past party lines: the higher a division's <b>${esc(party.f.ph)}</b>, the ${party.r < 0 ? "lower" : "higher"} its Remain share (${strength(party.r)} link, r = ${party.r.toFixed(2)}).`);
+    const ucpSeats = pts.filter(p=>CTX[p.w].p23.win==="UCP");
+    if (ucpSeats.length >= 20){
+      const ratios = ucpSeats.map(p=>(100-p.rem)/CTX[p.w].p23.ucp).sort((a,b)=>a-b), med = ratios[Math.floor(ratios.length/2)];
+      const below = ucpSeats.filter(p=>(100-p.rem) < CTX[p.w].p23.ucp).length;
+      items.push(`The leave vote follows the UCP vote but stays a minority: in UCP-won seats the Referendum share is about <b>${Math.round(med*100)}%</b> of the UCP's 2023 share, and it is below the UCP's share in <b>${below} of ${ucpSeats.length}</b>.`);
+    }
     const strong = pts.filter(p=>CTX[p.w].p23.ucp - CTX[p.w].p23.ndp >= 20);
     if (strong.length >= 5){ const lead = strong.filter(p=>p.rem >= 50).length;
-      items.push(`Remain leads in <b>${lead} of ${strong.length}</b> divisions the UCP won by 20 points or more in 2023.`); }
+      items.push(`Even in UCP strongholds, Remain leads in <b>${lead} of ${strong.length}</b> divisions the UCP won by 20 points or more in 2023.`); }
     const inc = corrFor(facBy("inc"), pts).r, age = corrFor(facBy("age"), pts).r;
     if (inc!=null && age!=null && Math.abs(inc) < .2 && Math.abs(age) < .2)
       items.push(`Income and age barely matter: r = ${inc.toFixed(2)} for median household income and ${age.toFixed(2)} for average age.`);
@@ -498,6 +554,60 @@ function aboutHTML(w){
     <div class="ab2"><span>Education and work</span><b>University degree ${k.deg.toFixed(1)}% · unemployment ${k.unemp.toFixed(1)}%</b><small>Degree for ages 25 to 64; unemployment from May 2021, during COVID</small></div>
     <div class="ab2"><span>Biggest occupation and industry</span><b>${esc(k.occ)} (${k.occp.toFixed(0)}%)</b><small>${esc(k.indus)} (${k.indusp.toFixed(0)}%)</small></div>
   </details>`;
+}
+
+/* ---------- Butterfly: UCP 2023 share (left) vs Referendum share now (right) ---------- */
+let BF = "ucp";                      // "ucp" = seats the UCP won in 2023, "ndp" = seats the NDP won, "all"
+let SCN = "B";                       // seat scenario
+function seatRows(){
+  if (!cur || !cur.wards || !CTX) return [];
+  return Object.entries(cur.wards).map(([w,x])=>{
+    const v = x.v[9], t = v ? v[0]+v[1] : 0; if (t < MINV) return null;
+    const c = CTX[w]; return {w, name:(MAP&&MAP.names[w])||w, ref:v[1]/t*100, rem:v[0]/t*100, ucp:c.p23.ucp, ndp:c.p23.ndp, win:c.p23.win, rep:x.t?x.r/x.t*100:0};
+  }).filter(Boolean);
+}
+function drawButterfly(){
+  const box = $("bfly"); if (!box) return;
+  const all = seatRows(); if (!all.length){ box.innerHTML = `<div class="dim">Waiting for results.</div>`; return; }
+  $("bfTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.k===BF));
+  const rows = all.filter(r => BF==="all" || r.win.toLowerCase()===BF).sort((a,b)=>b.ucp-a.ucp);
+  const shorter = rows.filter(r=>r.ref < r.ucp).length, remLead = rows.filter(r=>r.rem > 50).length;
+  const label = BF==="ucp" ? "seats the UCP won in 2023" : BF==="ndp" ? "seats the NDP won in 2023" : "divisions";
+  $("bfHead").innerHTML = `In <b>${shorter} of ${rows.length}</b> ${label}, the Referendum share is smaller than the UCP's 2023 share. Remain leads in <b>${remLead}</b>.`;
+  box.innerHTML = `<div class="bfh"><span></span><span class="l">UCP 2023 &larr;</span><span class="r">&rarr; Referendum now</span></div>` +
+    rows.map(r=>`<button type="button" class="bfr${r.w===S.d?" on":""}" data-w="${r.w}" title="${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, Referendum ${r.ref.toFixed(1)}% now (${r.rep.toFixed(0)}% counted)">
+      <span class="bfn">${esc(r.name)}</span>
+      <span class="bfl"><i style="width:${r.ucp.toFixed(1)}%;background:var(${r.win==="UCP"?"--ucp":"--ndpc"})"></i><em class="v num">${r.ucp.toFixed(0)}</em></span>
+      <span class="bfrr"><i style="width:${r.ref.toFixed(1)}%;background:var(--anti)"></i><em class="v num">${r.ref.toFixed(0)}</em></span>
+    </button>`).join("");
+  box.querySelectorAll(".bfr").forEach(b=>b.addEventListener("click", ()=>{ setState({view:"division", d:b.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
+}
+
+/* ---------- Seats at risk: hypothetical, all 87 seats ---------- */
+function seatWinner(r, scn){
+  if (scn === "A") return r.ref > 50 ? "sep" : "rem";
+  const mod = Math.max(0, 100 - r.ref - r.ndp);       // what is left after separatist UCP and the NDP's 2023 share
+  return r.ref >= r.ndp && r.ref >= mod ? "sep" : r.ndp >= mod ? "ndp" : "mod";
+}
+const SEATC = {sep:["--anti","Separatist UCP"], rem:["--pro","Remain candidate"], ndp:["--ndpc","NDP"], mod:["--modc","Moderate conservative"]};
+function drawSeats(){
+  const box = $("seats"); if (!box) return;
+  const rows = seatRows(); if (rows.length < 80){ box.innerHTML = `<div class="dim">Shown once results are in for 80 or more divisions.</div>`; return; }
+  $("scTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.k===SCN));
+  const order = ["sep","mod","ndp","rem"];
+  const res = rows.map(r=>({...r, s: seatWinner(r, SCN)}));
+  const cnt = {}; res.forEach(r=>cnt[r.s]=(cnt[r.s]||0)+1);
+  res.sort((a,b)=> order.indexOf(a.s)-order.indexOf(b.s) || (a.win==="UCP"?0:1)-(b.win==="UCP"?0:1) || b.ref-a.ref);
+  const ucpKept = res.filter(r=>r.win==="UCP" && r.s==="sep").length, ucpTot = res.filter(r=>r.win==="UCP").length;
+  const maj = Math.floor(res.length/2)+1;
+  const desc = SCN==="A"
+    ? `A separatist UCP gets only the Referendum vote; everyone voting Remain backs one candidate.`
+    : `A separatist UCP gets the Referendum vote, the NDP keeps its 2023 share, and the remaining voters back a moderate conservative party.`;
+  box.innerHTML = `<div class="scdesc">${desc}</div>
+    <div class="schead"><b class="num">${ucpKept}</b> of the UCP's ${ucpTot} seats survive<span class="dim"> · ${maj} needed for a majority</span></div>
+    <div class="grid87">${res.map(r=>`<i title="${esc(r.name)}: ${SEATC[r.s][1]}${r.win==="UCP"?" (UCP seat in 2023)":""}" class="${r.win==="UCP"?"was":""}" style="background:var(${SEATC[r.s][0]})" data-w="${r.w}"></i>`).join("")}</div>
+    <div class="sclegend">${order.filter(k=>cnt[k]).map(k=>`<span><i style="background:var(${SEATC[k][0]})"></i>${SEATC[k][1]} <b class="num">${cnt[k]}</b></span>`).join("")}<span><i class="wasK"></i>UCP seat in 2023</span></div>`;
+  box.querySelectorAll(".grid87 i").forEach(i=>i.addEventListener("click", ()=>{ setState({view:"division", d:i.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
 }
 
 /* ---------- maps ---------- */
@@ -581,7 +691,7 @@ function setState(patch, {fly=true} = {}){
   Object.assign(S, patch);
   if (S.d !== prevD && S.d && fly && MAP) flyTo(S.d);
   if ("d" in patch && !S.d) $("q").value = "";
-  writeHash(); drawMaps(); drawExplore(); drawPatterns();
+  writeHash(); drawMaps(); drawExplore(); drawPatterns(); drawButterfly();
 }
 function writeHash(){
   const h = S.view === "division" ? `#view=division${S.d?`&d=${S.d}`:""}` : `#q=${S.q}${S.d?`&d=${S.d}`:""}`;
@@ -708,9 +818,11 @@ setInterval(async ()=>{ if (BUILD.startsWith("__")) return;
   try { const r = await fetch("version.txt?t="+Date.now(), {cache:"no-store"}); if (!r.ok) return; const v = (await r.text()).trim();
     if (v && v !== BUILD) location.replace(location.pathname + "?v=" + v + location.hash); } catch(e){} }, 60000);
 fetch("context.json").then(r=>r.json()).then(c=>{ CTX = c;
+  $("bfTabs").querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ BF = b.dataset.k; drawButterfly(); }));
+  $("scTabs").querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ SCN = b.dataset.k; drawSeats(); }));
   $("facChips").innerHTML = FACTORS.map(f=>`<button class="chip" type="button" data-k="${f.k}">${esc(f.short)}</button>`).join("");
   $("facChips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click", ()=>{ FAC = b.dataset.k; drawPatterns(); }));
-  render(); }).catch(()=>{ $("patterns").hidden = true; });
+  render(); }).catch(()=>{ ["patterns","seatsPanel"].forEach(id=>$(id).hidden = true); });
 fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMaps(); render(); }).catch(()=>{ document.querySelectorAll(".maps,#heroMap").forEach(e=>e.style.display="none"); });
 </script>
 </body></html>
