@@ -499,6 +499,11 @@ async function poll(){
     if (!cur || d.fetchedAt !== cur.fetchedAt){ prev = cur; cur = d; render(); } } catch(e){}
 }
 setInterval(tick, 250);
+/* reload when a new version of the page is published (browsers may keep the old one for up to 10 minutes) */
+const BUILD = "__BUILD__";
+setInterval(async ()=>{ if (BUILD.startsWith("__")) return;
+  try { const r = await fetch("version.txt?t="+Date.now(), {cache:"no-store"}); if (!r.ok) return; const v = (await r.text()).trim();
+    if (v && v !== BUILD) location.replace(location.pathname + "?v=" + v + location.hash); } catch(e){} }, 60000);
 fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMaps(); render(); }).catch(()=>{ document.querySelectorAll(".maps,#heroMap").forEach(e=>e.style.display="none"); });
 </script>
 </body></html>
