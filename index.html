@@ -175,6 +175,21 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .sctable>div{display:grid;grid-template-columns:14px 1fr auto;gap:8px;align-items:center}
 .sw2{width:12px;height:12px;border-radius:3px}
 .sclist{margin-top:10px;font-size:.8rem;line-height:1.5;min-height:1em}
+.ratebar{position:relative;margin-top:12px}
+.rb{display:flex;height:26px;border-radius:6px;overflow:hidden;gap:1px;background:var(--panel)}
+.rb span{display:flex;align-items:center;justify-content:center;min-width:2px}
+.rb b{font-size:.72rem;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.rbmaj{position:absolute;top:-4px;height:34px;width:2px;background:var(--text);transform:translateX(-1px)}
+.rblab{display:flex;justify-content:space-between;gap:6px;font-size:.68rem;color:var(--muted);margin-top:4px}
+.rblab span:nth-child(2){text-align:center}.rblab span:last-child{text-align:right}
+.rtab{width:100%;border-collapse:collapse;margin-top:12px;font-size:.8rem}
+.rtab th,.rtab td{padding:5px 4px;border-top:1px solid var(--line);text-align:center}
+.rtab thead th{border-top:none;font-size:.7rem;color:var(--muted);font-weight:600}
+.rtab tbody th{text-align:left;font-weight:600;white-space:nowrap}
+.rtab .sw2{display:inline-block;vertical-align:-1px;margin-right:6px}
+.rtab .tot{font-weight:700}
+.rtab .pairs{text-align:left;font-size:.72rem}
+.rnote{font-size:.72rem;margin-top:6px}
 .scnote{margin-top:8px;font-size:.8rem;line-height:1.45;background:var(--panel2);border-radius:10px;padding:8px 10px}
 .schead{margin-top:8px;font-size:.9rem}.schead b{font-size:1.4rem}
 .grid87{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:10px;max-width:420px}
@@ -641,51 +656,59 @@ function drawButterfly(){
 }
 
 let SCN = "B";
-/* ---------- Seats at risk: hypothetical, all 87 seats, with toss-ups ---------- */
-let TOSS = 3;   // points: if the top two are within this, the seat is a toss-up
+/* ---------- Seats at risk: hypothetical ratings (Safe / Likely / Lean / Toss-up), all 87 seats ---------- */
+let TOSS = 3;                          // toss-up cutoff in points (switchable)
+const LEAN = 8, LIKELY = 15;           // lean below 8 points, likely below 15, safe at 15 or more
 const SEATC = {sep:["--anti","Separatist UCP"], rem:["--pro","Remain candidate"], ndp:["--ndpc","NDP"], mod:["--modc","Moderate conservative"]};
+const TIERS = ["safe","likely","lean"], TIERLAB = {safe:"Safe", likely:"Likely", lean:"Lean"}, TIEROP = {safe:1, likely:.68, lean:.4};
+const tint = (p, t) => `color-mix(in srgb, var(${SEATC[p][0]}) ${Math.round(TIEROP[t]*100)}%, var(--panel))`;
+const SHORTP = {sep:"Separatist", mod:"Moderate", ndp:"NDP", rem:"Remain"};
 function seatOutcome(r, scn){
   const sh = scn === "A" ? {sep:r.ref, rem:r.rem} : {sep:r.ref, ndp:r.ndp, mod:Math.max(0, 100 - r.ref - r.ndp)};
   const o = Object.entries(sh).sort((a,b)=>b[1]-a[1]);
-  const margin = o[0][1] - o[1][1], win = o[0][0], second = o[1][0];
-  return {win, second, margin, sh, toss: margin < TOSS};
+  const margin = o[0][1] - o[1][1];
+  const tier = margin < TOSS ? "toss" : margin < LEAN ? "lean" : margin < LIKELY ? "likely" : "safe";
+  return {win:o[0][0], second:o[1][0], margin, sh, tier};
 }
-function outcomeClass(r, o){
-  if (o.toss) return "toss";
-  const was = r.win === "UCP" ? "sep" : "ndp";
-  return o.win === was ? (was === "sep" ? "holdU" : "holdN") : "flip_" + o.win;
-}
-const OCL = {
-  holdU:{lab:"UCP holds", c:"--anti"}, flip_mod:{lab:"Flips to moderate conservative", c:"--modc"}, flip_ndp:{lab:"Flips to NDP", c:"--ndpc"},
-  flip_rem:{lab:"Flips to Remain candidate", c:"--pro"}, flip_sep:{lab:"Flips to separatist UCP", c:"--anti"}, toss:{lab:"Toss-up", c:null}, holdN:{lab:"NDP holds", c:"--ndpc"}
-};
-const OORDER = ["holdU","toss","flip_mod","flip_ndp","flip_rem","flip_sep","holdN"];
 function drawSeats(){
   const box = $("seats"); if (!box) return;
   const rows = seatRows(); if (rows.length < 80){ box.innerHTML = `<div class="dim">Shown once results are in for 80 or more divisions.</div>`; return; }
   $("scTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.k===SCN));
   $("tossTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", +b.dataset.k===TOSS));
-  const res = rows.map(r=>{ const o = seatOutcome(r, SCN); return {...r, o, k: outcomeClass(r, o)}; });
-  res.sort((a,b)=> OORDER.indexOf(a.k)-OORDER.indexOf(b.k) || (a.win==="UCP"?0:1)-(b.win==="UCP"?0:1) || a.o.margin-b.o.margin);
-  const cnt = {}; res.forEach(r=>cnt[r.k]=(cnt[r.k]||0)+1);
-  const ucp = res.filter(r=>r.win==="UCP"), firm = ucp.filter(r=>r.k==="holdU").length, tossU = ucp.filter(r=>r.k==="toss").length;
-  const maj = Math.floor(res.length/2)+1;
-  const fill = r => r.k === "toss" ? `background:repeating-linear-gradient(135deg,var(${SEATC[r.o.win][0]}) 0 4px,var(${SEATC[r.o.second][0]}) 4px 8px)` : `background:var(${OCL[r.k].c})`;
-  const tip = r => `${r.name}: ${OCL[r.k].lab}${r.k==="toss"?` between ${SEATC[r.o.win][1]} and ${SEATC[r.o.second][1]}`:""} (${Object.entries(r.o.sh).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(", ")}; margin ${r.o.margin.toFixed(1)} pts)`;
+  const parties = SCN === "A" ? ["sep","rem"] : ["sep","mod","ndp"];
+  // spectrum order: separatist safe..lean, toss-ups, then the others lean..safe
+  const groups = [...TIERS.map(t=>["sep",t]), ["toss","toss"], ...parties.slice(1).flatMap(p=>[...TIERS].reverse().map(t=>[p,t]))];
+  const res = rows.map(r=>({...r, o: seatOutcome(r, SCN)}));
+  const keyOf = r => r.o.tier === "toss" ? "toss|toss" : r.o.win + "|" + r.o.tier;
+  const cnt = {}; res.forEach(r=>{ const k = keyOf(r); cnt[k] = (cnt[k]||0)+1; });
+  const gi = r => groups.findIndex(([p,t])=>p+"|"+t === keyOf(r));
+  res.sort((a,b)=> gi(a)-gi(b) || a.o.margin-b.o.margin);
+  const N = res.length, maj = Math.floor(N/2)+1;
+  const styleFor = (p, t, r) => t === "toss" ? (r ? `background:repeating-linear-gradient(135deg,var(${SEATC[r.o.win][0]}) 0 4px,var(${SEATC[r.o.second][0]}) 4px 8px)` : `background:repeating-linear-gradient(135deg,var(--anti) 0 4px,var(--modc) 4px 8px)`) : `background:${tint(p,t)}`;
+  const tip = r => `${r.name}: ${r.o.tier==="toss" ? `Toss-up, ${SEATC[r.o.win][1]} vs ${SEATC[r.o.second][1]}` : `${TIERLAB[r.o.tier]} ${SEATC[r.o.win][1]}`} (${Object.entries(r.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(", ")}; margin ${r.o.margin.toFixed(1)} pts)`;
+  // ratings bar (like a forecaster's seat bar), majority marker in the middle
+  const bar = groups.map(([p,t])=>{ const n = cnt[p+"|"+t]||0; if (!n) return ""; return `<span style="flex:${n};${styleFor(p,t)}" title="${t==="toss"?"Toss-up":TIERLAB[t]+" "+SEATC[p][1]}: ${n}">${n >= 3 ? `<b>${n}</b>` : ""}</span>`; }).join("");
+  const sepTot = TIERS.reduce((a,t)=>a+(cnt["sep|"+t]||0),0), sepFirm = (cnt["sep|safe"]||0)+(cnt["sep|likely"]||0);
+  const tossN = cnt["toss|toss"]||0;
+  const pairs = {}; res.filter(r=>r.o.tier==="toss").forEach(r=>{ const k = [r.o.win, r.o.second].map(x=>SHORTP[x]).sort().join(" vs "); pairs[k]=(pairs[k]||0)+1; });
   const desc = SCN==="A"
     ? `A separatist UCP gets only the Referendum vote; everyone voting Remain backs one candidate.`
     : `A separatist UCP gets the Referendum vote, the NDP keeps its 2023 share, and the remaining voters back a moderate conservative party.`;
-  // toss-up pairs breakdown
-  const pairs = {}; res.filter(r=>r.k==="toss").forEach(r=>{ const k = [r.o.win, r.o.second].sort().map(x=>SEATC[x][1]).join(" vs "); pairs[k]=(pairs[k]||0)+1; });
-  const ndpGain = (cnt.flip_ndp||0);
+  const ucp23 = res.filter(r=>r.win==="UCP"), ndpPick = res.filter(r=>r.win==="UCP" && r.o.tier!=="toss" && r.o.win==="ndp").length;
+  const table = parties.map(p=>{ const tot = TIERS.reduce((a,t)=>a+(cnt[p+"|"+t]||0),0); if (!tot) return "";
+      return `<tr><th><span class="sw2" style="background:var(${SEATC[p][0]})"></span>${SEATC[p][1]}</th>${TIERS.map(t=>`<td class="num">${cnt[p+"|"+t]||"·"}</td>`).join("")}<td class="num tot">${tot}</td></tr>`; }).join("");
   box.innerHTML = `<div class="scdesc">${desc}</div>
-    <div class="schead">UCP holds <b class="num">${firm}</b> of its ${ucp.length} seats firmly; <b class="num">${tossU}</b> more ${tossU===1?"is a toss-up":"are toss-ups"}<span class="dim"> · ${maj} needed for a majority</span></div>
-    ${SCN==="B" && ndpGain ? `<div class="scnote">The NDP picks up <b>${ndpGain}</b> seats firmly without gaining a single vote: the UCP's 2023 vote splits between a separatist party and a moderate one, so the NDP's unchanged share is now the largest. First-past-the-post rewards a split on one side.</div>` : ""}
-    <div class="grid87">${res.map(r=>`<i title="${esc(tip(r))}" class="${r.win==="UCP"?"was":""}" style="${fill(r)}" data-w="${r.w}"></i>`).join("")}</div>
-    <div class="sctable">${OORDER.filter(k=>cnt[k]).map(k=>`<div><span class="sw2" style="${k==="toss"?"background:repeating-linear-gradient(135deg,var(--anti) 0 3px,var(--ndpc) 3px 6px)":`background:var(${OCL[k].c})`}"></span><span>${OCL[k].lab}${k==="toss"?` <span class="dim">(within ${TOSS} pts: ${Object.entries(pairs).map(([p,n])=>`${p} ${n}`).join(", ")})</span>`:""}</span><b class="num">${cnt[k]}</b></div>`).join("")}</div>
-    <div class="sclegend"><span><i class="wasK"></i>Outlined: UCP seat in 2023. Striped: toss-up between the two colours.</span></div>
+    <div class="schead">Separatist UCP: <b class="num">${sepFirm}</b> safe or likely, <b class="num">${cnt["sep|lean"]||0}</b> lean · <b class="num">${tossN}</b> toss-up${tossN===1?"":"s"}<span class="dim"> · ${maj} seats for a majority</span></div>
+    <div class="ratebar"><div class="rb">${bar}</div><div class="rbmaj" style="left:${(maj-0.5)/N*100}%"></div><div class="rblab"><span>${esc(SEATC.sep[1])}</span><span>${maj} for majority</span><span>${esc(parties.slice(1).map(p=>SEATC[p][1]).join(" · "))}</span></div></div>
+    <table class="rtab"><thead><tr><th></th>${TIERS.map(t=>`<th>${TIERLAB[t]}</th>`).join("")}<th>Total</th></tr></thead><tbody>${table}
+      <tr><th><span class="sw2" style="${styleFor("toss","toss")}"></span>Toss-up</th><td colspan="3" class="dim pairs">${Object.entries(pairs).map(([k,n])=>`${k} ${n}`).join(" · ") || "none"}</td><td class="num tot">${tossN}</td></tr></tbody></table>
+    <div class="rnote dim">Margin between the top two in each seat: toss-up under ${TOSS} pts, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more.</div>
+    ${SCN==="B" && ndpPick ? `<div class="scnote">The NDP would take <b>${ndpPick}</b> of the UCP's 2023 seats without gaining a single vote: the UCP's 2023 vote splits between a separatist party and a moderate one, so the NDP's unchanged share is now the largest. First-past-the-post rewards a split on one side.</div>` : ""}
+    <div class="grid87">${res.map(r=>`<i title="${esc(tip(r))}" class="${r.win==="UCP"?"was":""}" style="${r.o.tier==="toss"?styleFor(0,"toss",r):`background:${tint(r.o.win, r.o.tier)}`}" data-w="${r.w}"></i>`).join("")}</div>
+    <div class="sclegend"><span><i class="wasK"></i>Outlined: UCP seat in 2023. Fainter = less secure. Striped = toss-up between the two colours.</span></div>
     <div class="sclist" id="scList"></div>`;
-  const showSeat = w => { const r = res.find(x=>x.w===w); $("scList").innerHTML = `<b>${esc(r.name)}</b>: ${esc(OCL[r.k].lab)}${r.k==="toss"?` between ${SEATC[r.o.win][1]} and ${SEATC[r.o.second][1]}`:""}<br><span class="dim">${Object.entries(r.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(" · ")} · margin ${r.o.margin.toFixed(1)} pts</span> <button type="button" class="link" id="scOpen">Open division &rarr;</button>`;
+  const showSeat = w => { const r = res.find(x=>x.w===w);
+    $("scList").innerHTML = `<b>${esc(r.name)}</b>: ${r.o.tier==="toss" ? `Toss-up, ${SEATC[r.o.win][1]} vs ${SEATC[r.o.second][1]}` : `${TIERLAB[r.o.tier]} ${SEATC[r.o.win][1]}`}${r.win==="UCP"?" <span class=\"dim\">(UCP seat in 2023)</span>":""}<br><span class="dim">${Object.entries(r.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(" · ")} · margin ${r.o.margin.toFixed(1)} pts</span> <button type="button" class="link" id="scOpen">Open division &rarr;</button>`;
     $("scOpen").onclick = () => { setState({view:"division", d:w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }; };
   box.querySelectorAll(".grid87 i").forEach(i=>i.addEventListener("click", ()=>showSeat(i.dataset.w)));
 }
