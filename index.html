@@ -133,6 +133,39 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .row.big .qv{font-size:1rem}
 .trunc .qt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+.ins{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.ins li{position:relative;padding-left:16px;font-size:.88rem;line-height:1.45}
+.ins li::before{content:"";position:absolute;left:2px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.ins .dim,.dim{color:var(--muted)}
+.insfoot{margin-top:10px;font-size:.72rem;color:var(--muted);line-height:1.5}
+.lead3{font-size:.8rem;color:var(--muted);margin-top:4px}
+.h3{font-size:.92rem;margin:18px 0 0}
+#scatter{width:100%;max-width:560px;height:auto;display:block;margin:8px auto 0}
+#scatter .grid{stroke:var(--line);stroke-width:1}
+#scatter .half{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+#scatter .trend{stroke:var(--text);stroke-width:1.5;opacity:.55}
+#scatter .ax{font-size:9px;fill:var(--muted)}
+#scatter .lab{font-size:10px;font-weight:600}
+#scatter .dot{stroke:var(--panel);stroke-width:1;cursor:pointer}
+#scatter .dot.sel{stroke:var(--text);stroke-width:2}
+.scap{font-size:.82rem;margin-top:6px;line-height:1.45}
+#corrBars{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+.cb{display:grid;grid-template-columns:118px minmax(0,1fr) 44px;gap:8px;align-items:center;border:none;background:none;padding:6px 4px;border-radius:8px;cursor:pointer;text-align:left}
+.cb.on{background:var(--panel2)}
+.cbl{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbt{position:relative;height:10px;background:var(--track);border-radius:5px}
+.cbt i{position:absolute;top:0;bottom:0;background:var(--accent);border-radius:5px}
+.cbz{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.cbv{font-size:.78rem;text-align:right;color:var(--muted)}
+details.about{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+details.about summary{cursor:pointer;font-weight:600;font-size:.88rem;list-style:none;display:flex;justify-content:space-between}
+details.about summary::-webkit-details-marker{display:none}
+details.about summary::after{content:"+";color:var(--muted)}
+details.about[open] summary::after{content:"\2212"}
+.ab2{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--line);font-size:.82rem}
+.ab2:first-of-type{border-top:none}
+.ab2 span{font-size:.72rem;color:var(--muted)}
+.ab2 small{font-size:.75rem;color:var(--muted)}
 details.count summary{cursor:pointer;font-weight:600;font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details.count summary::-webkit-details-marker{display:none}
 details.count summary::after{content:"+";color:var(--muted);font-size:1.2rem}
@@ -177,7 +210,14 @@ details.count[open] summary::after{content:"\2212"}
     <div class="thin" style="grid-column:1/-1;margin-top:-6px"><span id="repBar" style="width:0"></span></div>
   </section>
 
-  <!-- 2. Explore: one lens at a time -->
+  <!-- 2. What's happening: short factual lines written from the numbers -->
+  <section class="panel" id="insights">
+    <span class="tag">What's happening</span>
+    <ul class="ins" id="insList"><li>Waiting for results.</li></ul>
+    <div class="insfoot" id="insFoot"></div>
+  </section>
+
+  <!-- 3. Explore: one lens at a time -->
   <section class="panel" id="explore">
     <div class="exhd">
       <h2>Explore</h2>
@@ -221,14 +261,28 @@ details.count[open] summary::after{content:"\2212"}
     <div class="score" id="score" hidden></div>
   </section>
 
-  <!-- 3. All questions for Alberta -->
+  <!-- 4. Patterns: what tracks the Remain vote -->
+  <section class="panel" id="patterns">
+    <span class="tag">Patterns</span>
+    <h2 style="margin-top:4px">What lines up with the Remain vote?</h2>
+    <div class="lead3">Each dot is a division: across, a factor from past elections or the census; up, its Remain share on Q10.</div>
+    <div class="chips" id="facChips"></div>
+    <svg id="scatter" viewBox="0 0 340 240" role="img" aria-label="Scatter chart of divisions"></svg>
+    <div class="scap" id="scap"></div>
+    <h3 class="h3">How strongly each factor lines up with Remain</h3>
+    <div class="lead3">From &minus;1 (higher factor, less Remain) to +1 (higher factor, more Remain). Tap a row to chart it.</div>
+    <div id="corrBars"></div>
+    <div class="insfoot">2025 federal results are estimated for each division from poll-by-poll results. Census figures are from 2021; unemployment was measured in May 2021, during COVID. These patterns describe divisions, not how any individual voted. Sources: Elections Alberta, Elections Canada, Statistics Canada via Alberta Office of Statistics and Information.</div>
+  </section>
+
+  <!-- 5. All questions for Alberta -->
   <section class="panel">
     <span class="tag">All questions</span>
     <h2 style="margin-top:4px">Alberta results</h2>
     <div class="rows" id="allRows" style="margin-top:6px"></div>
   </section>
 
-  <!-- 4. Counting details, closed by default -->
+  <!-- 6. Counting details, closed by default -->
   <section class="panel">
     <details class="count">
       <summary>Counting details</summary>
@@ -312,7 +366,138 @@ function render(){
   $("types").innerHTML = (cur.types||[]).map(t=>`<div>${esc(t.name)}<b class="num">${fmt(t.valid)}</b>${fmt(t.rep)} of ${fmt(t.tot)} reporting</div>`).join("");
   drawMaps();
   drawExplore();
+  renderInsights();
+  drawPatterns();
   tick();
+}
+
+/* ---------- context: 2023 provincial, by-elections, 2025 federal (estimated), 2021 Census ---------- */
+let CTX = null, FAC = "ucp23";
+const MINV = 300;          // a division needs this many Q10 votes counted to be used in patterns
+const MINREP = 25;         // % of voting places province-wide before pattern lines are shown
+const FACTORS = [
+  {k:"ucp23", ph:"UCP vote in 2023", lab:"UCP vote, 2023 provincial", short:"UCP 2023", g:c=>c.p23.ucp, u:"%"},
+  {k:"ndp23", ph:"NDP vote in 2023", lab:"NDP vote, 2023 provincial", short:"NDP 2023", g:c=>c.p23.ndp, u:"%"},
+  {k:"cpc25", ph:"Conservative vote in 2025", lab:"Conservative vote, 2025 federal (est.)", short:"CPC 2025", g:c=>c.f25.cpc, u:"%"},
+  {k:"lpc25", ph:"Liberal vote in 2025", lab:"Liberal vote, 2025 federal (est.)", short:"LPC 2025", g:c=>c.f25.lpc, u:"%"},
+  {k:"ppc25", ph:"PPC vote in 2025", lab:"PPC vote, 2025 federal (est.)", short:"PPC 2025", g:c=>c.f25.ppc, u:"%"},
+  {k:"deg", ph:"share with a university degree", lab:"University degree (ages 25 to 64)", short:"Degree", g:c=>c.c21.deg, u:"%"},
+  {k:"imm", ph:"share of immigrants", lab:"Immigrants", short:"Immigrants", g:c=>c.c21.imm, u:"%"},
+  {k:"rimm", ph:"share of recent immigrants", lab:"Recent immigrants (2016 to 2021)", short:"Recent immigrants", g:c=>c.c21.rimm, u:"%"},
+  {k:"vm", ph:"visible minority share", lab:"Visible minority", short:"Visible minority", g:c=>c.c21.vm, u:"%"},
+  {k:"ind", ph:"Indigenous share", lab:"Indigenous identity", short:"Indigenous", g:c=>c.c21.ind, u:"%"},
+  {k:"inc", ph:"household income", lab:"Median household income (2020)", short:"Income", g:c=>c.c21.inc, u:"$"},
+  {k:"age", ph:"average age", lab:"Average age", short:"Age", g:c=>c.c21.age, u:""},
+  {k:"unemp", ph:"unemployment rate", lab:"Unemployment rate (May 2021)", short:"Unemployment", g:c=>c.c21.unemp, u:"%"}
+];
+const facBy = k => FACTORS.find(f=>f.k===k);
+const fmtF = (f, x) => x==null ? "-" : f.u==="$" ? "$" + Math.round(x/1000) + "k" : f.u==="%" ? x.toFixed(1) + "%" : x.toFixed(1);
+function remainPoints(){
+  if (!cur || !cur.wards || !CTX) return [];
+  return Object.entries(cur.wards).map(([w,x])=>{ const v = x.v[9], t = v ? v[0]+v[1] : 0; return t >= MINV && CTX[w] ? {w, rem: v[0]/t*100, rep: x.t ? x.r/x.t*100 : 0} : null; }).filter(Boolean);
+}
+function pearson(xs, ys){
+  const n = xs.length; if (n < 3) return null;
+  const mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+  let sxy=0, sxx=0, syy=0; for (let i=0;i<n;i++){ const dx=xs[i]-mx, dy=ys[i]-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy; }
+  return sxx && syy ? sxy/Math.sqrt(sxx*syy) : null;
+}
+function corrFor(f, pts){ const xs=[], ys=[]; pts.forEach(p=>{ const x = f.g(CTX[p.w]); if (x!=null){ xs.push(x); ys.push(p.rem); } }); return {r: pearson(xs, ys), n: xs.length, xs, ys}; }
+const strength = r => { const a = Math.abs(r); return a >= .7 ? "strong" : a >= .4 ? "moderate" : a >= .2 ? "weak" : "little or no"; };
+
+/* ---------- What's happening ---------- */
+function renderInsights(){
+  const ul = $("insList"); if (!ul || !cur) return;
+  const s = cur.summary || {}, rp = s.tot ? s.rep/s.tot*100 : 0, items = [];
+  const w = cur.wards || {}, nm = k => (MAP && MAP.names[k]) || k;
+  // 1. where Remain and Referendum lead
+  let rem = 0, refL = [], withRes = 0;
+  for (const [k,x] of Object.entries(w)){ const p = pair(x.v[9]); if (!p) continue; withRes++; if (p.a >= p.b) rem++; else refL.push([k, p.b, x.t ? x.r/x.t*100 : 0]); }
+  if (withRes){
+    let t = `<b>${rp.toFixed(0)}%</b> of voting places have reported. Remain leads in <b>${rem} of ${withRes}</b> divisions with results`;
+    if (refL.length && refL.length <= 3) t += `; Referendum leads only in ${refL.map(([k,b,r])=>`${esc(nm(k))} (${b.toFixed(1)}%, ${r.toFixed(0)}% counted)`).join(", ")}`;
+    else if (refL.length) t += `; Referendum leads in ${refL.length}`;
+    items.push(t + ".");
+  }
+  // 2. closest of the other nine questions
+  let close = null;
+  for (let n=1;n<=9;n++){ const p = pair(abV(n)); if (p && (!close || Math.abs(p.a-p.b) < close.m)) close = {n, m:Math.abs(p.a-p.b), p}; }
+  if (close){ const L = labels(close.n); const dp = close.m < .2 ? 2 : 1; items.push(`Closest question: <b>Q${close.n} ${esc(SHORT[close.n])}</b>, ${L[0]} ${close.p.a.toFixed(dp)}% vs ${L[1]} ${close.p.b.toFixed(dp)}%.`); }
+  // 3. extremes among divisions with at least a quarter counted
+  const counted = remainPoints().filter(p=>p.rep >= 25).sort((a,b)=>b.rem-a.rem);
+  if (counted.length >= 5){
+    const hi = counted[0], lo = counted[counted.length-1];
+    items.push(`Highest Remain share: <b>${esc(nm(hi.w))}</b> ${hi.rem.toFixed(1)}%. Lowest: <b>${esc(nm(lo.w))}</b> ${lo.rem.toFixed(1)}% <span class="dim">(divisions at least 25% counted)</span>.`);
+  }
+  // 4 to 6. patterns, only once enough is counted
+  const pts = remainPoints();
+  if (CTX && rp >= MINREP && pts.length >= 60){
+    const party = ["ucp23","cpc25","ndp23","lpc25"].map(k=>({f:facBy(k), ...corrFor(facBy(k), pts)})).filter(x=>x.r!=null).sort((a,b)=>Math.abs(b.r)-Math.abs(a.r))[0];
+    if (party && Math.abs(party.r) >= .5)
+      items.push(`Remain is following past party lines: the higher a division's <b>${esc(party.f.ph)}</b>, the ${party.r < 0 ? "lower" : "higher"} its Remain share (${strength(party.r)} link, r = ${party.r.toFixed(2)}).`);
+    const strong = pts.filter(p=>CTX[p.w].p23.ucp - CTX[p.w].p23.ndp >= 20);
+    if (strong.length >= 5){ const lead = strong.filter(p=>p.rem >= 50).length;
+      items.push(`Remain leads in <b>${lead} of ${strong.length}</b> divisions the UCP won by 20 points or more in 2023.`); }
+    const inc = corrFor(facBy("inc"), pts).r, age = corrFor(facBy("age"), pts).r;
+    if (inc!=null && age!=null && Math.abs(inc) < .2 && Math.abs(age) < .2)
+      items.push(`Income and age barely matter: r = ${inc.toFixed(2)} for median household income and ${age.toFixed(2)} for average age.`);
+    const imm = corrFor(facBy("imm"), pts).r;
+    if (imm!=null && Math.abs(imm) >= .5) items.push(`Divisions with more immigrants lean ${imm > 0 ? "more" : "less"} to Remain (${strength(imm)} link, r = ${imm.toFixed(2)}).`);
+  }
+  ul.innerHTML = items.map(t=>`<li>${t}</li>`).join("") || `<li>Waiting for results.</li>`;
+  $("insFoot").textContent = rp >= MINREP ? `Patterns use ${pts.length} divisions with at least ${MINV} Q10 votes counted. They describe divisions, not how any individual voted.` : `Pattern findings appear once ${MINREP}% of voting places have reported.`;
+}
+
+/* ---------- Patterns: scatter + what tracks Remain ---------- */
+function drawPatterns(){
+  const svg = $("scatter"); if (!svg || !CTX || !cur) return;
+  const pts = remainPoints(), f = facBy(FAC), c = corrFor(f, pts);
+  $("facChips").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on", b.dataset.k===FAC));
+  const W = 340, H = 240, m = {l:36, r:10, t:10, b:30};
+  const xs = c.xs, ys = c.ys;
+  if (xs.length < 3){ svg.innerHTML = ""; $("scap").textContent = "Not enough divisions counted yet."; return; }
+  let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(40, ...ys), y1 = 100;
+  const px = (x1-x0)*.05 || 1; x0 -= px; x1 += px;
+  const X = v => m.l + (v-x0)/(x1-x0)*(W-m.l-m.r), Y = v => m.t + (y1-v)/(y1-y0)*(H-m.t-m.b);
+  const ticks = (a, b, n) => { const step = (b-a)/n; return Array.from({length:n+1}, (_,i)=>a+step*i); };
+  let g = "";
+  ticks(y0, y1, 4).forEach(v=>{ g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" class="grid"/><text x="${m.l-6}" y="${Y(v)+3}" class="ax" text-anchor="end">${v.toFixed(0)}%</text>`; });
+  ticks(x0+px, x1-px, 3).forEach(v=>{ g += `<text x="${X(v)}" y="${H-m.b+14}" class="ax" text-anchor="middle">${fmtF(f, v)}</text>`; });
+  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(50)}" y2="${Y(50)}" class="half"/><text x="${W-m.r}" y="${Y(50)-4}" class="ax" text-anchor="end">50%</text>`;
+  // least-squares trend line
+  const n = xs.length, mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+  let sxy=0, sxx=0; for (let i=0;i<n;i++){ sxy += (xs[i]-mx)*(ys[i]-my); sxx += (xs[i]-mx)**2; }
+  if (sxx){ const b = sxy/sxx, a = my - b*mx, ya = Math.max(y0, Math.min(y1, a+b*(x0+px))), yb = Math.max(y0, Math.min(y1, a+b*(x1-px)));
+    g += `<line x1="${X(x0+px)}" x2="${X(x1-px)}" y1="${Y(ya)}" y2="${Y(yb)}" class="trend"/>`; }
+  const ord = pts.map(p=>({...p, x:f.g(CTX[p.w])})).filter(p=>p.x!=null).sort((a,b)=>(a.w===S.d)-(b.w===S.d));
+  ord.forEach(p=>{ g += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.rem).toFixed(1)}" r="${p.w===S.d?7:4.5}" fill="${scaleColor(p.rem)}" class="dot${p.w===S.d?" sel":""}" data-w="${p.w}"><title>${esc(MAP.names[p.w]||"")}: ${fmtF(f,p.x)}, Remain ${p.rem.toFixed(1)}%</title></circle>`; });
+  g += `<text x="${(m.l+W-m.r)/2}" y="${H-2}" class="ax lab" text-anchor="middle">${esc(f.lab)}</text>`;
+  svg.innerHTML = g;
+  svg.querySelectorAll(".dot").forEach(d=>d.addEventListener("click", ()=>{ setState({view:"division", d:d.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
+  $("scap").innerHTML = c.r==null ? "" : `<b>${strength(c.r)[0].toUpperCase()+strength(c.r).slice(1)} link</b> (r = ${c.r.toFixed(2)}, ${c.n} divisions): ${Math.abs(c.r) < .2 ? `the ${esc(f.ph)} tells you little about the Remain share.` : `the higher the ${esc(f.ph)}, the ${c.r<0?"lower":"higher"} the Remain share tends to be.`} Tap a dot to open that division.`;
+  // correlation bars
+  const all = FACTORS.map(F=>({F, r: corrFor(F, pts).r})).filter(x=>x.r!=null).sort((a,b)=>Math.abs(b.r)-Math.abs(a.r));
+  $("corrBars").innerHTML = all.map(({F,r})=>`<button type="button" class="cb${F.k===FAC?" on":""}" data-k="${F.k}"><span class="cbl">${esc(F.short)}</span><span class="cbt"><span class="cbz"></span><i style="${r<0?`right:50%;width:${(-r*50).toFixed(1)}%`:`left:50%;width:${(r*50).toFixed(1)}%`}"></i></span><span class="cbv num">${r>0?"+":""}${r.toFixed(2)}</span></button>`).join("");
+  $("corrBars").querySelectorAll(".cb").forEach(b=>b.addEventListener("click", ()=>{ FAC = b.dataset.k; drawPatterns(); }));
+}
+
+/* ---------- About this division ---------- */
+function aboutHTML(w){
+  const c = CTX && CTX[w]; if (!c) return "";
+  const P = (a, b) => `${a} ${b==null?"-":b.toFixed(1)+"%"}`;
+  let by = "";
+  if (c.by){ const d = new Date(c.by.date+"T12:00:00").toLocaleDateString("en-CA",{month:"short", day:"numeric", year:"numeric"});
+    by = `<div class="ab2"><span>${d} by-election</span><b>${c.by.res.slice(0,2).map(([p,v])=>P(p,v)).join(" · ")}</b><small>${c.by.win} won</small></div>`; }
+  const k = c.c21;
+  return `<details class="about"><summary>About this division</summary>
+    <div class="ab2"><span>2023 provincial election</span><b>${P("UCP",c.p23.ucp)} · ${P("NDP",c.p23.ndp)}</b><small>${c.p23.win} won${c.by?", before the by-election":""}</small></div>
+    ${by}
+    <div class="ab2"><span>2025 federal election (estimated for this division)</span><b>${P("CPC",c.f25.cpc)} · ${P("LPC",c.f25.lpc)} · ${P("NDP",c.f25.ndp)}</b></div>
+    <div class="ab2"><span>People (2021 Census)</span><b>${fmt(k.pop)} people · average age ${k.age}</b><small>Median household income $${fmt(k.inc)}</small></div>
+    <div class="ab2"><span>Background</span><b>Immigrants ${k.imm.toFixed(1)}% · visible minority ${k.vm.toFixed(1)}%</b><small>Recent immigrants (2016 to 2021) ${k.rimm.toFixed(1)}% · Indigenous ${k.ind.toFixed(1)}%</small></div>
+    <div class="ab2"><span>Education and work</span><b>University degree ${k.deg.toFixed(1)}% · unemployment ${k.unemp.toFixed(1)}%</b><small>Degree for ages 25 to 64; unemployment from May 2021, during COVID</small></div>
+    <div class="ab2"><span>Biggest occupation and industry</span><b>${esc(k.occ)} (${k.occp.toFixed(0)}%)</b><small>${esc(k.indus)} (${k.indusp.toFixed(0)}%)</small></div>
+  </details>`;
 }
 
 /* ---------- maps ---------- */
@@ -377,12 +562,13 @@ function drawExplore(){
     $("callout").hidden = true; $("abRow").hidden = true;
     if (w){
       $("hint").hidden = true;
-      const c = $("score"), wasHidden = c.hidden;
+      const c = $("score"), wasHidden = c.hidden, aboutOpen = !!(c.querySelector("details.about") || {}).open;
       c.innerHTML = `<div class="dhd"><span class="badge num">${S.d}</span><div class="dn"><b>${esc(MAP.names[S.d]||"")}</b><span class="num">${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span><span class="thin"><span style="width:${w.t? (w.r/w.t*100).toFixed(1):0}%"></span></span></div><button type="button" class="x" aria-label="Clear selection">&times;</button></div>
         <div class="rows trunc" style="margin-top:6px">${QORDER.map(n=>rowHTML(n, w.v[n-1], {sub:"ref", ref:abV(n)})).join("")}</div>
-        <div class="legend" style="margin-top:8px"><span><i class="refk" aria-hidden="true"></i> marks the Alberta result</span></div>`;
+        <div class="legend" style="margin-top:8px"><span><i class="refk" aria-hidden="true"></i> marks the Alberta result</span></div>${aboutHTML(S.d)}`;
       c.hidden = false; if (wasHidden){ c.classList.remove("rise"); void c.offsetWidth; c.classList.add("rise"); }
       c.querySelector(".x").onclick = () => setState({d:null});
+      if (aboutOpen && c.querySelector("details.about")) c.querySelector("details.about").open = true;
       $("q").value = MAP.names[S.d] || "";
     } else { $("score").hidden = true; $("hint").hidden = false; $("hint").textContent = "Search above, or tap the map, to see how a division voted on all 10 questions."; }
   }
@@ -395,7 +581,7 @@ function setState(patch, {fly=true} = {}){
   Object.assign(S, patch);
   if (S.d !== prevD && S.d && fly && MAP) flyTo(S.d);
   if ("d" in patch && !S.d) $("q").value = "";
-  writeHash(); drawMaps(); drawExplore();
+  writeHash(); drawMaps(); drawExplore(); drawPatterns();
 }
 function writeHash(){
   const h = S.view === "division" ? `#view=division${S.d?`&d=${S.d}`:""}` : `#q=${S.q}${S.d?`&d=${S.d}`:""}`;
@@ -521,6 +707,10 @@ const BUILD = "__BUILD__";
 setInterval(async ()=>{ if (BUILD.startsWith("__")) return;
   try { const r = await fetch("version.txt?t="+Date.now(), {cache:"no-store"}); if (!r.ok) return; const v = (await r.text()).trim();
     if (v && v !== BUILD) location.replace(location.pathname + "?v=" + v + location.hash); } catch(e){} }, 60000);
+fetch("context.json").then(r=>r.json()).then(c=>{ CTX = c;
+  $("facChips").innerHTML = FACTORS.map(f=>`<button class="chip" type="button" data-k="${f.k}">${esc(f.short)}</button>`).join("");
+  $("facChips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click", ()=>{ FAC = b.dataset.k; drawPatterns(); }));
+  render(); }).catch(()=>{ $("patterns").hidden = true; });
 fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMaps(); render(); }).catch(()=>{ document.querySelectorAll(".maps,#heroMap").forEach(e=>e.style.display="none"); });
 </script>
 </body></html>
