@@ -18,6 +18,7 @@
   --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--text)}
 body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.35}
 .num{font-variant-numeric:tabular-nums}
@@ -62,7 +63,9 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .seg{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px}
 .seg button{border:none;background:none;padding:7px 12px;border-radius:9px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer}
 .seg button.on{background:var(--panel);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.chips{display:flex;gap:6px;overflow-x:auto;margin:12px -16px 0;padding:0 16px 4px;scrollbar-width:none}
+.ctlrow{height:56px;margin-top:12px}
+.ctlrow .search{margin-top:0}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:6px -16px 0;padding:0 16px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:.8rem;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
 .chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
@@ -82,9 +85,7 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .maps svg path{stroke:var(--panel);stroke-width:.6;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill-opacity .4s,fill .4s}
 .maps svg path.sel{stroke:var(--text);stroke-width:2.2}
 #mapAB{max-width:340px;margin:0 auto}
-#explore.dview .maps{grid-template-columns:minmax(0,260px) minmax(0,380px)}
-#explore.dview #mapAB{max-width:260px}
-@media (max-width:900px){#explore.dview .maps{grid-template-columns:1fr}}
+
 .insets{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .insets figure{margin:0;background:var(--panel2);border-radius:12px;padding:8px}
 .insets figcaption{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
@@ -178,6 +179,7 @@ details.count[open] summary::after{content:"\2212"}
       </div>
     </div>
 
+    <div class="ctlrow">
     <div id="paneQ">
       <div class="chips" id="chips"></div>
     </div>
@@ -188,8 +190,8 @@ details.count[open] summary::after{content:"\2212"}
         <ul id="sugg" role="listbox" hidden></ul>
       </div>
     </div>
+    </div>
 
-    <div class="score" id="score" hidden></div>
     <div class="maps">
       <div class="mapwrap">
         <svg id="mapAB" role="img" aria-label="Alberta map"></svg>
@@ -208,6 +210,7 @@ details.count[open] summary::after{content:"\2212"}
     <div class="ab rows" id="abRow" hidden></div>
     <div class="hint" id="hint"></div>
     <div class="callout" id="callout" hidden></div>
+    <div class="score" id="score" hidden></div>
   </section>
 
   <!-- 3. All questions for Alberta -->
@@ -326,9 +329,8 @@ function drawMaps(){
   });
   const L = labels(S.q);
   const sw = c => `<span class="sw">${SHADES.map(o=>`<i style="background:${c};opacity:${o}"></i>`).join("")}</span>`;
-  $("legend").innerHTML = locate ? "" :
+  $("legend").innerHTML = locate ? `<span><span class="sw"><i style="background:var(--locate)"></i></span>Selected division</span><span>Tap any division to see its results</span>` :
     `<span>${sw(colA(S.q))}${L[0]} leads</span><span>${sw(colB(S.q))}${L[1]} leads</span><span><span class="sw"><i style="background:var(--track)"></i></span>No results</span><span>Stronger colour = bigger margin</span>`;
-  $("legend").hidden = locate;
 }
 
 /* ---------- explore panes ---------- */
