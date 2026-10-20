@@ -25,7 +25,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Stamp page version
         run: |
-          v=$(git log -1 --format=%h -- index.html map.json)
+          # version = hash of the page itself, so open pages reload only when the page changes, not on every data update
+          v=$(cat index.html map.json | sha1sum | cut -c1-7)
           echo "$v" > version.txt
           sed -i "s/__BUILD__/$v/" index.html
       - uses: actions/configure-pages@v5
