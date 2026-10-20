@@ -75,6 +75,31 @@ h1{font-size:clamp(1.4rem,4vw,2rem);margin:4px 0 2px;letter-spacing:-.02em}
 .delta.up{color:var(--accent)}
 
 .tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* map */
+.mapcard{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.mapcard h2{margin:4px 0 2px;font-size:1.05rem;line-height:1.3}
+.mapcard .lead2{font-size:.85rem;color:var(--muted)}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:12px -16px 0;padding:0 16px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font:inherit;font-size:.8rem;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
+.chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.maps{display:grid;grid-template-columns:minmax(0,340px) minmax(0,520px);justify-content:center;gap:16px;margin-top:12px;align-items:start}
+.maps svg{width:100%;height:auto;display:block}
+.maps svg path{stroke:var(--panel);stroke-width:.6;cursor:pointer;transition:fill-opacity .4s}
+.maps svg path.sel{stroke:var(--text);stroke-width:1.6}
+#mapAB{max-width:340px;margin:0 auto}
+.insets{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.insets figure{margin:0;background:var(--panel2);border-radius:12px;padding:8px}
+.insets figcaption{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:.75rem;color:var(--muted);align-items:center}
+.legend .sw{display:inline-flex;gap:2px;margin-right:6px;vertical-align:middle}
+.legend .sw i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.info{margin-top:12px;background:var(--panel2);border-radius:12px;padding:10px 12px;font-size:.85rem;min-height:44px}
+.info b{font-weight:700}
+.info .row{display:flex;justify-content:space-between;gap:8px;margin-top:6px}
+.info .row small{display:block;color:var(--muted);font-size:.75rem}
+.info .row .b{text-align:right}
+@media (max-width:900px){.maps{grid-template-columns:1fr}}
 /* grid */
 .card.wide{grid-column:1/-1}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:16px}
@@ -113,6 +138,21 @@ details p{margin:6px 0 0;line-height:1.45}
     </div>
   </div>
   <div class="banner" id="banner"></div>
+  <section class="mapcard" id="mapcard">
+    <span class="tag">By electoral division</span>
+    <h2 id="mapTitle"></h2>
+    <div class="lead2 num" id="mapLead"></div>
+    <div class="chips" id="chips"></div>
+    <div class="maps">
+      <svg id="mapAB" role="img" aria-label="Alberta map"></svg>
+      <div class="insets">
+        <figure><figcaption>Calgary</figcaption><svg id="mapCAL" role="img" aria-label="Calgary map"></svg></figure>
+        <figure><figcaption>Edmonton</figcaption><svg id="mapEDM" role="img" aria-label="Edmonton map"></svg></figure>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="info" id="info">Tap a division for its results.</div>
+  </section>
 
   <section class="report" id="report">
     <div class="row">
@@ -237,6 +277,7 @@ function render(d){
     if (dv>0) flash(c);
   }
   tick();
+  drawMap();
 }
 
 /* poll data.json published by the GitHub Action */
@@ -262,6 +303,58 @@ async function poll(){
     if (!cur || d.fetchedAt !== cur.fetchedAt) render(d);
   } catch(e) {}
 }
+/* division map */
+let MAP = null, mapQ = 10, selWard = null;
+const SHADES = [.32, .55, .78, 1];
+function shade(m){ return m < 10 ? SHADES[0] : m < 25 ? SHADES[1] : m < 40 ? SHADES[2] : SHADES[3]; }
+function sides(n){ return n===10 ? ["Remain","Referendum"] : ["Yes","No"]; }
+function proIdx(n){ const f = PRO_CANADA[n]; return f==="a" ? 0 : 1; } // which side is the status quo
+function buildMap(){
+  const ns = "http://www.w3.org/2000/svg";
+  [["ab","mapAB"],["cal","mapCAL"],["edm","mapEDM"]].forEach(([k,id])=>{
+    const m = MAP[k], svg = $(id);
+    svg.setAttribute("viewBox", `0 0 ${m.w} ${m.h}`);
+    for (const [w,d] of Object.entries(m.d)){
+      const p = document.createElementNS(ns,"path");
+      p.setAttribute("d", d); p.dataset.w = w;
+      p.addEventListener("click", ()=>{ selWard = w; drawMap(); });
+      svg.appendChild(p);
+    }
+  });
+  const order = [10,1,2,3,4,5,6,7,8,9];
+  $("chips").innerHTML = order.map(n=>`<button class="chip" type="button" data-q="${n}">Q${n}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{ mapQ = +b.dataset.q; drawMap(); }));
+}
+function drawMap(){
+  if (!MAP || !cur || !cur.wards) return;
+  const n = mapQ, [A,B] = sides(n), pi = proIdx(n);
+  const lab = [A,B];
+  $("mapTitle").textContent = (n===10 ? "Q10 " : "Q"+n+" ") + SHORT[n];
+  $("chips").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on", +b.dataset.q===n));
+  let lead = [0,0], none = 0;
+  document.querySelectorAll(".maps path").forEach(p=>{
+    const w = cur.wards[p.dataset.w], v = w && w.v[n-1];
+    const tot = v ? v[0]+v[1] : 0;
+    p.classList.toggle("sel", p.dataset.w===selWard);
+    if (!tot){ p.style.fill = "var(--track)"; p.style.fillOpacity = 1; return; }
+    const win = v[0]>=v[1] ? 0 : 1, m = Math.abs(v[0]-v[1])/tot*100;
+    p.style.fill = win===pi ? "var(--pro)" : "var(--anti)";
+    p.style.fillOpacity = shade(m);
+  });
+  for (const w of Object.values(cur.wards)){ const v = w.v[n-1]; if (!v || !(v[0]+v[1])) none++; else lead[v[0]>=v[1]?0:1]++; }
+  const total = Object.keys(cur.wards).length;
+  $("mapLead").textContent = `${lab[0]} leads in ${lead[0]}, ${lab[1]} in ${lead[1]}` + (none ? `, no results in ${none}` : "") + ` of ${total} divisions`;
+  const sw = c => `<span class="sw">${SHADES.map(o=>`<i style="background:var(${c});opacity:${o}"></i>`).join("")}</span>`;
+  $("legend").innerHTML = `<span>${sw(pi===0?"--pro":"--anti")}${lab[0]} leads</span><span>${sw(pi===1?"--pro":"--anti")}${lab[1]} leads</span><span><span class="sw"><i style="background:var(--track)"></i></span>No results</span><span>Stronger colour = bigger margin</span>`;
+  const info = $("info");
+  if (selWard && cur.wards[selWard]){
+    const w = cur.wards[selWard], v = w.v[n-1] || [0,0], t = v[0]+v[1];
+    const pa = t ? (v[0]/t*100).toFixed(1) : "0.0", pb = t ? (v[1]/t*100).toFixed(1) : "0.0";
+    info.innerHTML = `<b></b><div class="row num"><span style="color:var(${pi===0?"--pro":"--anti"})"><b>${lab[0]} ${pa}%</b><small>${fmt(v[0])} votes</small></span><span class="b" style="color:var(${pi===1?"--pro":"--anti"})"><b>${lab[1]} ${pb}%</b><small>${fmt(v[1])} votes</small></span></div><div class="row num" style="color:var(--muted);font-size:.78rem"><span>${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span></div>`;
+    info.querySelector("b").textContent = selWard + " " + (MAP.names[selWard] || "");
+  } else info.textContent = "Tap a division for its results.";
+}
+fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMap(); drawMap(); }).catch(()=>{ $("mapcard").style.display = "none"; });
 buildGrid();
 setInterval(tick, 250);
 poll();
