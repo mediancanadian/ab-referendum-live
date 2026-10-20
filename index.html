@@ -86,11 +86,49 @@ h1{font-size:clamp(1.4rem,4vw,2rem);margin:4px 0 2px;letter-spacing:-.02em}
 .maps{display:grid;grid-template-columns:minmax(0,340px) minmax(0,520px);justify-content:center;gap:16px;margin-top:12px;align-items:start}
 .maps svg{width:100%;height:auto;display:block}
 .maps svg path{stroke:var(--panel);stroke-width:.6;cursor:pointer;transition:fill-opacity .4s}
-.maps svg path.sel{stroke:var(--text);stroke-width:1.6}
 #mapAB{max-width:340px;margin:0 auto}
 .insets{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .insets figure{margin:0;background:var(--panel2);border-radius:12px;padding:8px}
 .insets figcaption{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.search{position:relative;margin-top:12px}
+.search svg{position:absolute;left:12px;top:50%;width:16px;height:16px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search input{width:100%;font:inherit;font-size:16px;padding:10px 12px 10px 36px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);-webkit-appearance:none;appearance:none}
+.search input:focus{outline:none;border-color:var(--accent)}
+.search ul{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);margin:0;padding:4px;list-style:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.search li{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:.9rem}
+.search li .num{color:var(--muted);font-size:.78rem;width:20px}
+.search li.on,.search li:hover{background:var(--panel2)}
+.mapwrap{position:relative}
+.maps svg{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.maps svg.zoomed{touch-action:none;cursor:grab}
+.maps svg path{vector-effect:non-scaling-stroke}
+.maps.hasSel svg path:not(.sel){filter:saturate(.85)}
+.maps svg path.sel{stroke:var(--text);stroke-width:2.2}
+.zoomctl{position:absolute;right:6px;top:6px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.zoomctl button{min-width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:1.1rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.zoomctl .reset{font-size:.78rem;padding:0 10px}
+.hint{margin-top:12px;font-size:.8rem;color:var(--muted)}
+.dcard{margin-top:12px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.dcard.in{animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dhd{display:flex;gap:10px;align-items:flex-start}
+.dhd .dn{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.dhd .dn b{font-size:1rem}
+.dhd .dn span{font-size:.75rem;color:var(--muted)}
+.prog.sm{display:block;height:4px;background:var(--track);border-radius:3px;overflow:hidden;margin-top:2px}
+.prog.sm span{display:block;height:100%;background:var(--accent);border-radius:3px}
+.dhd .x{border:none;background:none;color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer;padding:0 4px}
+.qrows{display:flex;flex-direction:column;gap:2px;margin-top:10px}
+.qrow{display:grid;grid-template-columns:32px minmax(0,1fr) auto;grid-template-areas:"n t v" "n b b";column-gap:8px;row-gap:5px;align-items:center;text-align:left;border:none;background:none;color:var(--text);font:inherit;padding:8px 6px;border-radius:10px;cursor:pointer}
+.qrow.on{background:var(--panel)}
+.qrow .qn2{grid-area:n;align-self:start;font-size:.72rem;font-weight:700;color:var(--muted);padding-top:2px}
+.qrow .qt{grid-area:t;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qrow .qv{grid-area:v;font-size:.8rem}
+.qrow .qv.none{color:var(--muted)}
+.qrow .qbar{grid-area:b;position:relative;display:flex;height:6px;border-radius:4px;overflow:hidden;background:var(--track)}
+.qrow .qbar i{display:block;height:100%;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.qrow .qbar em{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--panel)}
+.qrow .qd{grid-column:2/4;display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:.75rem;color:var(--muted);align-items:center}
 .legend .sw{display:inline-flex;gap:2px;margin-right:6px;vertical-align:middle}
 .legend .sw i{width:12px;height:12px;border-radius:2px;display:inline-block}
@@ -142,16 +180,29 @@ details p{margin:6px 0 0;line-height:1.45}
     <span class="tag">By electoral division</span>
     <h2 id="mapTitle"></h2>
     <div class="lead2 num" id="mapLead"></div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search a division or number" autocomplete="off" aria-label="Search electoral divisions">
+      <ul id="sugg" role="listbox" hidden></ul>
+    </div>
     <div class="chips" id="chips"></div>
     <div class="maps">
-      <svg id="mapAB" role="img" aria-label="Alberta map"></svg>
+      <div class="mapwrap">
+        <svg id="mapAB" role="img" aria-label="Alberta map"></svg>
+        <div class="zoomctl">
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zout" aria-label="Zoom out">&minus;</button>
+          <button type="button" id="zreset" class="reset" hidden>Reset</button>
+        </div>
+      </div>
       <div class="insets">
         <figure><figcaption>Calgary</figcaption><svg id="mapCAL" role="img" aria-label="Calgary map"></svg></figure>
         <figure><figcaption>Edmonton</figcaption><svg id="mapEDM" role="img" aria-label="Edmonton map"></svg></figure>
       </div>
     </div>
     <div class="legend" id="legend"></div>
-    <div class="info" id="info">Tap a division for its results.</div>
+    <div class="hint" id="hint">Tap a division, or search, to see how it voted. Pinch or use + to zoom.</div>
+    <div class="dcard" id="dcard" hidden></div>
   </section>
 
   <section class="report" id="report">
@@ -303,57 +354,239 @@ async function poll(){
     if (!cur || d.fetchedAt !== cur.fetchedAt) render(d);
   } catch(e) {}
 }
-/* division map */
+/* division map: search, zoom, pan, scorecard */
 let MAP = null, mapQ = 10, selWard = null;
 const SHADES = [.32, .55, .78, 1];
+const QORDER = [10,1,2,3,4,5,6,7,8,9];
+const VIEWS = {};
 function shade(m){ return m < 10 ? SHADES[0] : m < 25 ? SHADES[1] : m < 40 ? SHADES[2] : SHADES[3]; }
 function sides(n){ return n===10 ? ["Remain","Referendum"] : ["Yes","No"]; }
-function proIdx(n){ const f = PRO_CANADA[n]; return f==="a" ? 0 : 1; } // which side is the status quo
+function proIdx(n){ return PRO_CANADA[n]==="a" ? 0 : 1; }
+function wardName(w){ return (MAP && MAP.names[w]) || ""; }
+
+/* ---------- zoom / pan controller (viewBox based) ---------- */
+function makeView(svg, W, H, onChange){
+  const v = {svg, W, H, x:0, y:0, w:W, h:H, anim:0};
+  const MIN = W/14;
+  function clamp(){
+    v.w = Math.min(W, Math.max(MIN, v.w)); v.h = v.w*H/W;
+    v.x = Math.min(W - v.w*0.5, Math.max(-v.w*0.5, v.x));
+    v.y = Math.min(H - v.h*0.5, Math.max(-v.h*0.5, v.y));
+    if (v.w >= W - 0.01){ v.x = 0; v.y = 0; }
+  }
+  function apply(){
+    clamp();
+    svg.setAttribute("viewBox", `${v.x.toFixed(2)} ${v.y.toFixed(2)} ${v.w.toFixed(2)} ${v.h.toFixed(2)}`);
+    const zoomed = v.w < W - 0.01;
+    svg.classList.toggle("zoomed", zoomed);
+    onChange && onChange(zoomed);
+  }
+  function toSvg(cx, cy){
+    const r = svg.getBoundingClientRect();
+    return [v.x + (cx - r.left)/r.width*v.w, v.y + (cy - r.top)/r.height*v.h];
+  }
+  v.zoomAt = (f, px, py) => { const nw = Math.min(W, Math.max(MIN, v.w/f)), k = nw/v.w; v.x = px - (px - v.x)*k; v.y = py - (py - v.y)*k; v.w = nw; apply(); };
+  v.zoomCenter = f => v.animateTo(...(()=>{ const nw = Math.min(W, Math.max(MIN, v.w/f)); const cx = v.x+v.w/2, cy = v.y+v.h/2; return [cx-nw/2, cy-nw*H/W/2, nw]; })());
+  v.animateTo = (tx, ty, tw) => {
+    cancelAnimationFrame(v.anim);
+    const sx=v.x, sy=v.y, sw=v.w, t0=performance.now(), d = matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420;
+    const step = t => { const k = d ? Math.min(1,(t-t0)/d) : 1, e = 1-Math.pow(1-k,3);
+      v.x = sx+(tx-sx)*e; v.y = sy+(ty-sy)*e; v.w = sw+(tw-sw)*e; apply(); if (k<1) v.anim = requestAnimationFrame(step); };
+    v.anim = requestAnimationFrame(step);
+  };
+  v.fit = (bb) => { // zoom to a bounding box with padding
+    const pad = 2.4, aspect = W/H;
+    let tw = Math.max(bb.width*pad, bb.height*pad*aspect, MIN*1.2); tw = Math.min(W, tw);
+    const th = tw/aspect;
+    v.animateTo(bb.x + bb.width/2 - tw/2, bb.y + bb.height/2 - th/2, tw);
+  };
+  v.reset = () => v.animateTo(0, 0, W);
+  v.isZoomed = () => v.w < W - 0.01;
+
+  // pointer gestures
+  const pts = new Map(); let start = null, moved = false, lastTap = 0, pinch = null;
+  svg.addEventListener("pointerdown", e => {
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pts.size === 1){ start = {cx:e.clientX, cy:e.clientY, x:v.x, y:v.y, target:e.target}; moved = false; }
+    if (pts.size === 2){ const [a,b] = [...pts.values()]; pinch = {d: Math.hypot(a[0]-b[0], a[1]-b[1]), w: v.w, c: toSvg((a[0]+b[0])/2, (a[1]+b[1])/2)}; moved = true; }
+    if (v.isZoomed() || pts.size === 2) svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener("pointermove", e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pts.size === 2 && pinch){
+      const [a,b] = [...pts.values()], d = Math.hypot(a[0]-b[0], a[1]-b[1]);
+      const nw = pinch.w * pinch.d / d, k = nw / v.w;
+      v.x = pinch.c[0] - (pinch.c[0]-v.x)*k; v.y = pinch.c[1] - (pinch.c[1]-v.y)*k; v.w = nw; apply();
+      e.preventDefault(); return;
+    }
+    if (pts.size === 1 && start){
+      const dx = e.clientX - start.cx, dy = e.clientY - start.cy;
+      if (Math.hypot(dx,dy) > 6) moved = true;
+      if (moved && v.isZoomed()){
+        const r = svg.getBoundingClientRect();
+        v.x = start.x - dx/r.width*v.w; v.y = start.y - dy/r.height*v.h; apply(); e.preventDefault();
+      }
+    }
+  });
+  const end = e => {
+    const wasPinch = pts.size === 2;
+    pts.delete(e.pointerId);
+    if (pts.size < 2) pinch = null;
+    if (wasPinch){ start = null; return; }
+    if (pts.size === 0 && start && !moved){
+      const now = Date.now();
+      if (now - lastTap < 300){ const [px,py] = toSvg(e.clientX, e.clientY); v.zoomAt(2, px, py); lastTap = 0; }
+      else { lastTap = now; const w = start.target && start.target.dataset && start.target.dataset.w; if (w) selectWard(w, svg.id); }
+    }
+    if (pts.size === 0) start = null;
+  };
+  svg.addEventListener("pointerup", end);
+  svg.addEventListener("pointercancel", e => { pts.delete(e.pointerId); pinch = null; start = null; });
+  svg.addEventListener("wheel", e => {
+    if (!(e.ctrlKey || e.metaKey || v.isZoomed())) return; // let the page scroll unless zoomed or pinching on a trackpad
+    e.preventDefault();
+    const [px,py] = toSvg(e.clientX, e.clientY);
+    v.zoomAt(Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.002)), px, py);
+  }, {passive:false});
+  svg.addEventListener("dblclick", e => e.preventDefault());
+  apply();
+  return v;
+}
+
+/* ---------- build ---------- */
 function buildMap(){
   const ns = "http://www.w3.org/2000/svg";
   [["ab","mapAB"],["cal","mapCAL"],["edm","mapEDM"]].forEach(([k,id])=>{
     const m = MAP[k], svg = $(id);
-    svg.setAttribute("viewBox", `0 0 ${m.w} ${m.h}`);
+    const g = document.createElementNS(ns,"g");
     for (const [w,d] of Object.entries(m.d)){
       const p = document.createElementNS(ns,"path");
       p.setAttribute("d", d); p.dataset.w = w;
-      p.addEventListener("click", ()=>{ selWard = w; drawMap(); });
-      svg.appendChild(p);
+      const t = document.createElementNS(ns,"title"); t.textContent = w + " " + wardName(w); p.appendChild(t);
+      g.appendChild(p);
     }
+    svg.appendChild(g);
+    VIEWS[id] = makeView(svg, m.w, m.h, id==="mapAB" ? updateReset : null);
   });
-  const order = [10,1,2,3,4,5,6,7,8,9];
-  $("chips").innerHTML = order.map(n=>`<button class="chip" type="button" data-q="${n}">Q${n}</button>`).join("");
-  $("chips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{ mapQ = +b.dataset.q; drawMap(); }));
+  $("chips").innerHTML = QORDER.map(n=>`<button class="chip" type="button" data-q="${n}">Q${n}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>setQ(+b.dataset.q)));
+  $("zin").addEventListener("click", ()=>VIEWS.mapAB.zoomCenter(1.8));
+  $("zout").addEventListener("click", ()=>VIEWS.mapAB.zoomCenter(1/1.8));
+  $("zreset").addEventListener("click", ()=>{ selWard = null; $("q").value = ""; Object.values(VIEWS).forEach(v=>v.reset()); writeHash(); drawMap(); });
+  setupSearch();
+  readHash(true);
 }
-function drawMap(){
+function updateReset(){ $("zreset").hidden = !(selWard || (VIEWS.mapAB && VIEWS.mapAB.isZoomed())); }
+
+/* ---------- selection ---------- */
+function selectWard(w, fromId){
+  selWard = (selWard === w && fromId) ? null : w;   // tapping the selected division again clears it
+  if (selWard){
+    const n = +selWard;
+    const pAB = document.querySelector(`#mapAB path[data-w="${selWard}"]`);
+    if (pAB && fromId !== "mapAB") VIEWS.mapAB.fit(pAB.getBBox());
+    if (pAB && fromId === "mapAB" && !(n<=46)) VIEWS.mapAB.fit(pAB.getBBox());
+    const inset = n<=26 ? "mapCAL" : n<=46 ? "mapEDM" : null;
+    if (inset){ const pi = document.querySelector(`#${inset} path[data-w="${selWard}"]`); if (pi && VIEWS[inset].isZoomed()) VIEWS[inset].fit(pi.getBBox()); }
+  }
+  if (fromId) $("q").value = "";
+  writeHash(); drawMap(true);
+}
+function setQ(n){ mapQ = n; writeHash(); drawMap(); }
+
+/* ---------- search ---------- */
+function setupSearch(){
+  const q = $("q"), ul = $("sugg");
+  const all = Object.keys(MAP.names).sort().map(w=>({w, name: MAP.names[w], key: (w+" "+MAP.names[w]).toLowerCase()}));
+  let hits = [], active = 0;
+  const show = () => {
+    const s = q.value.trim().toLowerCase();
+    hits = !s ? [] : all.filter(x => x.key.includes(s) || x.w === s.padStart(2,"0")).slice(0,7);
+    active = 0;
+    ul.innerHTML = hits.map((x,i)=>`<li role="option" data-w="${x.w}" class="${i===0?"on":""}"><span class="num">${x.w}</span></li>`).join("");
+    ul.querySelectorAll("li").forEach((li,i)=>{ li.appendChild(document.createTextNode(hits[i].name)); li.addEventListener("pointerdown", e=>{ e.preventDefault(); pick(hits[i]); }); });
+    ul.hidden = !hits.length;
+  };
+  const pick = x => { q.value = x.name; ul.hidden = true; q.blur(); selectWard(x.w, null); $("mapcard").scrollIntoView({behavior:"smooth", block:"start"}); };
+  q.addEventListener("input", show);
+  q.addEventListener("focus", show);
+  q.addEventListener("blur", ()=>setTimeout(()=>ul.hidden=true, 120));
+  q.addEventListener("keydown", e=>{
+    if (!hits.length) return;
+    if (e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); active = (active + (e.key==="ArrowDown"?1:-1) + hits.length) % hits.length; ul.querySelectorAll("li").forEach((li,i)=>li.classList.toggle("on", i===active)); }
+    if (e.key==="Enter"){ e.preventDefault(); pick(hits[active]); }
+    if (e.key==="Escape"){ ul.hidden = true; }
+  });
+}
+
+/* ---------- shareable link: #q=10&d=72 ---------- */
+function writeHash(){ const h = `#q=${mapQ}` + (selWard ? `&d=${selWard}` : ""); if (location.hash !== h) history.replaceState(null, "", h); }
+function readHash(initial){
+  const p = new URLSearchParams(location.hash.slice(1));
+  const q = +p.get("q"); if (QORDER.includes(q)) mapQ = q;
+  const d = (p.get("d") || "").padStart(2,"0");
+  if (MAP.names[d]) { if (d !== selWard) setTimeout(()=>selectWard(d, null), initial ? 300 : 0); }
+  else if (!initial && selWard) { selWard = null; }
+}
+
+/* ---------- draw ---------- */
+function pctPair(v){ const t = v ? v[0]+v[1] : 0; return t ? [v[0]/t*100, v[1]/t*100, t] : null; }
+function drawMap(openCard){
   if (!MAP || !cur || !cur.wards) return;
-  const n = mapQ, [A,B] = sides(n), pi = proIdx(n);
-  const lab = [A,B];
-  $("mapTitle").textContent = (n===10 ? "Q10 " : "Q"+n+" ") + SHORT[n];
+  const n = mapQ, lab = sides(n), pi = proIdx(n);
+  $("mapTitle").textContent = "Q" + n + " " + SHORT[n];
   $("chips").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on", +b.dataset.q===n));
   let lead = [0,0], none = 0;
   document.querySelectorAll(".maps path").forEach(p=>{
-    const w = cur.wards[p.dataset.w], v = w && w.v[n-1];
-    const tot = v ? v[0]+v[1] : 0;
+    const w = cur.wards[p.dataset.w], pr = pctPair(w && w.v[n-1]);
     p.classList.toggle("sel", p.dataset.w===selWard);
-    if (!tot){ p.style.fill = "var(--track)"; p.style.fillOpacity = 1; return; }
-    const win = v[0]>=v[1] ? 0 : 1, m = Math.abs(v[0]-v[1])/tot*100;
+    if (p.dataset.w===selWard) p.parentNode.appendChild(p); // draw outline on top
+    if (!pr){ p.style.fill = "var(--track)"; p.style.fillOpacity = 1; return; }
+    const win = pr[0]>=pr[1] ? 0 : 1;
     p.style.fill = win===pi ? "var(--pro)" : "var(--anti)";
-    p.style.fillOpacity = shade(m);
+    p.style.fillOpacity = shade(Math.abs(pr[0]-pr[1]));
   });
-  for (const w of Object.values(cur.wards)){ const v = w.v[n-1]; if (!v || !(v[0]+v[1])) none++; else lead[v[0]>=v[1]?0:1]++; }
+  document.querySelectorAll(".maps").forEach(m=>m.classList.toggle("hasSel", !!selWard));
+  for (const w of Object.values(cur.wards)){ const pr = pctPair(w.v[n-1]); if (!pr) none++; else lead[pr[0]>=pr[1]?0:1]++; }
   const total = Object.keys(cur.wards).length;
   $("mapLead").textContent = `${lab[0]} leads in ${lead[0]}, ${lab[1]} in ${lead[1]}` + (none ? `, no results in ${none}` : "") + ` of ${total} divisions`;
   const sw = c => `<span class="sw">${SHADES.map(o=>`<i style="background:var(${c});opacity:${o}"></i>`).join("")}</span>`;
   $("legend").innerHTML = `<span>${sw(pi===0?"--pro":"--anti")}${lab[0]} leads</span><span>${sw(pi===1?"--pro":"--anti")}${lab[1]} leads</span><span><span class="sw"><i style="background:var(--track)"></i></span>No results</span><span>Stronger colour = bigger margin</span>`;
-  const info = $("info");
-  if (selWard && cur.wards[selWard]){
-    const w = cur.wards[selWard], v = w.v[n-1] || [0,0], t = v[0]+v[1];
-    const pa = t ? (v[0]/t*100).toFixed(1) : "0.0", pb = t ? (v[1]/t*100).toFixed(1) : "0.0";
-    info.innerHTML = `<b></b><div class="row num"><span style="color:var(${pi===0?"--pro":"--anti"})"><b>${lab[0]} ${pa}%</b><small>${fmt(v[0])} votes</small></span><span class="b" style="color:var(${pi===1?"--pro":"--anti"})"><b>${lab[1]} ${pb}%</b><small>${fmt(v[1])} votes</small></span></div><div class="row num" style="color:var(--muted);font-size:.78rem"><span>${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span></div>`;
-    info.querySelector("b").textContent = selWard + " " + (MAP.names[selWard] || "");
-  } else info.textContent = "Tap a division for its results.";
+  drawCard(openCard);
+  updateReset();
 }
+
+function drawCard(open){
+  const c = $("dcard");
+  if (!selWard || !cur.wards[selWard]){ c.hidden = true; $("hint").hidden = false; return; }
+  const w = cur.wards[selWard], rp = w.t ? w.r/w.t*100 : 0;
+  $("hint").hidden = true;
+  const rows = QORDER.map(n=>{
+    const pr = pctPair(w.v[n-1]), lab = sides(n), pi = proIdx(n);
+    const ca = pi===0 ? "--pro" : "--anti", cb = pi===1 ? "--pro" : "--anti";
+    if (!pr) return `<button type="button" class="qrow${n===mapQ?" on":""}" data-q="${n}"><span class="qn2">Q${n}</span><span class="qt">${SHORT[n]}</span><span class="qv none">No results yet</span><span class="qbar"><i style="width:100%;background:var(--track)"></i></span></button>`;
+    const win = pr[0]>=pr[1] ? 0 : 1;
+    const big = win===0 ? `<b style="color:var(${ca})">${lab[0]} ${pr[0].toFixed(1)}%</b>` : `<b style="color:var(${cb})">${lab[1]} ${pr[1].toFixed(1)}%</b>`;
+    return `<button type="button" class="qrow${n===mapQ?" on":""}" data-q="${n}">
+      <span class="qn2">Q${n}</span><span class="qt">${SHORT[n]}</span><span class="qv num">${big}</span>
+      <span class="qbar"><i style="width:${pr[0].toFixed(2)}%;background:var(${ca})"></i><i style="width:${pr[1].toFixed(2)}%;background:var(${cb})"></i><em></em></span>
+      ${n===mapQ ? `<span class="qd num"><span>${lab[0]} ${pr[0].toFixed(1)}% · ${fmt(w.v[n-1][0])}</span><span>${lab[1]} ${pr[1].toFixed(1)}% · ${fmt(w.v[n-1][1])}</span></span>` : ""}
+    </button>`;
+  }).join("");
+  const firstOpen = c.hidden;
+  c.innerHTML = `<div class="dhd"><span class="qn">${selWard}</span><div class="dn"><b></b><span class="num">${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span><span class="prog sm"><span style="width:${rp.toFixed(1)}%"></span></span></div><button type="button" class="x" aria-label="Close">&times;</button></div><div class="qrows">${rows}</div>`;
+  c.querySelector(".dn b").textContent = wardName(selWard);
+  c.querySelector(".x").addEventListener("click", ()=>{ selWard = null; writeHash(); drawMap(); });
+  c.querySelectorAll(".qrow").forEach(b=>b.addEventListener("click", ()=>setQ(+b.dataset.q)));
+  c.hidden = false;
+  if (firstOpen){ c.classList.remove("in"); void c.offsetWidth; c.classList.add("in"); }
+  if (open && firstOpen && matchMedia("(max-width:900px)").matches){
+    const r = c.getBoundingClientRect();
+    if (r.top > innerHeight - 120) setTimeout(()=>c.scrollIntoView({behavior:"smooth", block:"nearest"}), 450);
+  }
+}
+window.addEventListener("hashchange", ()=>{ if (MAP){ readHash(false); drawMap(); } });
 fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMap(); drawMap(); }).catch(()=>{ $("mapcard").style.display = "none"; });
 buildGrid();
 setInterval(tick, 250);
