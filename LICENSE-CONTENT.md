@@ -1,11 +1,11 @@
 # Content licence
 
-The text, charts, maps and images made for this project by Canada Through Numbers
+The text, charts, maps and images made for this project by The Median Canadian
 are licensed under the Creative Commons Attribution 4.0 International licence (CC BY 4.0):
 https://creativecommons.org/licenses/by/4.0/
 
 You can share and adapt them, including commercially, as long as you give credit:
-"Canada Through Numbers (CC BY 4.0)" with a link to the source page.
+"The Median Canadian (CC BY 4.0)" with a link to the source page.
 
 The code in this repository is licensed separately under the MIT licence (see LICENSE).
 
