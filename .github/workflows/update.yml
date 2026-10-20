@@ -1,0 +1,49 @@
+name: Update results
+
+# One long run fetches every minute for up to ~5h50m.
+# The 5-minute schedule only restarts it if it has stopped (concurrency keeps one at a time).
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: updater
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch every minute and publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "results-bot"
+          git config user.email "results-bot@users.noreply.github.com"
+          end=$(( $(date +%s) + 350*60 ))
+          last_pub=0
+          while [ "$(date +%s)" -lt "$end" ]; do
+            start=$(date +%s)
+            if res=$(python3 scripts/fetch.py data.json 2>&1); then
+              echo "$(date -u +%H:%M:%S) $res"
+              now=$(date +%s)
+              # publish when numbers change, and at least every 4 minutes so "checked" stays fresh
+              if [[ "$res" == CHANGED* ]] || [ $((now-last_pub)) -ge 240 ]; then
+                git add data.json
+                git commit -q -m "Results: ${res#* }" || true
+                git pull -q --rebase && git push -q && gh workflow run pages.yml --ref main && last_pub=$now
+              else
+                git checkout -q -- data.json
+              fi
+            else
+              echo "$(date -u +%H:%M:%S) fetch failed: $(echo "$res" | tail -1)"
+            fi
+            sleep $(( 60 - ($(date +%s) - start) > 0 ? 60 - ($(date +%s) - start) : 1 ))
+          done
