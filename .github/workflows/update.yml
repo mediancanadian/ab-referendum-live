@@ -27,20 +27,24 @@ jobs:
         run: |
           git config user.name "results-bot"
           git config user.email "results-bot@users.noreply.github.com"
+          cp data.json /tmp/data.json 2>/dev/null || true
           end=$(( $(date +%s) + 350*60 ))
           last_pub=0
           while [ "$(date +%s)" -lt "$end" ]; do
             start=$(date +%s)
-            if res=$(python3 scripts/fetch.py data.json 2>&1); then
+            if res=$(python3 scripts/fetch.py /tmp/data.json 2>&1); then
               echo "$(date -u +%H:%M:%S) $res"
               now=$(date +%s)
               # publish when numbers change, and at least every 3 minutes so "checked" stays fresh
               if [[ "$res" == CHANGED* ]] || [ $((now-last_pub)) -ge 180 ]; then
-                git add data.json
-                git commit -q -m "Results: ${res#* }" || true
-                git pull -q --rebase && git push -q && gh workflow run pages.yml --ref main && last_pub=$now
-              else
-                git checkout -q -- data.json
+                # data.json is rewritten in full each time, so start from the latest main instead of merging
+                git rebase --abort 2>/dev/null || true
+                if git fetch -q origin main && git reset -q --hard origin/main; then
+                  cp /tmp/data.json data.json
+                  git add data.json
+                  git commit -q -m "Results: ${res#* }" || true
+                  git push -q origin HEAD:main && gh workflow run pages.yml --ref main && last_pub=$now
+                fi
               fi
             else
               echo "$(date -u +%H:%M:%S) fetch failed: $(echo "$res" | tail -1)"
