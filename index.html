@@ -855,7 +855,7 @@ function renderInsights(){
     p: `The last four polls before the vote put Remain at ${avg.toFixed(0)}% among decided voters. The count has it at ${res10.a.toFixed(0)}%.`});
 
   // conclusion
-  const hEnd = remWins ? (minorityInUcp ? "Separation is a minority position, including in UCP seats" : "Separation is a minority position") : "Separation has majority support";
+  const hEnd = remWins ? (minorityInUcp ? "Separation is a minority issue, including within UCP" : "Separation is a minority issue") : "Separation has majority support";
   const pEnd = remWins
     ? `Albertans voted to stay${rw ? " by a wide margin" : ""}${minorityInUcp ? ", and the UCP's own seats voted the same way" : ""}. A UCP that took up separation would be campaigning for the separation side, ${shareWords(res10.b)} of the vote.`
     : `Most Albertans who voted chose to start the separation process.`;
