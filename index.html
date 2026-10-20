@@ -538,7 +538,7 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
   <section class="panel" id="patterns">
     <span class="tag">Patterns</span>
     <h2 style="margin-top:4px">The separation vote sits far below the UCP's 2023 vote</h2>
-    <div class="lead3">Each bar counts the divisions in a 5-point band of vote share. Left: the UCP's share in 2023. Right: the separation share now.</div>
+    <div class="lead3">Alberta's divisions, grouped by the UCP's share of the vote in 2023 and by the separation share in 2026.</div>
     <div class="seg small" id="bfTabs" style="margin-top:10px">
       <button type="button" data-k="all" class="on">All 87 divisions</button><button type="button" data-k="ucp">UCP seats only</button>
     </div>
@@ -551,7 +551,7 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
     <span class="tag">Seat forecast</span>
     <h2 class="scH" id="scH">If the UCP ran on separation<sup><a href="#scFoot" class="fn">1</a></sup></h2>
     <div class="scDek" id="scDek"></div>
-    <div class="lead3">Based on today's results. Each dot is a seat; tap one for its numbers.</div>
+    <div class="lead3">Based on the 2026 referendum results. Tap a seat for its numbers.</div>
     <div class="seg small" id="scTabs" style="margin-top:10px">
       <button type="button" data-k="A">Straight fight</button><button type="button" data-k="B" class="on">Three-way race</button>
     </div>
@@ -563,12 +563,12 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
   <section class="panel">
     <details class="count" id="moreFactors">
       <summary>More patterns: census and federal factors</summary>
-      <div class="lead3" style="margin-top:8px">Each dot is a division: across, a factor; up, its Remain share on Q10.</div>
+      <div class="lead3" style="margin-top:8px">Every division, placed by the factor you pick and by its Remain vote.</div>
       <div class="chips" id="facChips"></div>
       <svg id="scatter" viewBox="0 0 340 240" role="img" aria-label="Scatter chart of divisions"></svg>
       <div class="scap" id="scap"></div>
       <h3 class="h3">How closely each factor lines up with Remain</h3>
-      <div class="lead3">From &minus;1 (higher factor, less Remain) through 0 (no link) to +1 (higher factor, more Remain). Tap a row to chart it.</div>
+      <div class="lead3">Bars to the right go with more Remain, bars to the left with less. Tap one to chart it.</div>
       <div id="corrBars"></div>
     </details>
     <div class="insfoot">2023 results: Elections Alberta. 2025 federal results are estimated per division from Elections Canada polling-station results. Census 2021 via Alberta Office of Statistics and Information; unemployment was measured in May 2021, during COVID. These patterns describe divisions, not how any individual voted. Seat scenarios are hypothetical.</div>
@@ -602,7 +602,8 @@ const SHORT = {
 const QORDER = [10,1,2,3,4,5,6,7,8,9];
 const $ = id => document.getElementById(id);
 const fmt = n => (n==null ? "-" : Number(n).toLocaleString("en-CA"));
-const tfmt = iso => iso ? new Date(iso).toLocaleTimeString("en-CA",{timeZone:"America/Edmonton",hour:"numeric",minute:"2-digit"}) + " MT" : "-";
+const tfmt = iso => { if (!iso) return "-"; const t = new Date(iso), z = {timeZone:"America/Edmonton"};
+  return `${t.toLocaleDateString("en-CA",{...z, month:"long", day:"numeric"})}, ${t.toLocaleTimeString("en-CA",{...z, hour:"numeric", minute:"2-digit"})} MT`; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const labels = n => n===10 ? ["Remain","Separation"] : ["Yes","No"];
 const proIdx = n => n===10 ? 0 : 1;               // index of the status quo answer
@@ -653,7 +654,7 @@ function render(){
   $("repBar").style.width = rp+"%";
   // Alberta list (Q1 to Q9; Q10 is the hero)
   // counting details
-  $("types").innerHTML = (cur.types||[]).map(t=>`<div>${esc(t.name)}<b class="num">${t.pct!=null ? (+t.pct).toFixed(1)+"%" : "-"}</b>of votes counted so far<br>${fmt(t.rep)} of ${fmt(t.tot)} places reporting</div>`).join("");
+  $("types").innerHTML = (cur.types||[]).map(t=>`<div>${esc(t.name)}<b class="num">${t.pct!=null ? (+t.pct).toFixed(1)+"%" : "-"}</b>of votes counted<br>${fmt(t.rep)} of ${fmt(t.tot)} places reporting</div>`).join("");
   drawMaps();
   drawExplore();
   renderInsights();
@@ -725,15 +726,15 @@ function chUcpRef(rows){
   let g = [0,25,50,75,100].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="${top-4}" y2="${top+n*rh}" class="grid"/>`).join("");
   g += `<text x="${X(0)}" y="${top-8}" class="ax">0%</text><text x="${X(100)}" y="${top-8}" class="ax" text-anchor="end">100%</text>`;
   rows.forEach((r,i)=>{ const y = top + i*rh, on = r.w===STSEL;
-    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, vote to separate ${r.ref.toFixed(1)}% now</title></rect>
+    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, vote to separate ${r.ref.toFixed(1)}% in 2026</title></rect>
       <rect x="${X(0)}" y="${y+2}" width="${(X(r.ucp)-X(0)).toFixed(1)}" height="${rh-4}" class="ub"/>
       <rect x="${X(0)}" y="${y+5}" width="${(X(r.ref)-X(0)).toFixed(1)}" height="${rh-10}" fill="var(--anti)"/>
       <text x="${(X(r.ref)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--anti)">${r.ref.toFixed(0)}%</text>
       <text x="${(X(r.ucp)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--ucp)">${r.ucp.toFixed(0)}%</text>
       <text x="${LBL}" y="${y+10.5}" class="dbn${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text></g>`; });
   return `<div class="lg"><span><i class="ubk"></i>UCP share in that seat, 2023</span><span><i class="rbk"></i>Vote to separate, 2026</span></div>
-    <p class="dbk-note">One row per seat the United Conservative Party (UCP) won in 2023, highest UCP vote share at the top. Both bars start at 0, so each red bar can be read against its own seat's 2023 result.</p>
-    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and vote to separate now">${g}</svg>`;
+    <p class="dbk-note">The ${n} seats the United Conservative Party (UCP) won in 2023, from its highest share of the vote to its lowest.</p>
+    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and vote to separate in 2026">${g}</svg>`;
 }
 
 /* chapter 3 data: seat ratings under the chosen scenario */
@@ -755,7 +756,7 @@ function chQuestions(qs){
       <span class="qxv num" style="color:var(${c})">${d>=0 ? `Yes ${y.toFixed(1)}%` : `No ${(100-y).toFixed(1)}%`}</span></button>`; };
   return `<div class="qx"><div class="qxg">Immigration and citizenship</div>${qs.filter(x=>x.n<=5).map(row).join("")}
     <div class="qxg">Constitution</div>${qs.filter(x=>x.n>=6).map(row).join("")}</div>
-    <div class="lg" style="margin-top:6px"><span class="dim">Bars grow from 50%: right for a Yes majority (red, the change), left for a No majority (green, the status quo). A full bar is 15 or more points from 50%. Tap a question for its map and full wording.</span></div>`;
+    <div class="lg" style="margin-top:6px"><span class="dim">Red where Yes won, green where No won. Tap a question for its map and full wording.</span></div>`;
 }
 
 /* chapter 5 chart: polls as dots, result as a line */
@@ -772,7 +773,7 @@ function chPolls(dec, avg, res){
       <text x="2" y="${r.d ? y-1.5 : y+3.5}" class="pvn${r.avg?" b":""}">${esc(r.n)}</text>${r.d ? `<text x="2" y="${y+10}" class="ax">${r.d}</text>` : ""}
       <circle cx="${X(r.v)}" cy="${y}" r="${r.avg?5:4}" fill="${r.avg?"var(--text)":"var(--muted)"}"/>
       <text x="${r.v <= res ? X(r.v)-8 : X(r.v)+8}" y="${y+3}" class="ann${r.avg?" b":""}" text-anchor="${r.v <= res ? "end" : "start"}">${r.v.toFixed(0)}%</text></g>`; });
-  g += `<line x1="${X(res)}" x2="${X(res)}" y1="${top-6}" y2="${top+rows.length*rh}" class="resl"/><text x="${X(res)}" y="${top-8}" class="annb" text-anchor="middle" fill="var(--pro)">Count so far ${res.toFixed(0)}%</text>`;
+  g += `<line x1="${X(res)}" x2="${X(res)}" y1="${top-6}" y2="${top+rows.length*rh}" class="resl"/><text x="${X(res)}" y="${top-8}" class="annb" text-anchor="middle" fill="var(--pro)">Unofficial count ${res.toFixed(0)}%</text>`;
   return `<svg class="chsvg" id="stPv" viewBox="0 0 ${W} ${H}" role="img" aria-label="Final polls and the result">${g}</svg>`;
 }
 
@@ -799,7 +800,7 @@ function renderInsights(){
     const sel = ucp.find(r=>r.w===STSEL);
     ch.push({h: fewer.length === ucp.length ? "In every UCP seat, fewer people voted to separate than voted UCP in 2023" : `In ${fewer.length} of the UCP's ${ucp.length} seats, fewer people voted to separate than voted UCP in 2023`,
       chart: chUcpRef(ucp),
-      read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Vote to separate ${sel.ref.toFixed(0)}% now · ${sel.rep.toFixed(0)}% of voting places counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
+      read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Vote to separate ${sel.ref.toFixed(0)}% in 2026 · ${sel.rep.toFixed(0)}% of voting places counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
       p: gaps.length ? `Out of every 100 voters in these seats, ${Math.min(...gaps).toFixed(0)} to ${Math.max(...gaps).toFixed(0)} fewer voted to separate than had voted UCP.` : "",
       go:"bfly:ucp", goT:"Compare all divisions"});
   } else ch.push({h:"How UCP seats voted", p:later});
@@ -812,7 +813,7 @@ function renderInsights(){
       chart:`<div class="seg small" id="stScn"><button type="button" data-k="B" class="${STSCN==="B"?"on":""}">Three-way race</button><button type="button" data-k="A" class="${STSCN==="A"?"on":""}">Straight fight</button></div>
         <div class="hhrow" style="margin-top:10px"><div class="hhd l"><span style="color:var(--anti)">Separatist UCP</span><b class="num" style="color:var(--anti)">${S3.sep}</b></div><div class="hhd c">${S3.maj} seats<br>for a majority</div><div class="hhd r"><span style="color:var(${SEATC[last][0]})">${SEATC[last][1]}</span><b class="num" style="color:var(${SEATC[last][0]})">${S3[last]}</b></div></div>
         <svg class="chsvg hemiL" id="stHemi" viewBox="0 0 200 108" role="img" aria-label="Seat forecast"></svg>
-        <div class="hmid">${S3.parties.length===3 ? `<span style="color:var(--modc)">Moderate conservative ${S3.mod}</span> · ` : ""}<span class="tossdot"></span>Toss-up ${S3.toss}</div><div class="hmid">Darker dots: safe, ahead by ${LIKELY} or more points. Lighter: likely (${LEAN} to ${LIKELY}) or lean (${TOSS} to ${LEAN}). Grey: toss-up, top two within ${TOSS}.</div>`,
+        <div class="hmid">${S3.parties.length===3 ? `<span style="color:var(--modc)">Moderate conservative ${S3.mod}</span> · ` : ""}<span class="tossdot"></span>Toss-up ${S3.toss}</div><div class="hmid">The darker the dot, the safer the seat. Grey seats are toss-ups, within ${TOSS} points.</div>`,
       read: rs ? `<b>${esc(rs.name)}</b> (${rs.win} in 2023): ${rs.o.tier==="toss" ? `toss-up, ${SEATC[rs.o.win][1]} vs ${SEATC[rs.o.second][1]}` : `${TIERLAB[rs.o.tier].toLowerCase()} ${SEATC[rs.o.win][1]}`}, lead ${rs.o.margin.toFixed(1)} points · ${Object.entries(rs.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(" · ")}` : `<span class="dim">Tap a seat to see its numbers.</span>`,
       p: STSCN === "B"
         ? `If everyone who voted to separate backed a separatist UCP, the New Democratic Party (NDP) kept its 2023 share and everyone else backed a moderate conservative party, the UCP would win ${seatsW(S3.sep)}. The NDP would win ${S3.ndp}${S3.ndp >= S3.maj ? `, more than the ${S3.maj} needed for a majority` : ""}.${S3.toss ? moreW(S3.toss, S3.sep) : ""}`
@@ -833,7 +834,7 @@ function renderInsights(){
              : pass1 === 0 ? "Albertans reject the immigration questions" : "Albertans are divided on immigration rules";
     const q9 = qs.find(x=>x.n===9), q9w = q9 ? shareWords(q9.p.t/res10.t*100) : "";
     ch.push({h:h4, chart:chQuestions(qs),
-      p: `${pass1 === 5 ? `All five immigration and citizenship questions pass, with ${lo1.toFixed(0)}% to ${hi1.toFixed(0)}% Yes.` : `${NUMW[pass1][0].toUpperCase()+NUMW[pass1].slice(1)} of five immigration and citizenship questions pass.`} The four constitutional questions are between ${lo2.toFixed(0)}% and ${hi2.toFixed(0)}% Yes.${q9w ? ` Questions 1 to 9 are counted after Question 10, in order, so they have fewer votes in so far: Question 9 has ${q9w} as many as Question 10.` : ""}`});
+      p: `${pass1 === 5 ? `All five immigration and citizenship questions pass, with ${lo1.toFixed(0)}% to ${hi1.toFixed(0)}% Yes.` : `${NUMW[pass1][0].toUpperCase()+NUMW[pass1].slice(1)} of five immigration and citizenship questions pass.`} The four constitutional questions are between ${lo2.toFixed(0)}% and ${hi2.toFixed(0)}% Yes.${q9w && q9.p.t < res10.t*0.95 ? ` Questions 1 to 9 are counted after Question 10, in order: in this count, Question 9 has ${q9w} as many votes as Question 10.` : ""}`});
   }
 
   // 5. polls
@@ -852,7 +853,7 @@ function renderInsights(){
     : `Most Albertans who voted chose to start the separation process.`;
 
   box.innerHTML = ch.map((c,i)=>`<article class="ch" id="stc${i+2}"><span class="chN">${i+2}</span><h3 class="chH">${c.h}</h3>${c.chart ? `<div class="chC">${c.chart}</div>` : ""}${c.read !== undefined ? `<div class="chRead">${c.read}</div>` : ""}${c.p.startsWith("<p") ? c.p : `<p class="chP">${c.p}</p>`}${c.go ? `<button type="button" class="chGo" data-go="${c.go}">${c.goT} &rarr;</button>` : ""}</article>`).join("")
-    + `<div class="ending" id="stEnd"><h3 class="chH">${hEnd}</h3><p class="chP">${pEnd}</p><p class="fnote"><sup>1</sup> Based on today's results. Assumes everyone who voted to separate backs a separatist UCP and the NDP keeps its 2023 share. Referendum and election turnout differ. Division results don't show how individual voters chose.</p></div>`;
+    + `<div class="ending" id="stEnd"><h3 class="chH">${hEnd}</h3><p class="chP">${pEnd}</p><p class="fnote"><sup>1</sup> Based on the 2026 referendum results. Assumes everyone who voted to separate backs a separatist UCP and the NDP keeps its 2023 share. Referendum and election turnout differ. Division results don't show how individual voters chose.</p></div>`;
 
   const S3 = (ch.find(c=>c.hemi) || {}).hemi;
   if (S3 && $("stHemi")){
@@ -866,7 +867,7 @@ function renderInsights(){
   box.querySelectorAll("#stDb .dbr").forEach(g=>g.addEventListener("click", ()=>{ STSEL = STSEL === g.dataset.w ? null : g.dataset.w; renderInsights(); }));
   box.querySelectorAll("#stScn button").forEach(b=>b.addEventListener("click", ()=>{ STSCN = b.dataset.k; STSEAT = null; renderInsights(); }));
   box.querySelectorAll("#stPv .pvr").forEach(g=>g.addEventListener("click", ()=>{ const i = +g.dataset.i; STPOLL = STPOLL === i ? null : i; renderInsights(); }));
-  $("insFoot").textContent = `Based on ${rp.toFixed(0)}% of voting places reported (${fmt(s.rep)} of ${fmt(s.tot)}). Seat comparisons use divisions with at least ${MINV} votes counted on Question 10. A "middle" result is the median: half the seats are above it and half below. The 2023 election and this referendum are different votes, with different turnout. This page calls the ballot's Referendum option the separation vote; some who chose it may only want the question put to a vote. Seat ratings use the first-place lead over second place: toss-up under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more. Figures update as counting continues.`;
+  $("insFoot").textContent = `Based on ${rp.toFixed(0)}% of voting places reported (${fmt(s.rep)} of ${fmt(s.tot)}). Seat comparisons use divisions with at least ${MINV} votes counted on Question 10. A "middle" result is the median: half the seats are above it and half below. The 2023 election and this referendum are different votes, with different turnout. This page calls the ballot's Referendum option the separation vote; some who chose it may only want the question put to a vote. Seat ratings use the first-place lead over second place: toss-up under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more.${rp < 100 ? " Figures update as counting continues." : ""}`;
 }
 
 function goTo(g){
@@ -964,7 +965,7 @@ function drawButterfly(){
   for (let c=0; c<=axMax; c+=axMax/5){ g += `<line x1="${xL(c)}" x2="${xL(c)}" y1="${top}" y2="${top+NB*rowH}" class="grid"/><line x1="${xR(c)}" x2="${xR(c)}" y1="${top}" y2="${top+NB*rowH}" class="grid"/>`;
     g += `<text x="${xL(c)}" y="${top+NB*rowH+12}" class="ax" text-anchor="middle">${c}</text><text x="${xR(c)}" y="${top+NB*rowH+12}" class="ax" text-anchor="middle">${c}</text>`; }
   g += `<text x="${mid}" y="${H-4}" class="ax" text-anchor="middle">Number of divisions</text>`;
-  g += `<text x="${mid-lab-4}" y="12" class="ttl" text-anchor="end" fill="var(--ucp)">UCP share, 2023</text><text x="${mid+lab+4}" y="12" class="ttl" fill="var(--anti)">Separation share, now</text>`;
+  g += `<text x="${mid-lab-4}" y="12" class="ttl" text-anchor="end" fill="var(--ucp)">UCP share, 2023</text><text x="${mid+lab+4}" y="12" class="ttl" fill="var(--anti)">Separation share, 2026</text>`;
   // bars + centre labels
   for (let i=0;i<NB;i++){
     const y = yOf(i) + 1.5, h = rowH - 3, on = BFBIN===i ? " on" : "";
@@ -992,7 +993,7 @@ function drawButterfly(){
   const chip = (r, v, c) => `<button type="button" class="dchip" data-w="${r.w}"><i style="background:var(${c})"></i>${esc(r.name)} <span class="num">${v.toFixed(1)}%</span></button>`;
   list.innerHTML = `<div class="bfband"><b>${lo}–${hi}%</b></div>
     ${inU.length ? `<div class="bfgrp"><span style="color:var(--ucp)">UCP 2023 (${inU.length})</span>${inU.map(r=>chip(r, r.ucp, "--ucp")).join("")}</div>` : ""}
-    ${inR.length ? `<div class="bfgrp"><span style="color:var(--anti)">Separation now (${inR.length})</span>${inR.map(r=>chip(r, r.ref, "--anti")).join("")}</div>` : ""}`;
+    ${inR.length ? `<div class="bfgrp"><span style="color:var(--anti)">Separation, 2026 (${inR.length})</span>${inR.map(r=>chip(r, r.ref, "--anti")).join("")}</div>` : ""}`;
   list.querySelectorAll(".dchip").forEach(b=>b.addEventListener("click", ()=>{ setState({view:"division", d:b.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
 }
 
@@ -1070,7 +1071,7 @@ function drawSeats(){
     <table class="rtab"><thead><tr><th></th>${TIERS.map(t=>`<th>${TIERLAB[t]}</th>`).join("")}<th>Total</th></tr></thead><tbody>${table}
       <tr><th><span class="sw2" style="background:var(--mapMid)"></span>Toss-up</th><td colspan="3" class="dim pairs">${Object.entries(pairs).map(([k,n])=>`${k} ${n}`).join(" · ") || "none"}</td><td class="num tot">${tossN}</td></tr></tbody></table>
     <div class="rnote dim">Safe: ahead by ${LIKELY} or more points. Likely: ${LEAN} to ${LIKELY}. Lean: ${TOSS} to ${LEAN}. Toss-up: top two within ${TOSS}.</div>
-    ${SCN==="B" && ndpPick ? `<div class="scnote">The NDP would take <b>${ndpPick}</b> of the UCP's 2023 seats without gaining a single vote: the UCP's 2023 vote splits between a separatist party and a moderate one, so the NDP's unchanged share is now the largest.</div>` : ""}
+    ${SCN==="B" && ndpPick ? `<div class="scnote">The NDP would take <b>${ndpPick}</b> of the UCP's 2023 seats without gaining a single vote: the UCP's 2023 vote splits between a separatist party and a moderate one, so the NDP's unchanged share becomes the largest.</div>` : ""}
     <div class="sclist" id="scList"></div>`;
   // headline written from the numbers
   const sepSeats = cntP("sep"), ndpSeats = cntP("ndp"), modSeats = parties.includes("mod") ? cntP("mod") : 0;
@@ -1084,7 +1085,7 @@ function drawSeats(){
     $("scH").innerHTML = sepSeats < maj ? `Run on separation, lose almost everything${sup}` : `A separatist UCP could still hold power${sup}`;
     $("scDek").innerHTML = `Against a single Remain candidate, a separatist UCP wins <b>${sepSeats}</b> of 87 seats${tossN ? `, with <b>${tossN}</b> toss-up${tossN===1?"":"s"} (top two within ${TOSS} points)` : ""}. Remain candidates take <b>${cntP("rem")}</b>.`;
   }
-  $("scFoot").innerHTML = `<sup>1</sup> ${SCN==="A" ? "Straight fight: everyone who voted to separate backs a separatist UCP, and everyone who voted Remain backs one candidate." : "Three-way race: everyone who voted to separate backs a separatist UCP, the NDP keeps its 2023 share in each seat, and the remaining voters back a moderate conservative party."} Ratings use the first-place lead over second place in each seat: toss-up under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more. Referendum and election turnout differ, and seat shares will move until counting ends.`;
+  $("scFoot").innerHTML = `<sup>1</sup> ${SCN==="A" ? "Straight fight: everyone who voted to separate backs a separatist UCP, and everyone who voted Remain backs one candidate." : "Three-way race: everyone who voted to separate backs a separatist UCP, the NDP keeps its 2023 share in each seat, and the remaining voters back a moderate conservative party."} Ratings use the first-place lead over second place in each seat: toss-up under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more. Referendum and election turnout differ.${(cur && cur.summary && cur.summary.rep < cur.summary.tot) ? " Seat shares will move until counting ends." : ""}`;
   // forecast dots ordered left to right: separatist, toss-up, others
   const dotFill = r => r.o.tier==="toss" ? "var(--mapMid)" : tint(r.o.win, r.o.tier);
   hemicycle($("hemiF"), res.map(r=>({w:r.w, fill:dotFill(r), title:tip(r)})));
