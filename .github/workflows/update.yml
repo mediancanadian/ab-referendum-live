@@ -1,6 +1,6 @@
 name: Update results
 
-# One long run fetches every minute for up to ~5h50m.
+# One long run fetches every 20 seconds for up to ~5h50m.
 # The 5-minute schedule only restarts it if it has stopped (concurrency keeps one at a time).
 on:
   schedule:
@@ -34,8 +34,8 @@ jobs:
             if res=$(python3 scripts/fetch.py data.json 2>&1); then
               echo "$(date -u +%H:%M:%S) $res"
               now=$(date +%s)
-              # publish when numbers change, and at least every 4 minutes so "checked" stays fresh
-              if [[ "$res" == CHANGED* ]] || [ $((now-last_pub)) -ge 240 ]; then
+              # publish when numbers change, and at least every 3 minutes so "checked" stays fresh
+              if [[ "$res" == CHANGED* ]] || [ $((now-last_pub)) -ge 180 ]; then
                 git add data.json
                 git commit -q -m "Results: ${res#* }" || true
                 git pull -q --rebase && git push -q && gh workflow run pages.yml --ref main && last_pub=$now
@@ -45,5 +45,5 @@ jobs:
             else
               echo "$(date -u +%H:%M:%S) fetch failed: $(echo "$res" | tail -1)"
             fi
-            sleep $(( 60 - ($(date +%s) - start) > 0 ? 60 - ($(date +%s) - start) : 1 ))
+            sleep $(( 20 - ($(date +%s) - start) > 0 ? 20 - ($(date +%s) - start) : 1 ))
           done
