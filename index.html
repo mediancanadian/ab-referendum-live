@@ -216,6 +216,56 @@ sup .fn{color:var(--accent);text-decoration:none;font-size:.7em;margin-left:2px}
 .wasK{background:transparent}
 .sclegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:.75rem;color:var(--muted)}
 .sclegend b{color:var(--text)}
+.story2{max-width:720px;margin:12px auto 0}
+.ch{position:relative;padding:0 0 26px 36px}
+.ch::before{content:"";position:absolute;left:12px;top:28px;bottom:2px;width:2px;background:var(--line)}
+.chN{position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--panel);font-size:.78rem;font-weight:800;display:grid;place-items:center}
+.chH{margin:0;font-size:clamp(1.12rem,4.4vw,1.45rem);line-height:1.22;letter-spacing:-.015em}
+#stc1 .chH{font-size:clamp(1.35rem,5.6vw,2rem)}
+.chC{margin-top:12px}
+.chP{margin:10px 0 0;font-size:.93rem;line-height:1.55}
+.chRead{margin-top:6px;font-size:.8rem;line-height:1.45;min-height:2.9em}
+.chGo{border:none;background:none;color:var(--accent);font:inherit;font-weight:600;font-size:.85rem;padding:0;margin-top:8px;cursor:pointer}
+.chGo.in{margin:0 0 0 6px}
+.ending{border-top:2px solid var(--text);padding-top:14px;margin:2px 0 0 36px}
+.fnote{font-size:.72rem;color:var(--muted);margin:10px 0 0}
+.v1{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.v1n b{display:block;font-size:clamp(2rem,9vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.v1n span{font-size:.78rem;color:var(--muted)}
+.v1n.r{text-align:right}
+.v1bar{grid-column:1/-1;position:relative;display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:6px}
+.v1bar i{display:block;height:100%}.v1bar em{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--panel)}
+.v1v{grid-column:1/-1;display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.72rem;color:var(--muted);margin-bottom:4px}
+.lg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.chsvg{width:100%;height:auto;display:block}
+.chsvg .grid{stroke:var(--line);stroke-width:1}
+.chsvg .half{stroke:var(--text);stroke-width:1;stroke-dasharray:3 3;opacity:.6}
+.chsvg .ax{font-size:9.5px;fill:var(--muted)}
+.chsvg .ann{font-size:9px;fill:var(--muted)}
+.chsvg .ann.b{font-weight:700}
+.chsvg .ann.hot{fill:var(--anti);font-weight:700}
+.chsvg .annb{font-size:10.5px;font-weight:700}
+.chsvg .lnk{stroke:var(--muted);stroke-width:1.2;opacity:.45}
+.chsvg .hit{fill:transparent;cursor:pointer}
+.chsvg .dbr.on .hit,.chsvg .pvr.on .hit{fill:var(--panel2)}
+.chsvg .pvn{font-size:10.5px;fill:var(--text)}
+.chsvg .pvn.b{font-weight:700}
+.chsvg .resl{stroke:var(--pro);stroke-width:2.5}
+.hemiL{max-width:320px;margin:4px auto 0}
+.hemiL circle{cursor:pointer;stroke:var(--panel);stroke-width:.6}
+.hemiL circle.on{stroke:var(--text);stroke-width:1.6}
+.qx{display:flex;flex-direction:column}
+.qxg{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px}
+.qxg:first-child{margin-top:0}
+.qxr{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,36%) 74px;gap:8px;align-items:center;border:none;background:none;text-align:left;padding:6px 0;border-top:1px solid var(--line);cursor:pointer}
+.qxn{font-size:.72rem;font-weight:700;color:var(--muted)}
+.qxt{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qxb{position:relative;height:12px;background:var(--track);border-radius:3px}
+.qxb em{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--text);opacity:.7;transform:translateX(-1px)}
+.qxb i{position:absolute;top:0;bottom:0;border-radius:3px}
+.qxv{font-size:.78rem;font-weight:700;text-align:right}
+@media (max-width:560px){.qxr{grid-template-columns:28px minmax(0,1fr) 70px;grid-template-areas:"n t v" "n b b"}.qxn{grid-area:n}.qxt{grid-area:t}.qxb{grid-area:b}.qxv{grid-area:v}.ch{padding-left:32px}.ending{margin-left:32px}}
 .poster{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:2px}
 .vrow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:4px}
 .badge2{flex:none;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:#fff;white-space:nowrap}
@@ -408,22 +458,11 @@ details.count[open] summary::after{content:"\2212"}
 
   <!-- 2. What's happening: short factual lines written from the numbers -->
   <section class="panel" id="insights">
-    <div class="poster">
-      <span class="tag" id="anK">Unofficial result</span>
-      <div class="vrow"><h2 class="anH" id="anH">Waiting for results</h2><span class="badge2" id="anBadge"></span></div>
-      <div class="vgrid">
-        <div class="score2" id="anScore"></div>
-        <figure class="vhemi"><svg id="anHemi" viewBox="0 0 200 108" role="img" aria-label="All 87 divisions by how they voted"></svg><figcaption id="anHemiCap"></figcaption></figure>
-      </div>
-      <div class="kf" id="kf"></div>
-    </div>
-    <h3 class="h3s" id="sbH">How each question is going</h3>
-    <div class="sb" id="scoreboard"></div>
-    <h3 class="h3s">What it means</h3>
-    <div class="stories" id="insCards"></div>
+    <span class="tag" id="anK">Unofficial results</span>
+    <div class="story2" id="story"><p class="dim">Waiting for results.</p></div>
     <details class="about2"><summary>About this analysis</summary>
       <div class="insfoot" id="insFoot"></div>
-      <p class="insfoot">Results: Elections Alberta unofficial results, refreshed every 20 seconds. 2023 provincial and by-election results: Elections Alberta. 2025 federal results estimated for each division from Elections Canada poll-by-poll results. Census 2021: Statistics Canada via Alberta's Office of Statistics and Information. Pre-vote polls as published (Angus Reid Aug 10&ndash;13, Leger Aug 21&ndash;23, Research Co. Aug 24&ndash;26, Abacus Data Sep 4&ndash;7, 2026), shown among decided respondents. Comparisons are between divisions and do not show how any individual voted. <a href="https://github.com/sjvadrevu/ab-referendum-live/blob/main/context/SOURCES.md" target="_blank" rel="noopener">Full sources and methods</a>.</p>
+      <p class="insfoot">Results: Elections Alberta unofficial results, refreshed every 20 seconds. 2023 provincial and by-election results: Elections Alberta. 2025 federal results estimated for each division from Elections Canada poll-by-poll results. Census 2021: Statistics Canada via Alberta's Office of Statistics and Information. Pre-vote polls as published: Angus Reid (Aug 10&ndash;13, n=1,017), Leger (Aug 21&ndash;23, n=1,001), Research Co. (Aug 24&ndash;26, n=750), Abacus Data (Sep 4&ndash;7, n=1,000), 2026, shown among decided respondents. <a href="https://github.com/sjvadrevu/ab-referendum-live/blob/main/context/SOURCES.md" target="_blank" rel="noopener">Full sources and methods</a>.</p>
     </details>
   </section>
 
@@ -644,105 +683,178 @@ function corrFor(f, pts){ const xs=[], ys=[]; pts.forEach(p=>{ const x = f.g(CTX
 const strength = r => { const a = Math.abs(r); return a >= .7 ? "strong" : a >= .4 ? "moderate" : a >= .2 ? "weak" : "little or no"; };
 
 /* ---------- What's happening ---------- */
-/* ---------- Outcome report: verdict poster, question scoreboard, what it means ---------- */
-const CALL = 2;   // a question is "too close to call" while the leading side is within this many points of 50% and counting is unfinished
-function callQ(p, done){
-  if (!p) return {k:"wait", t:"Waiting"};
-  const lead = Math.max(p.a, p.b);
-  if (!done && lead - 50 < CALL) return {k:"close", t:"Too close to call"};
-  return p.a > p.b ? {k:"yes", t:"Passes"} : {k:"no", t:"Fails"};
+/* ---------- Analysis story: five chapters with conclusion headings and exploratory charts ---------- */
+let STSEL = null, STSCN = "B", STSEAT = null, STPOLL = null;
+const POLLS = [   // last four published polls before the vote (sample, Remain, Referendum, undecided)
+  {n:"Angus Reid", d:"Aug 10–13", s:1017, a:61, b:33, u:5},
+  {n:"Leger", d:"Aug 21–23", s:1001, a:65, b:23, u:10},
+  {n:"Research Co.", d:"Aug 24–26", s:750, a:74, b:22, u:4},
+  {n:"Abacus Data", d:"Sep 4–7", s:1000, a:64, b:24, u:9}
+];
+const NUMW = ["no","one","two","three","four","five","six","seven","eight","nine","ten"];
+const ratioWords = (a, b) => { if (!b) return null; const r = a/b; if (r < 1.5) return null; const n = Math.round(r); return n <= 10 ? `${NUMW[n]} to one` : null; };
+function shareWords(v){
+  const opts = [[10,"a tenth"],[20,"a fifth"],[25,"a quarter"],[100/3,"a third"],[40,"two fifths"],[50,"half"]];
+  let best = null, d = 99; opts.forEach(([x,t])=>{ const e = Math.abs(x-v); if (e < d){ d = e; best = t; } });
+  return d <= 3 ? `about ${best}` : `${v.toFixed(0)}%`;
 }
+const seatsW = n => n === 0 ? "no seats" : n === 1 ? "one seat" : `${n} seats`;
+const moreW = (n, base) => base === 0 ? (n === 1 ? ` One seat is within ${TOSS} points.` : ` ${n} seats are within ${TOSS} points.`) : (n === 1 ? ` One more seat is within ${TOSS} points.` : ` Another ${n} are within ${TOSS} points.`);
+const clip = (t, n) => t.length > n ? t.slice(0, n-1) + "…" : t;
+
+/* chapter 2 chart: each UCP seat as a dumbbell, Referendum share now (red) to UCP share in 2023 (blue) */
+function chDumbbell(rows, mU, mR){
+  const W = 340, top = 22, rh = 10, L = 8, R = 332, n = rows.length, H = top + n*rh + 30;
+  const X = v => L + v/100*(R-L);
+  let g = "";
+  [0,25,50,75,100].forEach(v=>{ g += `<line x1="${X(v)}" x2="${X(v)}" y1="${top-3}" y2="${top+n*rh}" class="${v===50?"half":"grid"}"/><text x="${X(v)}" y="${top-7}" class="ax" text-anchor="${v===0?"start":v===100?"end":"middle"}">${v}%</text>`; });
+  rows.forEach((r,i)=>{ const y = top + i*rh + rh/2, on = r.w===STSEL;
+    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${(y-rh/2).toFixed(1)}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, Referendum ${r.ref.toFixed(1)}% now</title></rect>
+      <line x1="${X(r.ref).toFixed(1)}" x2="${X(r.ucp).toFixed(1)}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" class="lnk"/>
+      <circle cx="${X(r.ucp).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?3.8:3}" fill="var(--ucp)"/><circle cx="${X(r.ref).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?3.8:3}" fill="var(--anti)"/>
+      ${(r.ref > 50 || on) ? (()=>{ const t = `${clip(r.name, 22)} ${r.ref.toFixed(0)}%`, tw = t.length*4.7, xr = X(Math.max(r.ucp, r.ref)) + 7;
+          return xr + tw <= W ? `<text x="${xr.toFixed(1)}" y="${(y+3).toFixed(1)}" class="ann${r.ref>50?" hot":" b"}">${esc(t)}</text>`
+                              : `<text x="${(X(Math.min(r.ucp, r.ref)) - 7).toFixed(1)}" y="${(y+3).toFixed(1)}" class="ann${r.ref>50?" hot":" b"}" text-anchor="end">${esc(t)}</text>`; })() : ""}</g>`; });
+  const yb = top + n*rh + 15;
+  g += `<text x="${X(mR)}" y="${yb}" class="ann b" text-anchor="middle" fill="var(--anti)">▲ typical seat ${mR.toFixed(0)}%</text><text x="${X(mU)}" y="${yb}" class="ann b" text-anchor="middle" fill="var(--ucp)">▲ ${mU.toFixed(0)}%</text>`;
+  return `<div class="lg"><span><i style="background:var(--ucp)"></i>UCP share, 2023</span><span><i style="background:var(--anti)"></i>Referendum share now</span><span class="dim">One row per seat the UCP won in 2023</span></div>
+    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="UCP seats: 2023 UCP share and Referendum share">${g}</svg>`;
+}
+
+/* chapter 3 data: seat ratings under the chosen scenario */
+function chSeats(rows){
+  const res = rows.map(r=>({...r, o: seatOutcome(r, STSCN)}));
+  const N = res.length, maj = Math.floor(N/2)+1, parties = STSCN==="A" ? ["sep","rem"] : ["sep","mod","ndp"];
+  const groups = [...TIERS.map(t=>"sep|"+t), "toss", ...parties.slice(1).flatMap(p=>[...TIERS].reverse().map(t=>p+"|"+t))];
+  const key = r => r.o.tier==="toss" ? "toss" : r.o.win+"|"+r.o.tier;
+  res.sort((a,b)=> groups.indexOf(key(a)) - groups.indexOf(key(b)) || a.o.margin - b.o.margin);
+  const cnt = p => res.filter(r=>r.o.tier!=="toss" && r.o.win===p).length;
+  return {res, N, maj, parties, sep:cnt("sep"), ndp:cnt("ndp"), mod:cnt("mod"), rem:cnt("rem"), toss:res.filter(r=>r.o.tier==="toss").length};
+}
+
+/* chapter 4 chart: nine questions drawn as bars growing from 50% */
+function chQuestions(qs){
+  const row = x => { const y = x.p.a, d = y - 50, w = Math.min(50, Math.abs(d)/15*50), c = d >= 0 ? "--anti" : "--pro";
+    return `<button type="button" class="qxr" data-go="map:${x.n}"><span class="qxn num">Q${x.n}</span><span class="qxt">${esc(SHORT[x.n])}</span>
+      <span class="qxb"><em></em><i style="${d>=0?"left:50%":"right:50%"};width:${w.toFixed(1)}%;background:var(${c})"></i></span>
+      <span class="qxv num" style="color:var(${c})">${d>=0 ? `Yes ${y.toFixed(1)}%` : `No ${(100-y).toFixed(1)}%`}</span></button>`; };
+  return `<div class="qx"><div class="qxg">Immigration and citizenship</div>${qs.filter(x=>x.n<=5).map(row).join("")}
+    <div class="qxg">Constitution</div>${qs.filter(x=>x.n>=6).map(row).join("")}</div>
+    <div class="lg" style="margin-top:6px"><span class="dim">Bars grow from 50%: right for a Yes majority, left for a No majority. Tap a question for its map.</span></div>`;
+}
+
+/* chapter 5 chart: polls as dots, result as a line */
+function chPolls(dec, avg, res){
+  const rows = [...dec, {n:"Average", d:"", v:avg, avg:true}];
+  const W = 340, top = 20, rh = 24, L = 118, R = 326, H = top + rows.length*rh + 24;
+  const X = v => L + (Math.max(55, Math.min(85, v)) - 55)/30*(R-L);
+  let g = "";
+  [55,60,65,70,75,80,85].forEach(v=>{ g += `<line x1="${X(v)}" x2="${X(v)}" y1="${top-4}" y2="${top+rows.length*rh}" class="grid"/>`; });
+  [60,70,80].forEach(v=>{ g += `<text x="${X(v)}" y="${top+rows.length*rh+12}" class="ax" text-anchor="middle">${v}%</text>`; });
+  rows.forEach((r,i)=>{ const y = top + i*rh + rh/2, on = STPOLL===i;
+    g += `<g class="pvr${on?" on":""}" data-i="${i}"><rect class="hit" x="0" y="${y-rh/2}" width="${W}" height="${rh}"/>
+      <text x="2" y="${r.d ? y-1.5 : y+3.5}" class="pvn${r.avg?" b":""}">${esc(r.n)}</text>${r.d ? `<text x="2" y="${y+10}" class="ax">${r.d}</text>` : ""}
+      <circle cx="${X(r.v)}" cy="${y}" r="${r.avg?5:4}" fill="${r.avg?"var(--text)":"var(--muted)"}"/>
+      <text x="${r.v <= res ? X(r.v)-8 : X(r.v)+8}" y="${y+3}" class="ann${r.avg?" b":""}" text-anchor="${r.v <= res ? "end" : "start"}">${r.v.toFixed(0)}%</text></g>`; });
+  g += `<line x1="${X(res)}" x2="${X(res)}" y1="${top-6}" y2="${top+rows.length*rh}" class="resl"/><text x="${X(res)}" y="${top-8}" class="annb" text-anchor="middle" fill="var(--pro)">Result ${res.toFixed(0)}%</text>`;
+  return `<svg class="chsvg" id="stPv" viewBox="0 0 ${W} ${H}" role="img" aria-label="Final polls and the result">${g}</svg>`;
+}
+
 function renderInsights(){
-  const box = $("insCards"); if (!box || !cur) return;
-  const s = cur.summary || {}, rp = s.tot ? s.rep/s.tot*100 : 0, done = s.tot && s.rep >= s.tot;
-  const w = cur.wards || {}, nm = k => (MAP && MAP.names[k]) || k;
-  const pts = remainPoints(), ready = CTX && rp >= MINREP && pts.length >= 60;
+  const box = $("story"); if (!box || !cur) return;
+  const s = cur.summary || {}, rp = s.tot ? s.rep/s.tot*100 : 0;
+  $("anK").textContent = `Unofficial results · ${rp.toFixed(0)}% of voting places counted`;
   const res10 = pair(abV(10));
-  if (!res10){ $("anH").textContent = "Waiting for results"; return; }
+  if (!res10){ box.innerHTML = `<p class="dim">Waiting for results.</p>`; return; }
+  const ready = CTX && rp >= MINREP && remainPoints().length >= 60;
+  const later = `<p class="chP dim">Shown once a quarter of voting places have reported.</p>`;
+  const ch = [];
+  const remWins = res10.a > res10.b, rw = ratioWords(Math.max(res10.a,res10.b), Math.min(res10.a,res10.b));
 
-  // ---- 1. verdict poster ----
-  const remWins = res10.a > res10.b, called = done || Math.abs(res10.a - 50) >= CALL;
-  const divs = Object.entries(w).map(([k,x])=>({w:k, p:pair(x.v[9])})).filter(x=>x.p).sort((a,b)=>b.p.a-a.p.a);
-  const dRem = divs.filter(x=>x.p.a >= x.p.b).length, dRef = divs.length - dRem;
-  $("anK").textContent = `${done ? "Final unofficial result" : "Unofficial result"} · ${rp.toFixed(0)}% of voting places counted`;
-  $("anH").textContent = !called ? "Too close to call on separation" : remWins ? "Albertans reject starting the separation process" : "Albertans back starting the separation process";
-  $("anBadge").textContent = !called ? "Too close" : remWins ? "Rejected" : "Approved";
-  $("anBadge").className = "badge2 " + (!called ? "close" : remWins ? "no" : "yes");
-  $("anScore").innerHTML = `<div class="sc-l"><b class="num" style="color:var(--pro)">${res10.a.toFixed(1)}%</b><span>Remain in Canada</span></div>
-    <div class="sc-r"><b class="num" style="color:var(--anti)">${res10.b.toFixed(1)}%</b><span>Start separation process</span></div>
-    <div class="sc-bar"><i style="width:${res10.a}%;background:var(--pro)"></i><i style="width:${res10.b}%;background:var(--anti)"></i><em></em></div>
-    <div class="sc-v num">${fmt(res10.va)} to ${fmt(res10.vb)} votes</div>`;
-  hemicycle($("anHemi"), divs.map(x=>({w:x.w, fill: x.p.a>=x.p.b ? "var(--pro)" : "var(--anti)", title:`${nm(x.w)}: Remain ${x.p.a.toFixed(1)}%`})));
-  $("anHemi").querySelectorAll("circle").forEach(c=>c.addEventListener("click", ()=>goTo("div:"+c.dataset.w)));
-  $("anHemiCap").innerHTML = `<b style="color:var(--pro)">${dRem}</b> divisions voted Remain · <b style="color:var(--anti)">${dRef}</b> voted Referendum`;
+  // 1. verdict
+  ch.push({h: remWins ? `Albertans reject the separation process${rw ? ` by ${rw}` : ""}` : `Albertans back starting the separation process${rw ? ` by ${rw}` : ""}`,
+    chart:`<div class="v1"><div class="v1n"><b class="num" style="color:var(--pro)">${res10.a.toFixed(1)}%</b><span>Remain</span></div><div class="v1n r"><b class="num" style="color:var(--anti)">${res10.b.toFixed(1)}%</b><span>Referendum</span></div>
+      <div class="v1bar"><i style="width:${res10.a}%;background:var(--pro)"></i><i style="width:${res10.b}%;background:var(--anti)"></i><em></em></div>
+      <div class="v1v num"><span>${fmt(res10.va)} votes</span><span>${fmt(res10.vb)} votes</span></div></div>`,
+    p: `${remWins ? "Remain" : "Referendum"} leads ${Math.max(res10.a,res10.b).toFixed(1)}% to ${Math.min(res10.a,res10.b).toFixed(1)}% in unofficial results from Elections Alberta.`,
+    go:"map:10", goT:"See the map"});
 
-  // outcome callouts
-  const kfs = [];
-  let ucpS = [], mU = null, mR = null;
+  // 2. UCP seats
+  let minorityInUcp = false;
   if (ready){
-    ucpS = pts.filter(p=>CTX[p.w].p23.win==="UCP").sort((a,b)=>b.rem-a.rem);
-    const l = ucpS.filter(p=>p.rem>=50).length;
-    kfs.push([`${l} of ${ucpS.length}`, "UCP seats from 2023 said stay", "bfly:ucp"]);
-    const rows = seatRows();
-    if (rows.length >= 80){ const sep = rows.map(r=>seatOutcome(r,"B")).filter(o=>o.win==="sep" && o.tier!=="toss").length; kfs.push([`${sep} seats`, "for a separatist UCP in a three-way race<sup>1</sup>", "seats"]); }
-  }
-  const POLLS = [["Angus Reid","Aug 10–13",61,33],["Leger","Aug 21–23",65,23],["Research Co.","Aug 24–26",74,22],["Abacus Data","Sep 4–7",64,24]];
-  const pdec = POLLS.map(([n,d,a,b])=>({n, d, v:a/(a+b)*100})), pavg = pdec.reduce((t,x)=>t+x.v,0)/pdec.length, pgap = res10.a - pavg;
-  if (rp >= MINREP) kfs.push([`${pgap>=0?"+":"−"}${Math.abs(pgap).toFixed(0)} pts`, `Remain vs the final polls (average ${pavg.toFixed(0)}%)`, "polls"]);
-  $("kf").innerHTML = kfs.map(([v,t,g])=>`<button type="button" class="kfb" data-go="${g}"><b class="num">${v}</b><span>${t}</span></button>`).join("");
-  $("kf").querySelectorAll(".kfb").forEach(b=>b.addEventListener("click", ()=>goTo(b.dataset.go)));
+    const all = seatRows(), ucp = all.filter(r=>r.win==="UCP").sort((a,b)=>b.ucp-a.ucp);
+    const lead = ucp.filter(r=>r.rem >= 50).length, mU = median(ucp.map(r=>r.ucp)), mR = median(ucp.map(r=>r.ref)), refLead = all.filter(r=>r.ref > 50);
+    minorityInUcp = ucp.length - lead <= Math.floor(ucp.length*0.1);
+    const ratio = mR/mU, rel = ratio > .4 && ratio < .6 ? "about half" : `${Math.round(ratio*100)}% of`;
+    const sel = ucp.find(r=>r.w===STSEL);
+    ch.push({h: lead === ucp.length ? "Separatists are a minority in every UCP seat" : minorityInUcp ? "Separatists are a minority in almost every UCP seat" : `Separatists lead in ${ucp.length-lead} of the UCP's ${ucp.length} seats`,
+      chart: chDumbbell(ucp, mU, mR),
+      read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Referendum ${sel.ref.toFixed(0)}% now · ${sel.rep.toFixed(0)}% counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
+      p: `Remain won ${lead} of the ${ucp.length} seats the UCP won in 2023. In a typical UCP seat, Referendum has ${mR.toFixed(0)}%, ${rel} the UCP's ${mU.toFixed(0)}% in 2023.` +
+         (refLead.length === 1 ? ` ${esc(refLead[0].name)} is the only division where Referendum leads, with ${refLead[0].ref.toFixed(0)}%.` : refLead.length ? ` Referendum leads in ${refLead.length} divisions.` : ` Referendum leads in no division.`),
+      go:"bfly:ucp", goT:"Compare all divisions"});
+  } else ch.push({h:"How UCP seats voted", p:later});
 
-  // ---- 2. question scoreboard ----
-  $("scoreboard").innerHTML = QORDER.map(n=>{
-    const p = pair(abV(n)), c = callQ(p, done), L = labels(n);
-    if (!p) return "";
-    const ya = n===10 ? p.a : p.a;   // first option share (Remain for Q10, Yes otherwise)
-    return `<button type="button" class="sbr" data-go="map:${n}"><span class="sbn num">Q${n}</span><span class="sbt">${esc(SHORT[n])}</span>
-      <span class="sbb"><i style="width:${ya.toFixed(1)}%;background:${colA(n)}"></i><i style="width:${(100-ya).toFixed(1)}%;background:${colB(n)}"></i><em></em></span>
-      <span class="sbp num">${L[0]} ${ya.toFixed(1)}%</span><span class="badge2 ${n===10 ? (c.k==="yes"?"no2":c.k==="no"?"yes2":c.k) : c.k}">${n===10 ? (c.k==="yes" ? "Remain wins" : c.k==="no" ? "Referendum wins" : c.t) : c.t}</span></button>`;
-  }).join("");
-  $("scoreboard").querySelectorAll(".sbr").forEach(b=>b.addEventListener("click", ()=>goTo(b.dataset.go)));
-  const g1 = [1,2,3,4,5].map(n=>pair(abV(n))).filter(Boolean), g2 = [6,7,8,9].map(n=>pair(abV(n))).filter(Boolean);
-  const pass1 = g1.filter(p=>callQ(p,done).k==="yes").length, close2 = g2.filter(p=>callQ(p,done).k==="close").length;
-  $("sbH").textContent = g1.length===5 && g2.length===4
-    ? (pass1===5 && close2>=3 ? "Immigration rules pass; constitutional changes too close to call" : `${pass1} of 5 immigration questions pass; ${close2} of 4 constitutional questions too close to call`)
-    : "How each question is going";
+  // 3. seat consequence
+  if (ready && seatRows().length >= 80){
+    const S3 = chSeats(seatRows()), last = S3.parties[S3.parties.length-1], rs = S3.res.find(r=>r.w===STSEAT);
+    const sup = `<sup><a href="#stEnd" class="fn">1</a></sup>`;
+    ch.push({h: (S3.sep < S3.maj ? "Embracing separation would cost the UCP its government" : "A separatist UCP could still govern") + sup,
+      chart:`<div class="seg small" id="stScn"><button type="button" data-k="B" class="${STSCN==="B"?"on":""}">Three-way race</button><button type="button" data-k="A" class="${STSCN==="A"?"on":""}">Straight fight</button></div>
+        <div class="hhrow" style="margin-top:10px"><div class="hhd l"><span style="color:var(--anti)">Separatist UCP</span><b class="num" style="color:var(--anti)">${S3.sep}</b></div><div class="hhd c">${S3.maj} =<br>majority</div><div class="hhd r"><span style="color:var(${SEATC[last][0]})">${SEATC[last][1]}</span><b class="num" style="color:var(${SEATC[last][0]})">${S3[last]}</b></div></div>
+        <svg class="chsvg hemiL" id="stHemi" viewBox="0 0 200 108" role="img" aria-label="Seat forecast"></svg>
+        <div class="hmid">${S3.parties.length===3 ? `<span style="color:var(--modc)">Moderate conservative ${S3.mod}</span> · ` : ""}<span class="tossdot"></span>Too close ${S3.toss} · lighter dots are closer seats</div>`,
+      read: rs ? `<b>${esc(rs.name)}</b> (${rs.win} in 2023): ${rs.o.tier==="toss" ? `too close, ${SEATC[rs.o.win][1]} vs ${SEATC[rs.o.second][1]}` : `${TIERLAB[rs.o.tier].toLowerCase()} ${SEATC[rs.o.win][1]}`} · ${Object.entries(rs.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(" · ")}` : `<span class="dim">Tap a seat to see its numbers.</span>`,
+      p: STSCN === "B"
+        ? `If Referendum voters backed a separatist UCP and the UCP's other 2023 voters backed a moderate conservative party, the UCP would win ${seatsW(S3.sep)}. The NDP would win ${S3.ndp} on its 2023 vote${S3.ndp >= S3.maj ? `, more than the ${S3.maj} needed to govern` : ""}.${S3.toss ? moreW(S3.toss, S3.sep) : ""}`
+        : `If Referendum voters backed a separatist UCP and Remain voters backed one candidate, the UCP would win ${seatsW(S3.sep)}.${S3.toss ? moreW(S3.toss, S3.sep) : ""}`,
+      go:"seats", goT:"Full seat forecast", hemi:S3});
+  } else ch.push({h:"What separation would mean for the UCP", p:later});
 
-  // ---- 3. what it means ----
-  const out = [];
-  const agg = (lo, hi) => { let a=0, b=0; for (const [k,x] of Object.entries(w)){ const n = +k, v = x.v[9]; if (n>=lo && n<=hi && v){ a+=v[0]; b+=v[1]; } } return a+b ? a/(a+b)*100 : null; };
-  if (ready && ucpS.length >= 20){
-    mU = median(ucpS.map(p=>CTX[p.w].p23.ucp)); mR = median(ucpS.map(p=>100-p.rem));
-    const rows = seatRows(), res = rows.map(r=>seatOutcome(r,"B")), sep = res.filter(o=>o.win==="sep" && o.tier!=="toss").length, ndp = res.filter(o=>o.win==="ndp" && o.tier!=="toss").length, toss = res.filter(o=>o.tier==="toss").length, maj = Math.floor(rows.length/2)+1;
-    out.push(`<button type="button" class="story" data-go="seats"><span class="st-k">For the UCP<sup>1</sup></span>
-      <h3 class="st-h">Siding with separation would cost the UCP power</h3>
-      <div class="sk"><div class="sk-bar"><i style="width:${sep/rows.length*100}%;background:var(--anti)"></i><i style="flex:1;background:var(--track)"></i><i style="width:${ndp/rows.length*100}%;background:var(--ndpc)"></i><em style="left:${(maj-.5)/rows.length*100}%"></em></div>
-        <div class="sk-lab"><span style="color:var(--anti)">Separatist UCP ${sep}</span><span>${maj} to govern</span><span style="color:var(--ndpc)">NDP ${ndp}</span></div></div>
-      <p class="st-d"><b>Outcome:</b> a separatist UCP falls from 49 seats to ${sep}${toss ? `, with ${toss} toss-ups` : ""}. Split the right, and the NDP governs without gaining a vote.</p></button>`);
-    out.push(`<button type="button" class="story" data-go="bfly:ucp"><span class="st-k">For the separatist movement</span>
-      <h3 class="st-h">Leave fell far short of the UCP's own vote</h3>
-      <div class="db"><div class="db-ax"><span style="left:0">0</span><span style="left:50%">50%</span><span style="left:100%">100</span></div>
-        <div class="db-line"><span class="db-seg" style="left:${mR}%;width:${mU-mR}%"></span><span class="db-dot" style="left:${mR}%;background:var(--anti)"></span><span class="db-dot" style="left:${mU}%;background:var(--ucp)"></span></div>
-        <div class="db-lab"><span style="left:${mR}%;color:var(--anti)">Leave ${mR.toFixed(0)}%</span><span style="left:${mU}%;color:var(--ucp)">UCP 2023 ${mU.toFixed(0)}%</span></div></div>
-      <p class="st-d"><b>Outcome:</b> leave tops 50% in only ${divs.filter(x=>x.p.b>50).length} of ${divs.length} divisions. In the typical UCP seat it runs ${(mU-mR).toFixed(0)} points below the UCP's 2023 vote.</p></button>`);
-    const c = agg(1,26), e = agg(27,46), r = agg(47,87);
-    out.push(`<button type="button" class="story" data-go="map:10"><span class="st-k">By region</span>
-      <h3 class="st-h">No region of Alberta voted to leave</h3>
-      <div class="cv">${[["Calgary",c],["Edmonton",e],["Rest of Alberta",r]].map(([l,v])=>`<div class="cv-r"><span>${l}</span><span class="cv-b"><i style="width:${v}%"></i><em style="left:50%"></em></span><b class="num">${v.toFixed(0)}%</b></div>`).join("")}</div>
-      <p class="st-d"><b>Outcome:</b> Remain wins the cities by about ${Math.round(((c+e)/2)-50)*2} points and the rest of the province by ${Math.round((r-50)*2)}.</p></button>`);
+  // 4. the other nine questions
+  const qs = [1,2,3,4,5,6,7,8,9].map(n=>({n, p:pair(abV(n))})).filter(x=>x.p);
+  if (qs.length === 9){
+    const g1 = qs.filter(x=>x.n<=5), g2 = qs.filter(x=>x.n>=6), ya = g => g.map(x=>x.p.a);
+    const pass1 = g1.filter(x=>x.p.a > 50).length, lo1 = Math.min(...ya(g1)), hi1 = Math.max(...ya(g1)), lo2 = Math.min(...ya(g2)), hi2 = Math.max(...ya(g2));
+    const split = lo2 > 47 && hi2 < 53, back = lo2 >= 53, rej = hi2 <= 47;
+    const h4 = pass1 === 5 ? (split ? "Albertans want tighter immigration rules but are split on changing the constitution"
+                               : back ? "Albertans want tighter immigration rules and constitutional change"
+                               : rej ? "Albertans want tighter immigration rules but reject constitutional change"
+                               : "Albertans want tighter immigration rules; the constitutional questions are mixed")
+             : pass1 === 0 ? "Albertans reject the immigration questions" : "Albertans are divided on immigration rules";
+    ch.push({h:h4, chart:chQuestions(qs),
+      p: `${pass1 === 5 ? `All five immigration and citizenship questions pass, with ${lo1.toFixed(0)}% to ${hi1.toFixed(0)}% Yes.` : `${NUMW[pass1][0].toUpperCase()+NUMW[pass1].slice(1)} of five immigration and citizenship questions pass.`} The four constitutional questions are between ${lo2.toFixed(0)}% and ${hi2.toFixed(0)}%.`});
   }
-  if (rp >= MINREP){
-    const X = v => Math.max(0, Math.min(100, (v-55)/(85-55)*100));
-    out.push(`<button type="button" class="story" data-go="polls" id="pollsStory"><span class="st-k">Polls vs result</span>
-      <h3 class="st-h">${pgap >= 1 ? `Remain beat the final polls by ${pgap.toFixed(0)} points` : pgap <= -1 ? `Remain fell ${(-pgap).toFixed(0)} points short of the polls` : "The result matched the polls"}</h3>
-      <div class="pv2"><div class="pv-line">${pdec.map(x=>`<span class="pv-dot" style="left:${X(x.v)}%" title="${x.n}: ${x.v.toFixed(0)}%"></span>`).join("")}<span class="pv-res" style="left:${X(res10.a)}%"></span></div>
-        <div class="pv-ax"><span>55%</span><span>70%</span><span>85%</span></div></div>
-      <div class="pvt">${pdec.map(x=>`<span><i></i>${x.n} <span class="dim">${x.d}</span> <b class="num">${x.v.toFixed(0)}%</b></span>`).join("")}<span><i class="r"></i>Result so far <b class="num" style="color:var(--pro)">${res10.a.toFixed(0)}%</b></span></div>
-      <p class="st-d"><b>Outcome:</b> polls understated Remain. Shares are among decided respondents.</p></button>`);
+
+  // 5. polls
+  const dec = POLLS.map(x=>({...x, v:x.a/(x.a+x.b)*100})), avg = dec.reduce((t,x)=>t+x.v,0)/dec.length, gap = res10.a - avg;
+  const pr = STPOLL === null ? null : dec[STPOLL];
+  ch.push({h: gap >= 1 ? "Polls understated support for staying" : gap <= -1 ? "Polls overstated support for staying" : "Polls matched the result",
+    chart: chPolls(dec, avg, res10.a),
+    read: pr ? `<b>${pr.n}</b>, ${pr.d}, ${fmt(pr.s)} respondents: Remain ${pr.a}%, Referendum ${pr.b}%, undecided ${pr.u}%. Among decided voters, Remain ${pr.v.toFixed(0)}%.`
+         : STPOLL === dec.length ? `Average of the four polls among decided voters: ${avg.toFixed(1)}%.` : `<span class="dim">Tap a poll to see its full numbers.</span>`,
+    p: `The last four polls before the vote put Remain at ${avg.toFixed(0)}% among decided voters. The count has it at ${res10.a.toFixed(0)}%.`});
+
+  // conclusion
+  const hEnd = remWins ? (minorityInUcp ? "Separation is a minority position, including in UCP seats" : "Separation is a minority position") : "Separation has majority support";
+  const pEnd = remWins
+    ? `Albertans voted to stay${rw ? " by a wide margin" : ""}${minorityInUcp ? ", and the UCP's own seats voted the same way" : ""}. A UCP that took up separation would be campaigning for ${shareWords(res10.b)} of the vote.`
+    : `Most Albertans who voted chose to start the separation process.`;
+
+  box.innerHTML = ch.map((c,i)=>`<article class="ch" id="stc${i+1}"><span class="chN">${i+1}</span><h3 class="chH">${c.h}</h3>${c.chart ? `<div class="chC">${c.chart}</div>` : ""}${c.read !== undefined ? `<div class="chRead">${c.read}</div>` : ""}${c.p.startsWith("<p") ? c.p : `<p class="chP">${c.p}</p>`}${c.go ? `<button type="button" class="chGo" data-go="${c.go}">${c.goT} &rarr;</button>` : ""}</article>`).join("")
+    + `<div class="ending" id="stEnd"><h3 class="chH">${hEnd}</h3><p class="chP">${pEnd}</p><p class="fnote"><sup>1</sup> Based on today's results. Division results don't show how individual voters chose.</p></div>`;
+
+  const S3 = (ch.find(c=>c.hemi) || {}).hemi;
+  if (S3 && $("stHemi")){
+    hemicycle($("stHemi"), S3.res.map(r=>({w:r.w, fill: r.o.tier==="toss" ? "var(--mapMid)" : tint(r.o.win, r.o.tier), title:`${r.name}: ${r.o.tier==="toss" ? "too close" : TIERLAB[r.o.tier]+" "+SEATC[r.o.win][1]}`})));
+    $("stHemi").querySelectorAll("circle").forEach(c=>{ if (c.dataset.w === STSEAT) c.classList.add("on");
+      c.addEventListener("click", ()=>{ STSEAT = STSEAT === c.dataset.w ? null : c.dataset.w; renderInsights(); }); });
   }
-  box.innerHTML = out.join("");
-  box.querySelectorAll(".story").forEach(b=>b.addEventListener("click", ()=>goTo(b.dataset.go)));
-  $("insFoot").textContent = `Based on ${rp.toFixed(0)}% of voting places reported (${fmt(s.rep)} of ${fmt(s.tot)}). ${ready ? `Division comparisons use the ${pts.length} divisions with at least ${MINV} Q10 votes counted.` : ""} A question is called once the leading side is ${CALL} or more points clear of 50%, or when counting ends. Figures update as counting continues. 1 Seat forecast assumptions are in the Seat forecast section.`;
+  box.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click", ()=>goTo(b.dataset.go)));
+  box.querySelectorAll("#stDb .dbr").forEach(g=>g.addEventListener("click", ()=>{ STSEL = STSEL === g.dataset.w ? null : g.dataset.w; renderInsights(); }));
+  box.querySelectorAll("#stScn button").forEach(b=>b.addEventListener("click", ()=>{ STSCN = b.dataset.k; STSEAT = null; renderInsights(); }));
+  box.querySelectorAll("#stPv .pvr").forEach(g=>g.addEventListener("click", ()=>{ const i = +g.dataset.i; STPOLL = STPOLL === i ? null : i; renderInsights(); }));
+  $("insFoot").textContent = `Based on ${rp.toFixed(0)}% of voting places reported (${fmt(s.rep)} of ${fmt(s.tot)}). Seat comparisons use divisions with at least ${MINV} votes counted on Q10. Seat ratings use the margin between the top two: too close under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more. Figures update as counting continues.`;
 }
 
 function goTo(g){
