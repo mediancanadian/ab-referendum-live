@@ -538,7 +538,7 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
   <section class="panel" id="patterns">
     <span class="tag">Patterns</span>
     <h2 style="margin-top:4px">The separation vote sits far below the UCP's 2023 vote</h2>
-    <div class="lead3">Each bar counts the divisions in a 5-point band of vote share. Left: the UCP's share in 2023. Right: the separation share now.</div>
+    <div class="lead3">Alberta's divisions, grouped by the UCP's share of the vote in 2023 and by the separation share now.</div>
     <div class="seg small" id="bfTabs" style="margin-top:10px">
       <button type="button" data-k="all" class="on">All 87 divisions</button><button type="button" data-k="ucp">UCP seats only</button>
     </div>
@@ -732,7 +732,7 @@ function chUcpRef(rows){
       <text x="${(X(r.ucp)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--ucp)">${r.ucp.toFixed(0)}%</text>
       <text x="${LBL}" y="${y+10.5}" class="dbn${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text></g>`; });
   return `<div class="lg"><span><i class="ubk"></i>UCP share in that seat, 2023</span><span><i class="rbk"></i>Vote to separate, 2026</span></div>
-    <p class="dbk-note">One row per seat the United Conservative Party (UCP) won in 2023, highest UCP vote share at the top. Both bars start at 0, so each red bar can be read against its own seat's 2023 result.</p>
+    <p class="dbk-note">The ${n} seats the United Conservative Party (UCP) won in 2023, from its highest share of the vote to its lowest.</p>
     <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and vote to separate now">${g}</svg>`;
 }
 
