@@ -7,18 +7,21 @@
   --bg:#f4f5f7; --panel:#ffffff; --panel2:#f7f8fa; --text:#1b2330; --muted:#677080; --line:#dfe3e8;
   --pro:#2e7d4f; --anti:#b23b32; --accent:#4b6a8f; --track:#e6e9ee; --glow:rgba(75,106,143,.18); --locate:#4b6a8f;
   --mapPro:#1f7a45; --mapMid:#b9bfc9; --mapAnti:#b3332a;
+  --ucp:#1d4f91; --ndpc:#e07a1f; --modc:#6f4fb0; --tintBase:#ffffff;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
     --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
     --mapPro:#4fb07a; --mapMid:#7c8494; --mapAnti:#d4655a;
+    --ucp:#5b8fd6; --ndpc:#f0954a; --modc:#a68be0; --tintBase:#e8ebf0;
   }
 }
 :root[data-theme="dark"]{
   --bg:#11151c; --panel:#181d26; --panel2:#141922; --text:#e4e8ee; --muted:#8a93a2; --line:#262d39;
   --pro:#5aa37a; --anti:#c8665c; --accent:#7f97b5; --track:#232a36; --glow:rgba(127,151,181,.18); --locate:#9fb6d6;
     --mapPro:#4fb07a; --mapMid:#7c8494; --mapAnti:#d4655a;
+    --ucp:#5b8fd6; --ndpc:#f0954a; --modc:#a68be0; --tintBase:#e8ebf0;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -131,8 +134,300 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .refk{display:inline-block;width:2px;height:10px;background:var(--text);border-radius:1px;vertical-align:-1px;margin:0 2px}
 .row.big .bar{height:12px}
 .row.big .qv{font-size:1rem}
-.trunc .qt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trunc .qt{line-height:1.3}
 
+.seg.small button{padding:6px 10px;font-size:.8rem}
+.bfkey{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:10px;font-size:.72rem;color:var(--muted)}
+.bfkey i,.sclegend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+#bfly{width:100%;max-width:560px;height:auto;display:block;margin:10px auto 0}
+#bfly .grid{stroke:var(--line);stroke-width:1}
+#bfly .ax{font-size:8.5px;fill:var(--muted)}
+#bfly .ttl{font-size:10px;font-weight:700}
+#bfly .cnt{font-size:8px;fill:var(--muted)}
+#bfly .half{stroke:var(--text);stroke-width:1;stroke-dasharray:4 3;opacity:.7}
+#bfly .med{stroke-width:1.5;stroke-dasharray:2 2}
+#bfly .bar{cursor:pointer;transition:opacity .2s}
+#bfly .bar.on{stroke:var(--text);stroke-width:1.5}
+.bflist{margin-top:10px;font-size:.8rem}
+.bfband{margin-bottom:6px}
+.bfgrp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
+.bfgrp>span{font-size:.72rem;font-weight:700;width:100%}
+.dchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:4px 10px;font-size:.75rem;cursor:pointer}
+.dchip i{width:8px;height:8px;border-radius:50%}
+.dchip .num{color:var(--muted)}
+.bfh,.bfr{display:grid;grid-template-columns:minmax(0,38%) 1fr 1fr;align-items:center;column-gap:0}
+.bfh{font-size:.7rem;color:var(--muted);padding:0 0 4px}
+.bfh .l{text-align:right;padding-right:6px}.bfh .r{padding-left:6px}
+.bfr{border:none;background:none;padding:2px 0;cursor:pointer;text-align:left;border-radius:4px}
+.bfr.on{background:var(--panel2)}
+.bfn{font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px}
+.bfl,.bfrr{position:relative;height:12px;display:flex;align-items:center}
+.bfl{justify-content:flex-end;border-right:1px solid var(--muted)}
+.bfl i,.bfrr i{display:block;height:100%;border-radius:2px}
+.bfl i{border-radius:2px 0 0 2px}.bfrr i{border-radius:0 2px 2px 0}
+.bfl .v,.bfrr .v{position:absolute;font-size:.62rem;font-style:normal;color:var(--muted)}
+.bfl .v{left:2px}.bfrr .v{right:2px}
+.bfl::before,.bfrr::before{content:"";position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--line)}
+.bfl::before{left:50%}.bfrr::before{left:50%}
+.scdesc{font-size:.8rem;margin-top:10px;line-height:1.45}
+.tossrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:.78rem}
+.sctable{display:flex;flex-direction:column;gap:4px;margin-top:12px;font-size:.8rem}
+.sctable>div{display:grid;grid-template-columns:14px 1fr auto;gap:8px;align-items:center}
+.sw2{width:12px;height:12px;border-radius:3px}
+.sclist{margin-top:10px;font-size:.8rem;line-height:1.5;min-height:1em}
+.scH{margin:4px 0 0;font-size:clamp(1.25rem,5vw,1.6rem);line-height:1.15;letter-spacing:-.02em}
+.scDek{font-size:.95rem;margin-top:6px;line-height:1.4}
+.hemis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.hemi{margin:0;background:var(--panel2);border-radius:14px;padding:10px 8px 8px}
+.hemi figcaption{text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hemi svg{width:100%;height:auto;display:block;margin-top:2px}
+.hemi circle{cursor:pointer;stroke:var(--panel2);stroke-width:.6}
+.hemi .hmaj{stroke:var(--text);stroke-width:.8;stroke-dasharray:2 2;opacity:.7}
+.hhrow{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;margin-top:6px}
+.hhd{display:flex;flex-direction:column;font-size:.68rem;font-weight:700;line-height:1.1}
+.hhd b{font-size:1.4rem;font-weight:800;letter-spacing:-.02em}
+.hhd.r{text-align:right;align-items:flex-end}
+.hhd.c{font-size:.62rem;color:var(--muted);text-align:center;font-weight:600}
+.hmid{text-align:center;font-size:.72rem;color:var(--muted);margin-top:2px}
+.tossdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mapMid);margin-right:4px;vertical-align:0}
+sup .fn{color:var(--accent);text-decoration:none;font-size:.7em;margin-left:2px}
+#scFoot sup{color:var(--accent)}
+@media (max-width:420px){.hemis{grid-template-columns:1fr}}
+.ratebar{position:relative;margin-top:12px}
+.rb{display:flex;height:26px;border-radius:6px;overflow:hidden;gap:1px;background:var(--panel)}
+.rb span{display:flex;align-items:center;justify-content:center;min-width:2px}
+.rb b{font-size:.72rem;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.rbmaj{position:absolute;top:-4px;height:34px;width:2px;background:var(--text);transform:translateX(-1px)}
+.rblab{display:flex;justify-content:space-between;gap:6px;font-size:.68rem;color:var(--muted);margin-top:4px}
+.rblab span:nth-child(2){text-align:center}.rblab span:last-child{text-align:right}
+.rtab{width:100%;border-collapse:collapse;margin-top:12px;font-size:.8rem}
+.rtab th,.rtab td{padding:5px 4px;border-top:1px solid var(--line);text-align:center}
+.rtab thead th{border-top:none;font-size:.7rem;color:var(--muted);font-weight:600}
+.rtab tbody th{text-align:left;font-weight:600;white-space:nowrap}
+.rtab .sw2{display:inline-block;vertical-align:-1px;margin-right:6px}
+.rtab .tot{font-weight:700}
+.rtab .pairs{text-align:left;font-size:.72rem}
+.rnote{font-size:.72rem;margin-top:6px}
+.scnote{margin-top:8px;font-size:.8rem;line-height:1.45;background:var(--panel2);border-radius:10px;padding:8px 10px}
+.schead{margin-top:8px;font-size:.9rem}.schead b{font-size:1.4rem}
+.grid87{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:10px;max-width:420px}
+.grid87 i{aspect-ratio:1;border-radius:3px;cursor:pointer;display:block}
+.grid87 i.was,.wasK{box-shadow:inset 0 0 0 2px var(--text)}
+.wasK{background:transparent}
+.sclegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:.75rem;color:var(--muted)}
+.sclegend b{color:var(--text)}
+.story2{max-width:720px;margin:12px auto 0}
+.ch{position:relative;padding:0 0 26px 36px}
+.ch::before{content:"";position:absolute;left:12px;top:28px;bottom:2px;width:2px;background:var(--line)}
+.chN{position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--panel);font-size:.78rem;font-weight:800;display:grid;place-items:center}
+.chH{margin:0;font-size:clamp(1.12rem,4.4vw,1.45rem);line-height:1.22;letter-spacing:-.015em}
+#stc1 .chH{font-size:clamp(1.35rem,5.6vw,2rem)}
+.chC{margin-top:12px}
+.chP{margin:10px 0 0;font-size:.93rem;line-height:1.55}
+.chRead{margin-top:6px;font-size:.8rem;line-height:1.45;min-height:2.9em}
+.chGo{border:none;background:none;color:var(--accent);font:inherit;font-weight:600;font-size:.85rem;padding:0;margin-top:8px;cursor:pointer}
+.chGo.in{margin:0 0 0 6px}
+.ending{border-top:2px solid var(--text);padding-top:14px;margin:2px 0 0 36px}
+.fnote{font-size:.72rem;color:var(--muted);margin:10px 0 0}
+.v1{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.v1n b{display:block;font-size:clamp(2rem,9vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.v1n span{font-size:.78rem;color:var(--muted)}
+.v1n.r{text-align:right}
+.v1bar{grid-column:1/-1;position:relative;display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:6px}
+.v1bar i{display:block;height:100%}.v1bar em{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--panel)}
+.v1v{grid-column:1/-1;display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.72rem;color:var(--muted);margin-bottom:4px}
+.lg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.chsvg{width:100%;height:auto;display:block;max-width:520px}
+#stDb{max-width:470px}
+.chsvg .dbn{font-size:9.5px;fill:var(--text)}
+.chsvg .dbn.hot{fill:var(--anti);font-weight:700}
+.chsvg .dbn.on{font-weight:700}
+.chsvg .dbv{font-size:9px;font-weight:700}
+.chsvg .ub{fill:color-mix(in srgb, var(--ucp) 28%, var(--panel))}
+.lg i.ubk{width:14px;height:10px;border-radius:2px;background:color-mix(in srgb, var(--ucp) 28%, var(--panel))}
+.lg i.rbk{width:14px;height:4px;border-radius:1px;vertical-align:1px;background:var(--anti)}
+.dbkey{max-width:470px;margin-bottom:6px}
+.dbk-ex{display:flex;align-items:center;width:100%;max-width:240px;margin:2px 0 0}
+.dbk-ex .d{flex:none;width:12px;height:12px;border-radius:50%}
+.dbk-ex .ln{flex:1;height:2px;background:var(--muted);opacity:.5}
+.dbk-lab{display:flex;justify-content:space-between;gap:12px;max-width:240px;font-size:.78rem;font-weight:700;margin-top:4px;line-height:1.25}
+.dbk-lab span:last-child{text-align:right}
+.dbk-note{margin:6px 0 0;font-size:.78rem;color:var(--muted);line-height:1.4}
+.chsvg .grid{stroke:var(--line);stroke-width:1}
+.chsvg .half{stroke:var(--text);stroke-width:1;stroke-dasharray:3 3;opacity:.6}
+.chsvg .ax{font-size:9.5px;fill:var(--muted)}
+.chsvg .ann{font-size:9px;fill:var(--muted)}
+.chsvg .ann.b{font-weight:700}
+.chsvg .ann.hot{fill:var(--anti);font-weight:700}
+.chsvg .annb{font-size:10.5px;font-weight:700}
+.chsvg .lnk{stroke:var(--muted);stroke-width:1.2;opacity:.45}
+.chsvg .hit{fill:transparent;cursor:pointer}
+.chsvg .dbr.on .hit,.chsvg .pvr.on .hit{fill:var(--panel2)}
+.chsvg .pvn{font-size:10.5px;fill:var(--text)}
+.chsvg .pvn.b{font-weight:700}
+.chsvg .resl{stroke:var(--pro);stroke-width:2.5}
+.hemiL{max-width:320px;margin:4px auto 0}
+.hemiL circle{cursor:pointer;stroke:var(--panel);stroke-width:.6}
+.hemiL circle.on{stroke:var(--text);stroke-width:1.6}
+.qx{display:flex;flex-direction:column}
+.qxg{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px}
+.qxg:first-child{margin-top:0}
+.qxr{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,36%) 74px;gap:8px;align-items:center;border:none;background:none;text-align:left;padding:6px 0;border-top:1px solid var(--line);cursor:pointer}
+.qxn{font-size:.72rem;font-weight:700;color:var(--muted)}
+.qxt{font-size:.8rem;line-height:1.3}
+.qxb{position:relative;height:12px;background:var(--track);border-radius:3px}
+.qxb em{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--text);opacity:.7;transform:translateX(-1px)}
+.qxb i{position:absolute;top:0;bottom:0;border-radius:3px}
+.qxv{font-size:.78rem;font-weight:700;text-align:right}
+@media (max-width:560px){.qxr{grid-template-columns:28px minmax(0,1fr) 70px;grid-template-areas:"n t v" "n b b"}.qxn{grid-area:n}.qxt{grid-area:t}.qxb{grid-area:b}.qxv{grid-area:v}.ch{padding-left:32px}.ending{margin-left:32px}}
+.poster{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:2px}
+.vrow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:4px}
+.badge2{flex:none;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:#fff;white-space:nowrap}
+.badge2.no{background:var(--pro)}.badge2.yes{background:var(--anti)}.badge2.close{background:var(--mapMid);color:var(--text)}
+.badge2.no2{background:var(--pro)}.badge2.yes2{background:var(--anti)}.badge2.wait{background:var(--track);color:var(--muted)}
+.vgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;margin-top:12px}
+.score2{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.score2 b{display:block;font-size:clamp(2rem,8vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.score2 span{font-size:.75rem;color:var(--muted)}
+.sc-r{text-align:right}
+.sc-bar{grid-column:1/-1;position:relative;display:flex;height:14px;border-radius:7px;overflow:hidden;margin-top:6px}
+.sc-bar i{display:block;height:100%}.sc-bar em{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--panel)}
+.sc-v{grid-column:1/-1;font-size:.72rem;color:var(--muted)}
+.vhemi{margin:0}.vhemi svg{width:100%;max-width:300px;display:block;margin:0 auto}.vhemi circle{stroke:var(--panel);stroke-width:.6;cursor:pointer}
+.vhemi figcaption{text-align:center;font-size:.75rem;color:var(--muted);margin-top:4px}
+.kfb{display:flex;flex-direction:column;gap:4px;text-align:left;border:none;border-top:3px solid var(--accent);background:none;padding:8px 0 0;cursor:pointer}
+.kfb b{font-size:clamp(1.3rem,5vw,2rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.kfb span{font-size:.75rem;color:var(--muted);line-height:1.35}
+.h3s{margin:18px 0 8px;font-size:1rem}
+.sb{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sbr{display:grid;grid-template-columns:30px minmax(0,1fr) 90px auto;grid-template-areas:"n t p g" "n b b g";gap:4px 10px;align-items:center;text-align:left;border:none;border-top:1px solid var(--line);background:var(--panel);padding:9px 12px;cursor:pointer}
+.sbr:first-child{border-top:none;background:var(--panel2)}
+.sbn{grid-area:n;font-size:.72rem;font-weight:700;color:var(--muted)}
+.sbt{grid-area:t;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sbb{grid-area:b;position:relative;display:flex;height:7px;border-radius:4px;overflow:hidden}.sbb i{display:block;height:100%}.sbb em{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--panel)}
+.sbp{grid-area:p;font-size:.78rem;text-align:right;color:var(--muted)}
+.sbr .badge2{grid-area:g;font-size:.62rem;padding:4px 8px;min-width:84px;text-align:center}
+.pv2{margin:10px 4px 0}
+.pv2 .pv-ax{display:flex;justify-content:space-between;font-size:.62rem;color:var(--muted);margin-top:8px}
+.pvt{display:flex;flex-direction:column;gap:3px;font-size:.75rem;margin-top:6px}
+.pvt i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:-1px}
+.pvt i.r{border-radius:2px;width:4px;height:12px;background:var(--pro)}
+@media (max-width:640px){.vgrid{grid-template-columns:1fr}.sbr{grid-template-columns:28px minmax(0,1fr) auto;grid-template-areas:"n t g" "n b p"}.sbp{text-align:left}}
+.anH{margin:6px 0 0;font-size:clamp(1.35rem,5vw,1.9rem);line-height:1.15;letter-spacing:-.02em}
+.kf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.kf>div{display:flex;flex-direction:column;gap:4px;border-top:3px solid var(--accent);padding-top:8px}
+.kf b{font-size:clamp(1.6rem,6vw,2.4rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.kf span{font-size:.78rem;color:var(--muted);line-height:1.35}
+.kf sup{font-size:.65em}
+details.about2{margin-top:12px;border-top:1px solid var(--line);padding-top:8px}
+details.about2 summary{cursor:pointer;font-weight:600;font-size:.85rem;list-style:none}
+details.about2 summary::-webkit-details-marker{display:none}
+details.about2 summary::after{content:" +";color:var(--muted)}
+details.about2[open] summary::after{content:" \2212"}
+.pv{position:relative;margin:8px 4px 4px;padding:22px 0 34px}
+.pv-ax span{position:absolute;top:0;font-size:.62rem;color:var(--muted);transform:translateX(-50%)}
+.pv-ax span:first-child{transform:none}.pv-ax span:last-child{transform:translateX(-100%)}
+.pv-line{position:relative;height:4px;background:var(--track);border-radius:2px;margin-top:6px}
+.pv-dot{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--muted);transform:translate(-50%,-50%);border:2px solid var(--panel2)}
+.pv-lab{position:absolute;font-size:.62rem;color:var(--muted);transform:translateX(-50%);white-space:nowrap;margin-top:-4px}
+.pv-res{position:absolute;top:-10px;bottom:-10px;width:3px;background:var(--pro);border-radius:2px;transform:translateX(-50%)}
+.pv-reslab{position:absolute;bottom:0;font-size:.75rem;font-weight:700;color:var(--pro);transform:translateX(-50%);white-space:nowrap}
+@media (max-width:640px){.kf{grid-template-columns:1fr 1fr 1fr;gap:8px}}
+.stories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
+.story{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px;cursor:pointer}
+.story:hover{border-color:var(--accent)}
+.story.lead{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:center}
+.st-k{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.st-h{margin:0;font-size:1.08rem;line-height:1.25;letter-spacing:-.01em}
+.story.lead .st-h{font-size:clamp(1.3rem,5vw,1.7rem);margin-top:4px}
+.st-v{font-size:3rem;font-weight:800;letter-spacing:-.04em;line-height:1;margin-top:8px;color:var(--pro)}
+.st-v small{font-size:1.1rem;font-weight:600;color:var(--muted);letter-spacing:0}
+.st-d{margin:0;font-size:.82rem;line-height:1.45;color:var(--text)}
+.story .st-d .dim{font-size:.72rem}
+.st-viz svg{width:100%;max-width:300px;display:block;margin:0 auto}
+.st-viz circle{stroke:var(--panel2);stroke-width:.6;cursor:pointer}
+.st-cap{display:flex;justify-content:center;gap:14px;font-size:.72rem;color:var(--muted);margin-top:4px}
+.st-cap i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.db{position:relative;margin:6px 0 2px;padding:18px 0 20px}
+.db-ax span{position:absolute;top:0;font-size:.62rem;color:var(--muted);transform:translateX(-50%)}
+.db-ax span:first-child{transform:none}.db-ax span:last-child{transform:translateX(-100%)}
+.db-line{position:relative;height:4px;background:var(--track);border-radius:2px}
+.db-seg{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,var(--anti),var(--ucp));opacity:.45}
+.db-dot{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid var(--panel2)}
+.db-lab span{position:absolute;bottom:0;font-size:.72rem;font-weight:700;transform:translateX(-50%);white-space:nowrap}
+.cv{display:flex;flex-direction:column;gap:8px;margin:4px 0}
+.cv-r{display:grid;grid-template-columns:92px 1fr 40px;gap:8px;align-items:center;font-size:.8rem}
+.cv-b{position:relative;height:12px;background:var(--anti);border-radius:6px;overflow:hidden;opacity:.95}
+.cv-b i{display:block;height:100%;background:var(--pro)}
+.cv-b em{position:absolute;top:0;bottom:0;width:2px;background:var(--panel2)}
+.cv-r b{text-align:right}
+.qd{display:flex;flex-direction:column;gap:3px;margin:2px 0}
+.qd-r{display:grid;grid-template-columns:28px 1fr 34px;gap:8px;align-items:center;font-size:.72rem;color:var(--muted)}
+.qd-r b{color:var(--text);text-align:right}
+.qd-b{position:relative;height:10px;background:var(--track);border-radius:3px}
+.qd-b em{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--text);opacity:.6}
+.qd-b i{position:absolute;top:0;bottom:0;border-radius:3px}
+.sk{margin:6px 0 2px}
+.sk-bar{position:relative;display:flex;height:22px;border-radius:6px;overflow:hidden;gap:2px}
+.sk-bar i{display:block;height:100%}
+.sk-bar em{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--text);transform:translateX(-1px)}
+.sk-lab{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;margin-top:5px;color:var(--muted)}
+@media (max-width:640px){.stories{grid-template-columns:1fr}.story.lead{grid-template-columns:1fr}}
+.icards{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px;margin-top:10px}
+@media (max-width:560px){.icards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:10px -16px 0;padding:0 16px 6px;scrollbar-width:none}.icards::-webkit-scrollbar{display:none}.icard{flex:0 0 72%;scroll-snap-align:start}}
+.icard{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;min-height:150px}
+.icard:hover{border-color:var(--accent)}
+.icard .ik{padding-right:18px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.icard .iv{font-size:2rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+.icard .ivw{font-size:1.35rem;letter-spacing:-.02em}
+.icard .iv small{font-size:.9rem;font-weight:600;color:var(--muted);letter-spacing:0}
+.icard .id{font-size:.78rem;line-height:1.35}
+.icard .igo{position:absolute;right:12px;top:10px;color:var(--muted)}
+.mq{display:grid;grid-template-columns:repeat(15,1fr);gap:2px;margin-top:auto;padding-top:6px}
+.mq i{aspect-ratio:1;border-radius:2px}
+.mbar{position:relative;display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--track);margin-top:auto}
+.mbar i{display:block;height:100%}
+.mbar em{position:absolute;top:0;bottom:0;width:2px;background:var(--text);opacity:.8;transform:translateX(-1px)}
+.mb,.mr{display:grid;grid-template-columns:auto 1fr auto;gap:4px 6px;align-items:center;font-size:.68rem;color:var(--muted);margin-top:auto}
+.mb i{display:block;height:8px;border-radius:4px}
+.mb b{color:var(--text);font-size:.72rem}
+.mr{grid-template-columns:auto 1fr}
+.mr .t{height:8px;border-radius:4px;background:var(--track);overflow:hidden}.mr .t i{display:block;height:100%;background:var(--accent)}
+.ins{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.ins li{position:relative;padding-left:16px;font-size:.88rem;line-height:1.45}
+.ins li::before{content:"";position:absolute;left:2px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.ins .dim,.dim{color:var(--muted)}
+.insfoot{margin-top:10px;font-size:.72rem;color:var(--muted);line-height:1.5}
+.lead3{font-size:.8rem;color:var(--muted);margin-top:4px}
+.h3{font-size:.92rem;margin:18px 0 0}
+#scatter{width:100%;max-width:560px;height:auto;display:block;margin:8px auto 0}
+#scatter .grid{stroke:var(--line);stroke-width:1}
+#scatter .half{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+#scatter .trend{stroke:var(--text);stroke-width:1.5;opacity:.55}
+#scatter .ax{font-size:9px;fill:var(--muted)}
+#scatter .lab{font-size:10px;font-weight:600}
+#scatter .lbl{paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+#scatter .dot{stroke:var(--panel);stroke-width:1;cursor:pointer}
+#scatter .dot.sel{stroke:var(--text);stroke-width:2}
+.scap{font-size:.82rem;margin-top:6px;line-height:1.45}
+#corrBars{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+.cb{display:grid;grid-template-columns:132px minmax(0,1fr) 44px;gap:8px;align-items:center;border:none;background:none;padding:6px 4px;border-radius:8px;cursor:pointer;text-align:left}
+.cb.on{background:var(--panel2)}
+.cbl{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbt{position:relative;height:10px;background:var(--track);border-radius:5px}
+.cbt i{position:absolute;top:0;bottom:0;background:var(--accent);border-radius:5px}
+.cbz{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.cbv{font-size:.78rem;text-align:right;color:var(--muted)}
+details.about{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+details.about summary{cursor:pointer;font-weight:600;font-size:.88rem;list-style:none;display:flex;justify-content:space-between}
+details.about summary::-webkit-details-marker{display:none}
+details.about summary::after{content:"+";color:var(--muted)}
+details.about[open] summary::after{content:"\2212"}
+.ab2{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--line);font-size:.82rem}
+.ab2:first-of-type{border-top:none}
+.ab2 span{font-size:.72rem;color:var(--muted)}
+.ab2 small{font-size:.75rem;color:var(--muted)}
 details.count summary{cursor:pointer;font-weight:600;font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details.count summary::-webkit-details-marker{display:none}
 details.count summary::after{content:"+";color:var(--muted);font-size:1.2rem}
@@ -142,6 +437,10 @@ details.count[open] summary::after{content:"\2212"}
 .types b{display:block;color:var(--text);font-size:.95rem}
 .foot{margin-top:20px;font-size:.75rem;color:var(--muted);line-height:1.5}
 .foot a{color:inherit}
+details.qfull{margin-top:10px;font-size:.8rem}
+details.qfull summary{cursor:pointer;color:var(--accent);font-weight:600;list-style:none}
+details.qfull summary::-webkit-details-marker{display:none}
+details.qfull p{margin:6px 0 0;line-height:1.45}
 @media (max-width:900px){.maps{grid-template-columns:1fr}}
 @media (max-width:560px){.hero{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:12px}.types{grid-template-columns:repeat(2,1fr)}.hero .q{font-size:.92rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -170,14 +469,24 @@ details.count[open] summary::after{content:"\2212"}
     </div>
     <figure class="heroMap" id="heroMap" role="button" tabindex="0" aria-label="Open the map">
       <svg id="mapHero" aria-hidden="true"></svg>
-      <figcaption id="heroCap">Tap the map to explore</figcaption>
+      <figcaption id="heroCap">Alberta's 87 divisions (ridings). Green: more Remain. Grey: close to even. Red: more Referendum. Tap to explore.</figcaption>
     </figure>
     <div class="bar heroBar"><i id="hBarA" style="background:var(--pro);width:50%"></i><i id="hBarB" style="background:var(--anti);width:50%"></i><span class="mid"></span></div>
     <div class="rep"><span><b class="num" id="repN">-</b> voting places reporting</span><span class="num" id="repV"></span></div>
     <div class="thin" style="grid-column:1/-1;margin-top:-6px"><span id="repBar" style="width:0"></span></div>
   </section>
 
-  <!-- 2. Explore: one lens at a time -->
+  <!-- 2. What's happening: short factual lines written from the numbers -->
+  <section class="panel" id="insights">
+    <span class="tag" id="anK">Unofficial results</span>
+    <div class="story2" id="story"><p class="dim">Waiting for results.</p></div>
+    <details class="about2"><summary>About this analysis</summary>
+      <div class="insfoot" id="insFoot"></div>
+      <p class="insfoot">Results: Elections Alberta unofficial results, checked every 20 seconds. 2023 provincial and by-election results: Elections Alberta. 2025 federal results estimated for each division from Elections Canada polling-station results. Census 2021: Statistics Canada via Alberta's Office of Statistics and Information. Pre-vote polls as published: Angus Reid (Aug 10&ndash;13, 1,017 people), Leger (Aug 21&ndash;23, 1,001 people), Research Co. (Aug 24&ndash;26, 750 people), Abacus Data (Sep 4&ndash;7, 1,000 people), 2026, shown among decided respondents (undecided left out). <a href="https://github.com/sjvadrevu/ab-referendum-live/blob/main/context/SOURCES.md" target="_blank" rel="noopener">Full sources and methods</a>.</p>
+    </details>
+  </section>
+
+  <!-- 3. Explore: one lens at a time -->
   <section class="panel" id="explore">
     <div class="exhd">
       <h2>Explore</h2>
@@ -221,14 +530,55 @@ details.count[open] summary::after{content:"\2212"}
     <div class="score" id="score" hidden></div>
   </section>
 
-  <!-- 3. All questions for Alberta -->
+  <!-- 4. Patterns: what tracks the Remain vote -->
+  <section class="panel" id="patterns">
+    <span class="tag">Patterns</span>
+    <h2 style="margin-top:4px">The Referendum vote sits far below the UCP's 2023 vote</h2>
+    <div class="lead3">Each bar counts the divisions in a 5-point band of vote share. Left: the UCP's share in 2023. Right: the Referendum share now.</div>
+    <div class="seg small" id="bfTabs" style="margin-top:10px">
+      <button type="button" data-k="all" class="on">All 87 divisions</button><button type="button" data-k="ucp">UCP seats only</button>
+    </div>
+    <svg id="bfly" role="img" aria-label="Butterfly chart: divisions by UCP 2023 share and by Referendum share"></svg>
+    <div class="scap" id="bfHead"></div>
+    <div class="bflist" id="bfList"></div>
+  </section>
+
+  <section class="panel" id="seatsPanel">
+    <span class="tag">Seat forecast</span>
+    <h2 class="scH" id="scH">If the UCP ran on separation<sup><a href="#scFoot" class="fn">1</a></sup></h2>
+    <div class="scDek" id="scDek"></div>
+    <div class="lead3">Based on today's results. Each dot is a seat; tap one for its numbers.</div>
+    <div class="seg small" id="scTabs" style="margin-top:10px">
+      <button type="button" data-k="A">Straight fight</button><button type="button" data-k="B" class="on">Three-way race</button>
+    </div>
+    <div class="tossrow"><span class="dim">Call it a toss-up if the top two are within</span><div class="seg small" id="tossTabs"><button type="button" data-k="2">2 pts</button><button type="button" data-k="3" class="on">3 pts</button><button type="button" data-k="5">5 pts</button></div></div>
+    <div id="seats"></div>
+    <div class="insfoot" id="scFoot"></div>
+  </section>
+
+  <section class="panel">
+    <details class="count" id="moreFactors">
+      <summary>More patterns: census and federal factors</summary>
+      <div class="lead3" style="margin-top:8px">Each dot is a division: across, a factor; up, its Remain share on Q10.</div>
+      <div class="chips" id="facChips"></div>
+      <svg id="scatter" viewBox="0 0 340 240" role="img" aria-label="Scatter chart of divisions"></svg>
+      <div class="scap" id="scap"></div>
+      <h3 class="h3">How closely each factor lines up with Remain</h3>
+      <div class="lead3">From &minus;1 (higher factor, less Remain) through 0 (no link) to +1 (higher factor, more Remain). Tap a row to chart it.</div>
+      <div id="corrBars"></div>
+    </details>
+    <div class="insfoot">2023 results: Elections Alberta. 2025 federal results are estimated per division from Elections Canada polling-station results. Census 2021 via Alberta Office of Statistics and Information; unemployment was measured in May 2021, during COVID. These patterns describe divisions, not how any individual voted. Seat scenarios are hypothetical.</div>
+  </section>
+
+  <!-- 5. All questions for Alberta -->
   <section class="panel">
     <span class="tag">All questions</span>
     <h2 style="margin-top:4px">Alberta results</h2>
+    <div class="lead3">Question 10 is counted first, then Questions 1 to 9 in order, so later questions have fewer votes counted so far.</div>
     <div class="rows" id="allRows" style="margin-top:6px"></div>
   </section>
 
-  <!-- 4. Counting details, closed by default -->
+  <!-- 6. Counting details, closed by default -->
   <section class="panel">
     <details class="count">
       <summary>Counting details</summary>
@@ -236,21 +586,21 @@ details.count[open] summary::after{content:"\2212"}
     </details>
   </section>
 
-  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every 20 seconds. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Official results: October 29, 2026.</div>
+  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every 20 seconds. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Unofficial results are not final until official results are published on October 29, 2026.</div>
 </main>
 
 <script>
 const QTEXT = {"1": "Do you support the Government of Alberta taking increased control over immigration for the purposes of decreasing immigration to more sustainable levels, prioritizing economic migration and giving Albertans first priority on new employment opportunities?", "2": "Do you support the Government of Alberta introducing a law mandating that only Canadian citizens, permanent residents and individuals with an Alberta-approved immigration status will be eligible for provincially-funded programs, such as health care, education and other social services?", "3": "Assuming that all Canadian citizens and permanent residents continue to qualify for social support programs as they do now, do you support the Government of Alberta introducing a law requiring all individuals with a non-permanent legal immigration status to reside in Alberta for at least 12 months before qualifying for any provincially-funded social support programs?", "4": "Assuming that all Canadian citizens and permanent residents continue to qualify for public health care and education as they do now, do you support the Government of Alberta charging a reasonable fee or premium to individuals with a non-permanent immigration status living in Alberta for their and their family's use of the health care and education systems?", "5": "Do you support the Government of Alberta introducing a law requiring individuals to provide proof of citizenship, such as a passport, birth certificate or citizenship card, to vote in an Alberta provincial election?", "6": "Do you support the Government of Alberta working with the governments of other willing provinces to amend the Canadian Constitution to have provincial governments, and not the federal government, select the justices appointed to provincial King's Bench and Appeal courts?", "7": "Do you support the Government of Alberta working with the governments of other willing provinces to amend the Canadian Constitution to abolish the unelected federal Senate?", "8": "Do you support the Government of Alberta working with the governments of other willing provinces to amend the Canadian Constitution to allow provinces to opt out of federal programs that intrude on provincial jurisdiction such as health care, education and social services, without a province losing any of the associated federal funding for use in its social programs?", "9": "Do you support the Government of Alberta working with the governments of other willing provinces to amend the Canadian Constitution to better protect provincial rights from federal interference by giving a province's laws dealing with provincial or shared areas of constitutional jurisdiction priority over federal laws when the province's laws and federal laws conflict?", "10": "Should Alberta remain a province of Canada, or should the Government of Alberta commence the legal process required under the Canadian Constitution to hold a binding provincial referendum on whether or not Alberta should separate from Canada? Option 1: Alberta should remain a province in Canada. Option 2: The Government of Alberta should commence the legal process required under the Canadian Constitution to hold a binding provincial referendum on whether or not Alberta should separate from Canada"};
 const SHORT = {
-  1:"Increase provincial control over immigration",
-  2:"Limit provincial programs to citizens, PRs and approved status",
-  3:"12-month residency before social supports (non-permanent)",
-  4:"Health and education fee for non-permanent residents",
+  1:"More provincial control to reduce immigration",
+  2:"Limit provincial programs by immigration status",
+  3:"Non-permanent residents wait 12 months for supports",
+  4:"Health and education fees for non-permanent residents",
   5:"Proof of citizenship to vote provincially",
   6:"Provinces select King's Bench and Appeal judges",
   7:"Abolish the Senate",
   8:"Opt out of federal programs, keep the funding",
-  9:"Provincial laws take priority over federal laws",
+  9:"Provincial laws over federal in provincial areas",
   10:"Remain in Canada, or start the process for a separation referendum"
 };
 const QORDER = [10,1,2,3,4,5,6,7,8,9];
@@ -303,16 +653,460 @@ function render(){
     $("hBarA").style.width = h.a+"%"; $("hBarB").style.width = h.b+"%"; }
   const s = cur.summary || {}, rp = s.tot ? s.rep/s.tot*100 : 0;
   $("repN").textContent = `${fmt(s.rep)} of ${fmt(s.tot)}`;
-  $("repV").textContent = `${rp.toFixed(1)}% · ${fmt(s.valid)} ballots`;
+  $("repV").textContent = `${rp.toFixed(1)}%`;
   $("repBar").style.width = rp+"%";
   // Alberta list (Q1 to Q9; Q10 is the hero)
   $("allRows").innerHTML = [1,2,3,4,5,6,7,8,9].map(n=>rowHTML(n, abV(n), {sub:"votes"})).join("");
   if (prev) [1,2,3,4,5,6,7,8,9].forEach(n=>{ const a=pair(abV(n)), b=(prev.questions||[]).find(x=>x.n===n); if (a && b && a.t !== b.yes+b.no) document.querySelector(`#allRows .row[data-n="${n}"]`).classList.add("flash"); });
   // counting details
-  $("types").innerHTML = (cur.types||[]).map(t=>`<div>${esc(t.name)}<b class="num">${fmt(t.valid)}</b>${fmt(t.rep)} of ${fmt(t.tot)} reporting</div>`).join("");
+  $("types").innerHTML = (cur.types||[]).map(t=>`<div>${esc(t.name)}<b class="num">${t.pct!=null ? (+t.pct).toFixed(1)+"%" : "-"}</b>of votes counted so far<br>${fmt(t.rep)} of ${fmt(t.tot)} places reporting</div>`).join("");
   drawMaps();
   drawExplore();
+  renderInsights();
+  drawButterfly();
+  drawSeats();
+  drawPatterns();
   tick();
+}
+
+/* ---------- context: 2023 provincial, by-elections, 2025 federal (estimated), 2021 Census ---------- */
+let CTX = null, FAC = "ucp23";
+const MINV = 300;          // a division needs this many Q10 votes counted to be used in patterns
+const MINREP = 25;         // % of voting places province-wide before pattern lines are shown
+const FACTORS = [
+  {k:"ucp23", ph:"UCP vote in 2023", lab:"UCP vote, 2023 provincial", short:"UCP 2023", g:c=>c.p23.ucp, u:"%"},
+  {k:"ndp23", ph:"NDP vote in 2023", lab:"NDP vote, 2023 provincial", short:"NDP 2023", g:c=>c.p23.ndp, u:"%"},
+  {k:"cpc25", ph:"federal Conservative vote in 2025", lab:"Conservative vote, 2025 federal (estimated)", short:"Conservative 2025", g:c=>c.f25.cpc, u:"%"},
+  {k:"lpc25", ph:"federal Liberal vote in 2025", lab:"Liberal vote, 2025 federal (estimated)", short:"Liberal 2025", g:c=>c.f25.lpc, u:"%"},
+  {k:"ppc25", ph:"People's Party vote in 2025", lab:"People's Party vote, 2025 federal (estimated)", short:"People's Party 2025", g:c=>c.f25.ppc, u:"%"},
+  {k:"deg", ph:"share with a university degree", lab:"University degree (ages 25 to 64)", short:"Degree", g:c=>c.c21.deg, u:"%"},
+  {k:"imm", ph:"share of immigrants", lab:"Immigrants", short:"Immigrants", g:c=>c.c21.imm, u:"%"},
+  {k:"rimm", ph:"share of recent immigrants", lab:"Recent immigrants (2016 to 2021)", short:"Recent immigrants", g:c=>c.c21.rimm, u:"%"},
+  {k:"vm", ph:"visible minority share", lab:"Visible minority", short:"Visible minority", g:c=>c.c21.vm, u:"%"},
+  {k:"ind", ph:"Indigenous share", lab:"Indigenous identity", short:"Indigenous", g:c=>c.c21.ind, u:"%"},
+  {k:"inc", ph:"household income", lab:"Median household income (2020)", short:"Income", g:c=>c.c21.inc, u:"$"},
+  {k:"age", ph:"average age", lab:"Average age", short:"Age", g:c=>c.c21.age, u:""},
+  {k:"unemp", ph:"unemployment rate", lab:"Unemployment rate (May 2021)", short:"Unemployment", g:c=>c.c21.unemp, u:"%"}
+];
+const facBy = k => FACTORS.find(f=>f.k===k);
+const fmtF = (f, x) => x==null ? "-" : f.u==="$" ? "$" + Math.round(x/1000) + "k" : f.u==="%" ? x.toFixed(1) + "%" : x.toFixed(1);
+function remainPoints(){
+  if (!cur || !cur.wards || !CTX) return [];
+  return Object.entries(cur.wards).map(([w,x])=>{ const v = x.v[9], t = v ? v[0]+v[1] : 0; return t >= MINV && CTX[w] ? {w, rem: v[0]/t*100, rep: x.t ? x.r/x.t*100 : 0} : null; }).filter(Boolean);
+}
+function pearson(xs, ys){
+  const n = xs.length; if (n < 3) return null;
+  const mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+  let sxy=0, sxx=0, syy=0; for (let i=0;i<n;i++){ const dx=xs[i]-mx, dy=ys[i]-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy; }
+  return sxx && syy ? sxy/Math.sqrt(sxx*syy) : null;
+}
+function corrFor(f, pts){ const xs=[], ys=[]; pts.forEach(p=>{ const x = f.g(CTX[p.w]); if (x!=null){ xs.push(x); ys.push(p.rem); } }); return {r: pearson(xs, ys), n: xs.length, xs, ys}; }
+const strength = r => { const a = Math.abs(r); return a >= .7 ? "strong" : a >= .4 ? "moderate" : a >= .2 ? "weak" : "little or no"; };
+const strengthHow = r => { const a = Math.abs(r); return a >= .7 ? "the dots fall close to a line" : a >= .4 ? "a clear but loose pattern" : a >= .2 ? "a faint pattern" : "no clear pattern"; };
+
+/* ---------- What's happening ---------- */
+/* ---------- Analysis story: five chapters with conclusion headings and exploratory charts ---------- */
+let STSEL = null, STSCN = "B", STSEAT = null, STPOLL = null;
+const POLLS = [   // last four published polls before the vote (sample, Remain, Referendum, undecided)
+  {n:"Angus Reid", d:"Aug 10–13", s:1017, a:61, b:33, u:5},
+  {n:"Leger", d:"Aug 21–23", s:1001, a:65, b:23, u:10},
+  {n:"Research Co.", d:"Aug 24–26", s:750, a:74, b:22, u:4},
+  {n:"Abacus Data", d:"Sep 4–7", s:1000, a:64, b:24, u:9}
+];
+const NUMW = ["no","one","two","three","four","five","six","seven","eight","nine","ten"];
+const ratioWords = (a, b) => { if (!b) return null; const r = a/b; if (r < 1.5) return null; const n = Math.round(r); return n <= 10 ? `${NUMW[n]} to one` : null; };
+function shareWords(v){
+  const opts = [[10,"a tenth"],[20,"a fifth"],[25,"a quarter"],[100/3,"a third"],[40,"two fifths"],[50,"half"]];
+  let best = null, d = 99; opts.forEach(([x,t])=>{ const e = Math.abs(x-v); if (e < d){ d = e; best = t; } });
+  return d <= 3 ? `about ${best}` : `${v.toFixed(0)}%`;
+}
+const seatsW = n => n === 0 ? "no seats" : n === 1 ? "one seat" : `${n} seats`;
+const moreW = (n, base) => base === 0 ? (n === 1 ? ` One seat is a toss-up, with the top two within ${TOSS} points.` : ` ${n} seats are toss-ups, with the top two within ${TOSS} points.`) : (n === 1 ? ` One more seat is a toss-up, with the top two within ${TOSS} points.` : ` Another ${n} are toss-ups, with the top two within ${TOSS} points.`);
+const clip = (t, n) => t.length > n ? t.slice(0, n-1) + "…" : t;
+
+/* chapter 2 chart: each UCP seat as a row; light bar = UCP share in 2023, red bar = Referendum share now, both from 0 */
+function chUcpRef(rows){
+  const W = 340, top = 22, rh = 15, LBL = 116, L = 122, R = 314, n = rows.length, H = top + n*rh + 6;
+  const X = v => L + v/100*(R-L);
+  let g = [0,25,50,75,100].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="${top-4}" y2="${top+n*rh}" class="grid"/>`).join("");
+  g += `<text x="${X(0)}" y="${top-8}" class="ax">0%</text><text x="${X(100)}" y="${top-8}" class="ax" text-anchor="end">100%</text>`;
+  rows.forEach((r,i)=>{ const y = top + i*rh, on = r.w===STSEL;
+    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, vote to separate ${r.ref.toFixed(1)}% now</title></rect>
+      <rect x="${X(0)}" y="${y+2}" width="${(X(r.ucp)-X(0)).toFixed(1)}" height="${rh-4}" class="ub"/>
+      <rect x="${X(0)}" y="${y+5}" width="${(X(r.ref)-X(0)).toFixed(1)}" height="${rh-10}" fill="var(--anti)"/>
+      <text x="${(X(r.ref)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--anti)">${r.ref.toFixed(0)}%</text>
+      <text x="${(X(r.ucp)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--ucp)">${r.ucp.toFixed(0)}%</text>
+      <text x="${LBL}" y="${y+10.5}" class="dbn${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text></g>`; });
+  return `<div class="lg"><span><i class="ubk"></i>UCP share in that seat, 2023</span><span><i class="rbk"></i>Vote to separate, 2026</span></div>
+    <p class="dbk-note">One row per seat the United Conservative Party (UCP) won in 2023, highest UCP vote share at the top. Both bars start at 0, so each red bar can be read against its own seat's 2023 result.</p>
+    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and vote to separate now">${g}</svg>`;
+}
+
+/* chapter 3 data: seat ratings under the chosen scenario */
+function chSeats(rows){
+  const res = rows.map(r=>({...r, o: seatOutcome(r, STSCN)}));
+  const N = res.length, maj = Math.floor(N/2)+1, parties = STSCN==="A" ? ["sep","rem"] : ["sep","mod","ndp"];
+  const groups = [...TIERS.map(t=>"sep|"+t), "toss", ...parties.slice(1).flatMap(p=>[...TIERS].reverse().map(t=>p+"|"+t))];
+  const key = r => r.o.tier==="toss" ? "toss" : r.o.win+"|"+r.o.tier;
+  res.sort((a,b)=> groups.indexOf(key(a)) - groups.indexOf(key(b)) || a.o.margin - b.o.margin);
+  const cnt = p => res.filter(r=>r.o.tier!=="toss" && r.o.win===p).length;
+  return {res, N, maj, parties, sep:cnt("sep"), ndp:cnt("ndp"), mod:cnt("mod"), rem:cnt("rem"), toss:res.filter(r=>r.o.tier==="toss").length};
+}
+
+/* chapter 4 chart: nine questions drawn as bars growing from 50% */
+function chQuestions(qs){
+  const row = x => { const y = x.p.a, d = y - 50, w = Math.min(50, Math.abs(d)/15*50), c = d >= 0 ? "--anti" : "--pro";
+    return `<button type="button" class="qxr" data-go="map:${x.n}"><span class="qxn num">Q${x.n}</span><span class="qxt">${esc(SHORT[x.n])}</span>
+      <span class="qxb"><em></em><i style="${d>=0?"left:50%":"right:50%"};width:${w.toFixed(1)}%;background:var(${c})"></i></span>
+      <span class="qxv num" style="color:var(${c})">${d>=0 ? `Yes ${y.toFixed(1)}%` : `No ${(100-y).toFixed(1)}%`}</span></button>`; };
+  return `<div class="qx"><div class="qxg">Immigration and citizenship</div>${qs.filter(x=>x.n<=5).map(row).join("")}
+    <div class="qxg">Constitution</div>${qs.filter(x=>x.n>=6).map(row).join("")}</div>
+    <div class="lg" style="margin-top:6px"><span class="dim">Bars grow from 50%: right for a Yes majority (red, the change), left for a No majority (green, the status quo). A full bar is 15 or more points from 50%. Tap a question for its map and full wording.</span></div>`;
+}
+
+/* chapter 5 chart: polls as dots, result as a line */
+function chPolls(dec, avg, res){
+  const rows = [...dec, {n:"Average", d:"", v:avg, avg:true}];
+  const W = 340, top = 20, rh = 24, L = 118, R = 326, H = top + rows.length*rh + 34;
+  const X = v => L + (Math.max(55, Math.min(85, v)) - 55)/30*(R-L);
+  let g = "";
+  [55,60,65,70,75,80,85].forEach(v=>{ g += `<line x1="${X(v)}" x2="${X(v)}" y1="${top-4}" y2="${top+rows.length*rh}" class="grid"/>`; });
+  [60,70,80].forEach(v=>{ g += `<text x="${X(v)}" y="${top+rows.length*rh+12}" class="ax" text-anchor="middle">${v}%</text>`; });
+  g += `<text x="${(L+R)/2}" y="${top+rows.length*rh+27}" class="ax" text-anchor="middle">Remain share among decided respondents</text>`;
+  rows.forEach((r,i)=>{ const y = top + i*rh + rh/2, on = STPOLL===i;
+    g += `<g class="pvr${on?" on":""}" data-i="${i}"><rect class="hit" x="0" y="${y-rh/2}" width="${W}" height="${rh}"/>
+      <text x="2" y="${r.d ? y-1.5 : y+3.5}" class="pvn${r.avg?" b":""}">${esc(r.n)}</text>${r.d ? `<text x="2" y="${y+10}" class="ax">${r.d}</text>` : ""}
+      <circle cx="${X(r.v)}" cy="${y}" r="${r.avg?5:4}" fill="${r.avg?"var(--text)":"var(--muted)"}"/>
+      <text x="${r.v <= res ? X(r.v)-8 : X(r.v)+8}" y="${y+3}" class="ann${r.avg?" b":""}" text-anchor="${r.v <= res ? "end" : "start"}">${r.v.toFixed(0)}%</text></g>`; });
+  g += `<line x1="${X(res)}" x2="${X(res)}" y1="${top-6}" y2="${top+rows.length*rh}" class="resl"/><text x="${X(res)}" y="${top-8}" class="annb" text-anchor="middle" fill="var(--pro)">Count so far ${res.toFixed(0)}%</text>`;
+  return `<svg class="chsvg" id="stPv" viewBox="0 0 ${W} ${H}" role="img" aria-label="Final polls and the result">${g}</svg>`;
+}
+
+function renderInsights(){
+  const box = $("story"); if (!box || !cur) return;
+  const s = cur.summary || {}, rp = s.tot ? s.rep/s.tot*100 : 0;
+  $("anK").textContent = `Unofficial results · ${rp.toFixed(0)}% of voting places counted`;
+  const res10 = pair(abV(10));
+  if (!res10){ box.innerHTML = `<p class="dim">Waiting for results.</p>`; return; }
+  const ready = CTX && rp >= MINREP && remainPoints().length >= 60;
+  const later = `<p class="chP dim">Shown once a quarter of voting places have reported.</p>`;
+  const ch = [];
+  const remWins = res10.a > res10.b, rw = ratioWords(Math.max(res10.a,res10.b), Math.min(res10.a,res10.b));
+
+  // 1. verdict
+  ch.push({h: remWins ? `Albertans reject the separation process${rw ? ` by ${rw}` : ""}` : `Albertans back starting the separation process${rw ? ` by ${rw}` : ""}`,
+    chart:`<div class="v1"><div class="v1n"><b class="num" style="color:var(--pro)">${res10.a.toFixed(1)}%</b><span>Remain</span></div><div class="v1n r"><b class="num" style="color:var(--anti)">${res10.b.toFixed(1)}%</b><span>Referendum</span></div>
+      <div class="v1bar"><i style="width:${res10.a}%;background:var(--pro)"></i><i style="width:${res10.b}%;background:var(--anti)"></i><em></em></div>
+      <div class="v1v num"><span>${fmt(res10.va)} votes</span><span>${fmt(res10.vb)} votes</span></div></div>`,
+    p: `${remWins ? "Remain" : "Referendum"} leads ${Math.max(res10.a,res10.b).toFixed(1)}% to ${Math.min(res10.a,res10.b).toFixed(1)}% in unofficial results from Elections Alberta. A Referendum vote backs starting the legal process for a binding vote on separating from Canada.`,
+    go:"map:10", goT:"See the map"});
+
+  // 2. UCP seats
+  let minorityInUcp = false;
+  if (ready){
+    const all = seatRows(), ucp = all.filter(r=>r.win==="UCP").sort((a,b)=>b.ucp-a.ucp);
+    const lead = ucp.filter(r=>r.rem >= 50).length;
+    minorityInUcp = ucp.length - lead <= Math.floor(ucp.length*0.1);
+    const fewer = ucp.filter(r=>r.ref < r.ucp), gaps = fewer.map(r=>r.ucp - r.ref);
+    const sel = ucp.find(r=>r.w===STSEL);
+    ch.push({h: fewer.length === ucp.length ? "In every UCP seat, fewer people voted to separate than voted UCP in 2023" : `In ${fewer.length} of the UCP's ${ucp.length} seats, fewer people voted to separate than voted UCP in 2023`,
+      chart: chUcpRef(ucp),
+      read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Vote to separate ${sel.ref.toFixed(0)}% now · ${sel.rep.toFixed(0)}% of voting places counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
+      p: gaps.length ? `Out of every 100 voters in these seats, ${Math.min(...gaps).toFixed(0)} to ${Math.max(...gaps).toFixed(0)} fewer voted to separate than had voted UCP.` : "",
+      go:"bfly:ucp", goT:"Compare all divisions"});
+  } else ch.push({h:"How UCP seats voted", p:later});
+
+  // 3. seat consequence
+  if (ready && seatRows().length >= 80){
+    const S3 = chSeats(seatRows()), last = S3.parties[S3.parties.length-1], rs = S3.res.find(r=>r.w===STSEAT);
+    const sup = `<sup><a href="#stEnd" class="fn">1</a></sup>`;
+    ch.push({h: (S3.sep < S3.maj ? "Embracing separation would cost the UCP its government" : "A separatist UCP could still govern") + sup,
+      chart:`<div class="seg small" id="stScn"><button type="button" data-k="B" class="${STSCN==="B"?"on":""}">Three-way race</button><button type="button" data-k="A" class="${STSCN==="A"?"on":""}">Straight fight</button></div>
+        <div class="hhrow" style="margin-top:10px"><div class="hhd l"><span style="color:var(--anti)">Separatist UCP</span><b class="num" style="color:var(--anti)">${S3.sep}</b></div><div class="hhd c">${S3.maj} seats<br>for a majority</div><div class="hhd r"><span style="color:var(${SEATC[last][0]})">${SEATC[last][1]}</span><b class="num" style="color:var(${SEATC[last][0]})">${S3[last]}</b></div></div>
+        <svg class="chsvg hemiL" id="stHemi" viewBox="0 0 200 108" role="img" aria-label="Seat forecast"></svg>
+        <div class="hmid">${S3.parties.length===3 ? `<span style="color:var(--modc)">Moderate conservative ${S3.mod}</span> · ` : ""}<span class="tossdot"></span>Toss-up ${S3.toss}</div><div class="hmid">Darker dots: safe, ahead by ${LIKELY} or more points. Lighter: likely (${LEAN} to ${LIKELY}) or lean (${TOSS} to ${LEAN}). Grey: toss-up, top two within ${TOSS}.</div>`,
+      read: rs ? `<b>${esc(rs.name)}</b> (${rs.win} in 2023): ${rs.o.tier==="toss" ? `toss-up, ${SEATC[rs.o.win][1]} vs ${SEATC[rs.o.second][1]}` : `${TIERLAB[rs.o.tier].toLowerCase()} ${SEATC[rs.o.win][1]}`}, lead ${rs.o.margin.toFixed(1)} points · ${Object.entries(rs.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(" · ")}` : `<span class="dim">Tap a seat to see its numbers.</span>`,
+      p: STSCN === "B"
+        ? `If everyone voting Referendum backed a separatist UCP, the New Democratic Party (NDP) kept its 2023 share and everyone else backed a moderate conservative party, the UCP would win ${seatsW(S3.sep)}. The NDP would win ${S3.ndp}${S3.ndp >= S3.maj ? `, more than the ${S3.maj} needed for a majority` : ""}.${S3.toss ? moreW(S3.toss, S3.sep) : ""}`
+        : `If everyone voting Referendum backed a separatist UCP and everyone voting Remain backed one candidate, the UCP would win ${seatsW(S3.sep)}.${S3.toss ? moreW(S3.toss, S3.sep) : ""}`,
+      go:"seats", goT:"Full seat forecast", hemi:S3});
+  } else ch.push({h:"What separation would mean for the UCP", p:later});
+
+  // 4. the other nine questions
+  const qs = [1,2,3,4,5,6,7,8,9].map(n=>({n, p:pair(abV(n))})).filter(x=>x.p);
+  if (qs.length === 9){
+    const g1 = qs.filter(x=>x.n<=5), g2 = qs.filter(x=>x.n>=6), ya = g => g.map(x=>x.p.a);
+    const pass1 = g1.filter(x=>x.p.a > 50).length, lo1 = Math.min(...ya(g1)), hi1 = Math.max(...ya(g1)), lo2 = Math.min(...ya(g2)), hi2 = Math.max(...ya(g2));
+    const split = lo2 > 46 && hi2 < 54, back = lo2 >= 54, rej = hi2 <= 46;
+    const h4 = pass1 === 5 ? (split ? "Albertans want tighter immigration rules but are split on changing the constitution"
+                               : back ? "Albertans want tighter immigration rules and constitutional change"
+                               : rej ? "Albertans want tighter immigration rules but reject constitutional change"
+                               : "Albertans want tighter immigration rules but are divided on the constitution")
+             : pass1 === 0 ? "Albertans reject the immigration questions" : "Albertans are divided on immigration rules";
+    const q9 = qs.find(x=>x.n===9), q9w = q9 ? shareWords(q9.p.t/res10.t*100) : "";
+    ch.push({h:h4, chart:chQuestions(qs),
+      p: `${pass1 === 5 ? `All five immigration and citizenship questions pass, with ${lo1.toFixed(0)}% to ${hi1.toFixed(0)}% Yes.` : `${NUMW[pass1][0].toUpperCase()+NUMW[pass1].slice(1)} of five immigration and citizenship questions pass.`} The four constitutional questions are between ${lo2.toFixed(0)}% and ${hi2.toFixed(0)}% Yes.${q9w ? ` Questions 1 to 9 are counted after Question 10, in order, so they have fewer votes in so far: Question 9 has ${q9w} as many as Question 10.` : ""}`});
+  }
+
+  // 5. polls
+  const dec = POLLS.map(x=>({...x, v:x.a/(x.a+x.b)*100})), avg = dec.reduce((t,x)=>t+x.v,0)/dec.length, gap = res10.a - avg;
+  const pr = STPOLL === null ? null : dec[STPOLL];
+  ch.push({h: gap >= 1 ? "Polls understated support for staying" : gap <= -1 ? "Polls overstated support for staying" : "Polls matched the result",
+    chart: chPolls(dec, avg, res10.a),
+    read: pr ? `<b>${pr.n}</b>, ${pr.d}, ${fmt(pr.s)} respondents: Remain ${pr.a}%, Referendum ${pr.b}%, undecided ${pr.u}%. Among decided voters, Remain ${pr.v.toFixed(0)}%.`
+         : STPOLL === dec.length ? `Average of the four polls among decided voters: ${avg.toFixed(1)}%.` : `<span class="dim">Tap a poll to see its full numbers.</span>`,
+    p: `The last four polls before the vote put Remain at ${avg.toFixed(0)}% among decided voters. The count has it at ${res10.a.toFixed(0)}%.`});
+
+  // conclusion
+  const hEnd = remWins ? (minorityInUcp ? "Separation is a minority position, including in UCP seats" : "Separation is a minority position") : "Separation has majority support";
+  const pEnd = remWins
+    ? `Albertans voted to stay${rw ? " by a wide margin" : ""}${minorityInUcp ? ", and the UCP's own seats voted the same way" : ""}. A UCP that took up separation would be campaigning for the Referendum side, ${shareWords(res10.b)} of the vote.`
+    : `Most Albertans who voted chose to start the separation process.`;
+
+  box.innerHTML = ch.map((c,i)=>`<article class="ch" id="stc${i+1}"><span class="chN">${i+1}</span><h3 class="chH">${c.h}</h3>${c.chart ? `<div class="chC">${c.chart}</div>` : ""}${c.read !== undefined ? `<div class="chRead">${c.read}</div>` : ""}${c.p.startsWith("<p") ? c.p : `<p class="chP">${c.p}</p>`}${c.go ? `<button type="button" class="chGo" data-go="${c.go}">${c.goT} &rarr;</button>` : ""}</article>`).join("")
+    + `<div class="ending" id="stEnd"><h3 class="chH">${hEnd}</h3><p class="chP">${pEnd}</p><p class="fnote"><sup>1</sup> Based on today's results and each seat's 2023 NDP share, assuming voters split as described in chapter 3. Referendum and election turnout differ. Division results don't show how individual voters chose.</p></div>`;
+
+  const S3 = (ch.find(c=>c.hemi) || {}).hemi;
+  if (S3 && $("stHemi")){
+    hemicycle($("stHemi"), S3.res.map(r=>({w:r.w, fill: r.o.tier==="toss" ? "var(--mapMid)" : tint(r.o.win, r.o.tier), title:`${r.name}: ${r.o.tier==="toss" ? "toss-up" : TIERLAB[r.o.tier]+" "+SEATC[r.o.win][1]}`})));
+    $("stHemi").querySelectorAll("circle").forEach(c=>{ if (c.dataset.w === STSEAT) c.classList.add("on");
+      c.addEventListener("click", ()=>{ STSEAT = STSEAT === c.dataset.w ? null : c.dataset.w; renderInsights(); }); });
+  }
+  box.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click", ()=>goTo(b.dataset.go)));
+  if ($("stDb")) $("stDb").querySelectorAll("text.dbn").forEach(t=>{ const max = 114; let str = t.dataset.full || t.textContent;
+      if (t.getComputedTextLength() <= max) return; while (str.length > 4 && t.getComputedTextLength() > max){ str = str.slice(0, -1); t.textContent = str.trimEnd() + "…"; } });
+  box.querySelectorAll("#stDb .dbr").forEach(g=>g.addEventListener("click", ()=>{ STSEL = STSEL === g.dataset.w ? null : g.dataset.w; renderInsights(); }));
+  box.querySelectorAll("#stScn button").forEach(b=>b.addEventListener("click", ()=>{ STSCN = b.dataset.k; STSEAT = null; renderInsights(); }));
+  box.querySelectorAll("#stPv .pvr").forEach(g=>g.addEventListener("click", ()=>{ const i = +g.dataset.i; STPOLL = STPOLL === i ? null : i; renderInsights(); }));
+  $("insFoot").textContent = `Based on ${rp.toFixed(0)}% of voting places reported (${fmt(s.rep)} of ${fmt(s.tot)}). Seat comparisons use divisions with at least ${MINV} votes counted on Question 10. A "middle" result is the median: half the seats are above it and half below. The 2023 election and this referendum are different votes, with different turnout. This page treats a Referendum vote as the separation side; some Referendum voters may only want the question put to a vote. Seat ratings use the first-place lead over second place: toss-up under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more. Figures update as counting continues.`;
+}
+
+function goTo(g){
+  const [kind, arg] = g.split(":");
+  const scroll = id => $(id).scrollIntoView({behavior:"smooth", block:"start"});
+  if (kind === "map"){ setState({view:"question", q:+arg, d:null}); scroll("explore"); }
+  else if (kind === "div"){ setState({view:"division", d:arg}); scroll("explore"); }
+  else if (kind === "bfly"){ BF = arg; BFBIN = null; drawButterfly(); scroll("patterns"); }
+  else if (kind === "seats"){ scroll("seatsPanel"); }
+  else if (kind === "polls"){ scroll("insCards"); }
+  else if (kind === "more"){ $("moreFactors").open = true; FAC = "imm"; drawPatterns(); scroll("moreFactors"); }
+}
+
+/* ---------- Patterns: scatter + what tracks Remain ---------- */
+function drawPatterns(){
+  const svg = $("scatter"); if (!svg || !CTX || !cur) return;
+  const pts = remainPoints(), f = facBy(FAC), c = corrFor(f, pts);
+  $("facChips").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on", b.dataset.k===FAC));
+  const W = 340, H = 240, m = {l:36, r:10, t:10, b:30};
+  const xs = c.xs, ys = c.ys;
+  if (xs.length < 3){ svg.innerHTML = ""; $("scap").textContent = "Not enough divisions counted yet."; return; }
+  let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(40, ...ys), y1 = 100;
+  const px = (x1-x0)*.05 || 1; x0 -= px; x1 += px;
+  const X = v => m.l + (v-x0)/(x1-x0)*(W-m.l-m.r), Y = v => m.t + (y1-v)/(y1-y0)*(H-m.t-m.b);
+  const ticks = (a, b, n) => { const step = (b-a)/n; return Array.from({length:n+1}, (_,i)=>a+step*i); };
+  let g = "";
+  ticks(y0, y1, 4).forEach(v=>{ g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" class="grid"/><text x="${m.l-6}" y="${Y(v)+3}" class="ax" text-anchor="end">${v.toFixed(0)}%</text>`; });
+  ticks(x0+px, x1-px, 3).forEach(v=>{ g += `<text x="${X(v)}" y="${H-m.b+14}" class="ax" text-anchor="middle">${fmtF(f, v)}</text>`; });
+  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(50)}" y2="${Y(50)}" class="half"/>`;
+  let lbl = `<text x="${W-m.r}" y="${Y(50)-4}" class="ax lbl" text-anchor="end">50%</text>`;
+  // least-squares trend line
+  const n = xs.length, mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+  let sxy=0, sxx=0; for (let i=0;i<n;i++){ sxy += (xs[i]-mx)*(ys[i]-my); sxx += (xs[i]-mx)**2; }
+  if (sxx){ const b = sxy/sxx, a = my - b*mx, ya = Math.max(y0, Math.min(y1, a+b*(x0+px))), yb = Math.max(y0, Math.min(y1, a+b*(x1-px)));
+    g += `<line x1="${X(x0+px)}" x2="${X(x1-px)}" y1="${Y(ya)}" y2="${Y(yb)}" class="trend"/>`;
+    let ty = Math.abs(Y(yb)-Y(50)) < 14 ? Math.min(Y(yb), Y(50))-12 : Y(yb)-5; if (ty < m.t+9) ty = Y(yb)+13;
+    lbl += `<text x="${X(x1-px)}" y="${ty}" class="ax lbl" text-anchor="end">trend</text>`; }
+  const ord = pts.map(p=>({...p, x:f.g(CTX[p.w])})).filter(p=>p.x!=null).sort((a,b)=>(a.w===S.d)-(b.w===S.d));
+  ord.forEach(p=>{ g += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.rem).toFixed(1)}" r="${p.w===S.d?7:4.5}" fill="${scaleColor(p.rem)}" class="dot${p.w===S.d?" sel":""}" data-w="${p.w}"><title>${esc(MAP.names[p.w]||"")}: ${fmtF(f,p.x)}, Remain ${p.rem.toFixed(1)}%</title></circle>`; });
+  g += lbl + `<text x="${(m.l+W-m.r)/2}" y="${H-2}" class="ax lab" text-anchor="middle">${esc(f.lab)}</text>`;
+  svg.innerHTML = g;
+  svg.querySelectorAll(".dot").forEach(d=>d.addEventListener("click", ()=>{ setState({view:"division", d:d.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
+  $("scap").innerHTML = c.r==null ? "" : `<b>${strength(c.r)[0].toUpperCase()+strength(c.r).slice(1)} link</b>: ${strengthHow(c.r)} (r = ${c.r.toFixed(2)}, on a scale from &minus;1 to +1; ${c.n} divisions). ${Math.abs(c.r) < .2 ? `The ${esc(f.ph)} tells you little about the Remain share.` : `The higher the ${esc(f.ph)}, the ${c.r<0?"lower":"higher"} the Remain share tends to be.`} Tap a dot to open that division.`;
+  // correlation bars
+  const all = FACTORS.map(F=>({F, r: corrFor(F, pts).r})).filter(x=>x.r!=null).sort((a,b)=>Math.abs(b.r)-Math.abs(a.r));
+  $("corrBars").innerHTML = all.map(({F,r})=>`<button type="button" class="cb${F.k===FAC?" on":""}" data-k="${F.k}"><span class="cbl">${esc(F.short)}</span><span class="cbt"><span class="cbz"></span><i style="${r<0?`right:50%;width:${(-r*50).toFixed(1)}%`:`left:50%;width:${(r*50).toFixed(1)}%`}"></i></span><span class="cbv num">${r>0?"+":""}${r.toFixed(2)}</span></button>`).join("");
+  $("corrBars").querySelectorAll(".cb").forEach(b=>b.addEventListener("click", ()=>{ FAC = b.dataset.k; drawPatterns(); }));
+}
+
+/* ---------- About this division ---------- */
+function aboutHTML(w){
+  const c = CTX && CTX[w]; if (!c) return "";
+  const P = (a, b) => `${a} ${b==null?"-":b.toFixed(1)+"%"}`;
+  let by = "";
+  if (c.by){ const d = new Date(c.by.date+"T12:00:00").toLocaleDateString("en-CA",{month:"short", day:"numeric", year:"numeric"});
+    by = `<div class="ab2"><span>${d} by-election</span><b>${c.by.res.slice(0,2).map(([p,v])=>P(p,v)).join(" · ")}</b><small>${c.by.win} won</small></div>`; }
+  const k = c.c21;
+  return `<details class="about"><summary>About this division</summary>
+    <div class="ab2"><span>2023 provincial election</span><b>${P("UCP",c.p23.ucp)} · ${P("NDP",c.p23.ndp)}</b><small>${c.p23.win} won${c.by?", before the by-election":""}</small></div>
+    ${by}
+    <div class="ab2"><span>2025 federal election (estimated for this division)</span><b>${P("Conservative",c.f25.cpc)} · ${P("Liberal",c.f25.lpc)} · ${P("NDP",c.f25.ndp)}</b></div>
+    <div class="ab2"><span>People (2021 Census)</span><b>${fmt(k.pop)} people · average age ${k.age}</b><small>Median household income $${fmt(k.inc)} (half of households earn more)</small></div>
+    <div class="ab2"><span>Background</span><b>Immigrants ${k.imm.toFixed(1)}% · visible minority ${k.vm.toFixed(1)}%</b><small>Recent immigrants (2016 to 2021) ${k.rimm.toFixed(1)}% · Indigenous ${k.ind.toFixed(1)}%</small></div>
+    <div class="ab2"><span>Education and work</span><b>University degree ${k.deg.toFixed(1)}% · unemployment ${k.unemp.toFixed(1)}%</b><small>Degree for ages 25 to 64; unemployment from May 2021, during COVID</small></div>
+    <div class="ab2"><span>Biggest occupation and industry</span><b>${esc(k.occ)} (${k.occp.toFixed(0)}% of workers)</b><small>${esc(k.indus)} (${k.indusp.toFixed(0)}% of workers)</small></div>
+  </details>`;
+}
+
+/* ---------- Butterfly: distribution of divisions by UCP 2023 share (left) and Referendum share now (right) ---------- */
+let BF = "all", BFBIN = null;
+function seatRows(){
+  if (!cur || !cur.wards || !CTX) return [];
+  return Object.entries(cur.wards).map(([w,x])=>{
+    const v = x.v[9], t = v ? v[0]+v[1] : 0; if (t < MINV) return null;
+    const c = CTX[w]; return {w, name:(MAP&&MAP.names[w])||w, ref:v[1]/t*100, rem:v[0]/t*100, ucp:c.p23.ucp, ndp:c.p23.ndp, win:c.p23.win, rep:x.t?x.r/x.t*100:0};
+  }).filter(Boolean);
+}
+const median = a => { const s = [...a].sort((x,y)=>x-y), n = s.length; return n ? (n%2 ? s[(n-1)/2] : (s[n/2-1]+s[n/2])/2) : null; };
+function drawButterfly(){
+  const svg = $("bfly"); if (!svg) return;
+  const all = seatRows();
+  $("bfTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.k===BF));
+  const rows = all.filter(r => BF==="all" || r.win==="UCP");
+  if (rows.length < 20){ svg.innerHTML = ""; $("bfHead").textContent = "Shown once enough divisions have reported."; return; }
+  const STEP = 5, NB = 100/STEP, bin = v => Math.min(NB-1, Math.floor(v/STEP));
+  const L = Array(NB).fill(0), Rr = Array(NB).fill(0);
+  rows.forEach(r=>{ L[bin(r.ucp)]++; Rr[bin(r.ref)]++; });
+  const maxC = Math.max(...L, ...Rr), axMax = Math.max(5, Math.ceil(maxC/5)*5);
+  // geometry: centre column holds the bin labels, wings grow outwards
+  const W = 360, rowH = 13, top = 26, H = top + NB*rowH + 30, mid = W/2, lab = 26, wing = mid - lab - 8;
+  const xL = c => mid - lab - c/axMax*wing, xR = c => mid + lab + c/axMax*wing;
+  const yOf = i => top + (NB-1-i)*rowH;              // high shares at the top, like an age pyramid
+  let g = "";
+  // grid + value axis on both sides
+  for (let c=0; c<=axMax; c+=axMax/5){ g += `<line x1="${xL(c)}" x2="${xL(c)}" y1="${top}" y2="${top+NB*rowH}" class="grid"/><line x1="${xR(c)}" x2="${xR(c)}" y1="${top}" y2="${top+NB*rowH}" class="grid"/>`;
+    g += `<text x="${xL(c)}" y="${top+NB*rowH+12}" class="ax" text-anchor="middle">${c}</text><text x="${xR(c)}" y="${top+NB*rowH+12}" class="ax" text-anchor="middle">${c}</text>`; }
+  g += `<text x="${mid}" y="${H-4}" class="ax" text-anchor="middle">Number of divisions</text>`;
+  g += `<text x="${mid-lab-4}" y="12" class="ttl" text-anchor="end" fill="var(--ucp)">UCP share, 2023</text><text x="${mid+lab+4}" y="12" class="ttl" fill="var(--anti)">Referendum share, now</text>`;
+  // bars + centre labels
+  for (let i=0;i<NB;i++){
+    const y = yOf(i) + 1.5, h = rowH - 3, on = BFBIN===i ? " on" : "";
+    if (L[i]) g += `<rect x="${xL(L[i])}" y="${y}" width="${xL(0)-xL(L[i])}" height="${h}" fill="var(--ucp)" class="bar${on}" data-b="${i}" data-s="ucp"><title>UCP 2023 ${i*STEP} to ${i*STEP+STEP}%: ${L[i]} divisions</title></rect><text x="${xL(L[i])-3}" y="${y+h-2}" class="cnt" text-anchor="end">${L[i]}</text>`;
+    if (Rr[i]) g += `<rect x="${xR(0)}" y="${y}" width="${xR(Rr[i])-xR(0)}" height="${h}" fill="var(--anti)" class="bar${on}" data-b="${i}" data-s="ref"><title>Referendum ${i*STEP} to ${i*STEP+STEP}%: ${Rr[i]} divisions</title></rect><text x="${xR(Rr[i])+3}" y="${y+h-2}" class="cnt">${Rr[i]}</text>`;
+    if (i%2===0) g += `<text x="${mid}" y="${y+h-2}" class="ax" text-anchor="middle">${i*STEP}–${i*STEP+STEP}%</text>`;
+  }
+  // 50% majority line across both wings
+  const y50 = yOf(NB/2) + rowH;
+  g += `<line x1="${xL(axMax)}" x2="${xR(axMax)}" y1="${y50}" y2="${y50}" class="half"/><text x="${xR(axMax)}" y="${y50-3}" class="ax" text-anchor="end">50%: majority</text>`;
+  // medians
+  const mU = median(rows.map(r=>r.ucp)), mR = median(rows.map(r=>r.ref));
+  const yM = v => top + (100 - v)/100*NB*rowH;
+  g += `<line x1="${xL(axMax)}" x2="${xL(0)}" y1="${yM(mU)}" y2="${yM(mU)}" class="med" stroke="var(--ucp)"/><text x="${xL(axMax)}" y="${Math.abs(mU-50) < 4 ? yM(mU)+10 : yM(mU)-3}" class="ax" fill="var(--ucp)">middle ${mU.toFixed(0)}%</text>`;
+  g += `<line x1="${xR(0)}" x2="${xR(axMax)}" y1="${yM(mR)}" y2="${yM(mR)}" class="med" stroke="var(--anti)"/><text x="${xR(axMax)}" y="${Math.abs(mR-50) < 4 ? yM(mR)+10 : yM(mR)-3}" class="ax" text-anchor="end" fill="var(--anti)">middle ${mR.toFixed(0)}%</text>`;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.innerHTML = g;
+  svg.querySelectorAll(".bar").forEach(b=>b.addEventListener("click", ()=>{ BFBIN = BFBIN === +b.dataset.b ? null : +b.dataset.b; drawButterfly(); }));
+  const over = (a, k) => a.filter(r=>r[k] > 50).length;
+  $("bfHead").innerHTML = `The UCP topped 50% in <b>${over(rows,"ucp")}</b> of these ${rows.length} divisions in 2023. The Referendum side tops 50% in <b>${over(rows,"ref")}</b>. Its middle result is <b>${mR.toFixed(0)}%</b> (half the divisions above, half below), against the UCP's <b>${mU.toFixed(0)}%</b>.`;
+  // tap a band to list its divisions
+  const list = $("bfList");
+  if (BFBIN === null){ list.innerHTML = `<span class="dim">Tap a bar to see which divisions are in it.</span>`; return; }
+  const lo = BFBIN*STEP, hi = lo+STEP;
+  const inU = rows.filter(r=>bin(r.ucp)===BFBIN).sort((a,b)=>b.ucp-a.ucp), inR = rows.filter(r=>bin(r.ref)===BFBIN).sort((a,b)=>b.ref-a.ref);
+  const chip = (r, v, c) => `<button type="button" class="dchip" data-w="${r.w}"><i style="background:var(${c})"></i>${esc(r.name)} <span class="num">${v.toFixed(1)}%</span></button>`;
+  list.innerHTML = `<div class="bfband"><b>${lo}–${hi}%</b></div>
+    ${inU.length ? `<div class="bfgrp"><span style="color:var(--ucp)">UCP 2023 (${inU.length})</span>${inU.map(r=>chip(r, r.ucp, "--ucp")).join("")}</div>` : ""}
+    ${inR.length ? `<div class="bfgrp"><span style="color:var(--anti)">Referendum now (${inR.length})</span>${inR.map(r=>chip(r, r.ref, "--anti")).join("")}</div>` : ""}`;
+  list.querySelectorAll(".dchip").forEach(b=>b.addEventListener("click", ()=>{ setState({view:"division", d:b.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
+}
+
+let SCN = "B";
+/* ---------- Seats at risk: hypothetical ratings (Safe / Likely / Lean / Toss-up), all 87 seats ---------- */
+let TOSS = 3;                          // toss-up cutoff in points (switchable)
+const LEAN = 8, LIKELY = 15;           // lean below 8 points, likely below 15, safe at 15 or more
+const SEATC = {sep:["--anti","Separatist UCP"], rem:["--pro","Remain candidate"], ndp:["--ndpc","NDP"], mod:["--modc","Moderate conservative"]};
+const TIERS = ["safe","likely","lean"], TIERLAB = {safe:"Safe", likely:"Likely", lean:"Lean"}, TIEROP = {safe:1, likely:.68, lean:.4};
+const tint = (p, t) => `color-mix(in srgb, var(${SEATC[p][0]}) ${Math.round(TIEROP[t]*100)}%, var(--tintBase))`;   // lighter = less secure, like forecaster maps
+const SHORTP = {sep:"Separatist", mod:"Moderate", ndp:"NDP", rem:"Remain"};
+function seatOutcome(r, scn){
+  const sh = scn === "A" ? {sep:r.ref, rem:r.rem} : {sep:r.ref, ndp:r.ndp, mod:Math.max(0, 100 - r.ref - r.ndp)};
+  const o = Object.entries(sh).sort((a,b)=>b[1]-a[1]);
+  const margin = o[0][1] - o[1][1];
+  const tier = margin < TOSS ? "toss" : margin < LEAN ? "lean" : margin < LIKELY ? "likely" : "safe";
+  return {win:o[0][0], second:o[1][0], margin, sh, tier};
+}
+/* parliament half-circle: seats placed row by row, then ordered by angle from left to right */
+function hemicycle(svg, seats){
+  const N = seats.length, rows = 5, R0 = 40, R1 = 96, cx = 100, cy = 100;
+  const radii = Array.from({length:rows}, (_,i)=>R0 + (R1-R0)*i/(rows-1));
+  const sum = radii.reduce((a,b)=>a+b,0);
+  let per = radii.map(r=>Math.round(N*r/sum)); let diff = N - per.reduce((a,b)=>a+b,0); per[rows-1] += diff;
+  const pos = [];
+  radii.forEach((r,i)=>{ const n = per[i]; for (let j=0;j<n;j++){ const a = Math.PI - (n===1 ? Math.PI/2 : j*Math.PI/(n-1)); pos.push({a, x: cx + r*Math.cos(a), y: cy - r*Math.sin(a)}); } });
+  pos.sort((p,q)=> q.a - p.a || 0);
+  const rad = Math.min(5.2, (R1-R0)/(rows-1)/2 - .4);
+  svg.innerHTML = seats.map((s,i)=>`<circle cx="${pos[i].x.toFixed(1)}" cy="${pos[i].y.toFixed(1)}" r="${rad.toFixed(2)}" fill="${s.fill}" data-w="${s.w}"><title>${esc(s.title)}</title></circle>`).join("")
+    + `<line x1="${cx}" x2="${cx}" y1="${cy-R1-6}" y2="${cy-R0+8}" class="hmaj"/>`;
+}
+function drawSeats(){
+  const box = $("seats"); if (!box) return;
+  const rows = seatRows(); if (rows.length < 80){ box.innerHTML = `<div class="dim">Shown once results are in for 80 or more divisions.</div>`; return; }
+  $("scTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", b.dataset.k===SCN));
+  $("tossTabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on", +b.dataset.k===TOSS));
+  const parties = SCN === "A" ? ["sep","rem"] : ["sep","mod","ndp"];
+  // spectrum order: separatist safe..lean, toss-ups, then the others lean..safe
+  const groups = [...TIERS.map(t=>["sep",t]), ["toss","toss"], ...parties.slice(1).flatMap(p=>[...TIERS].reverse().map(t=>[p,t]))];
+  const res = rows.map(r=>({...r, o: seatOutcome(r, SCN)}));
+  const keyOf = r => r.o.tier === "toss" ? "toss|toss" : r.o.win + "|" + r.o.tier;
+  const cnt = {}; res.forEach(r=>{ const k = keyOf(r); cnt[k] = (cnt[k]||0)+1; });
+  const gi = r => groups.findIndex(([p,t])=>p+"|"+t === keyOf(r));
+  res.sort((a,b)=> gi(a)-gi(b) || a.o.margin-b.o.margin);
+  const N = res.length, maj = Math.floor(N/2)+1;
+  const styleFor = (p, t) => t === "toss" ? `background:var(--mapMid)` : `background:${tint(p,t)}`;
+  const tip = r => `${r.name}: ${r.o.tier==="toss" ? `Toss-up, ${SEATC[r.o.win][1]} vs ${SEATC[r.o.second][1]}` : `${TIERLAB[r.o.tier]} ${SEATC[r.o.win][1]}`} (${Object.entries(r.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(", ")}; lead ${r.o.margin.toFixed(1)} points)`;
+  // ratings bar (like a forecaster's seat bar), majority marker in the middle
+  const bar = groups.map(([p,t])=>{ const n = cnt[p+"|"+t]||0; if (!n) return ""; return `<span style="flex:${n};${styleFor(p,t)}" title="${t==="toss"?"Toss-up":TIERLAB[t]+" "+SEATC[p][1]}: ${n}">${n >= 3 ? `<b>${n}</b>` : ""}</span>`; }).join("");
+  const sepTot = TIERS.reduce((a,t)=>a+(cnt["sep|"+t]||0),0), sepFirm = (cnt["sep|safe"]||0)+(cnt["sep|likely"]||0);
+  const tossN = cnt["toss|toss"]||0;
+  const pairs = {}; res.filter(r=>r.o.tier==="toss").forEach(r=>{ const k = [r.o.win, r.o.second].map(x=>SHORTP[x]).sort().join(" vs "); pairs[k]=(pairs[k]||0)+1; });
+  const desc = SCN==="A"
+    ? `A separatist UCP gets only the Referendum vote; everyone voting Remain backs one candidate.`
+    : `A separatist UCP gets the Referendum vote, the NDP keeps its 2023 share, and the remaining voters back a moderate conservative party.`;
+  const ucp23 = res.filter(r=>r.win==="UCP"), ndpPick = res.filter(r=>r.win==="UCP" && r.o.tier!=="toss" && r.o.win==="ndp").length;
+  const table = parties.map(p=>{ const tot = TIERS.reduce((a,t)=>a+(cnt[p+"|"+t]||0),0); if (!tot) return "";
+      return `<tr><th><span class="sw2" style="background:var(${SEATC[p][0]})"></span>${SEATC[p][1]}</th>${TIERS.map(t=>`<td class="num">${cnt[p+"|"+t]||"·"}</td>`).join("")}<td class="num tot">${tot}</td></tr>`; }).join("");
+  const cntP = p => TIERS.reduce((a,t)=>a+(cnt[p+"|"+t]||0),0);
+  const head = (side, p) => `<div class="hhd ${side}"><span style="color:var(${SEATC[p][0]})">${esc(SEATC[p][1])}</span><b class="num" style="color:var(${SEATC[p][0]})">${cntP(p)}</b></div>`;
+  const last = parties[parties.length-1];
+  const was23 = res.map(r=>r).sort((a,b)=>(a.win==="UCP"?0:1)-(b.win==="UCP"?0:1));
+  const u23 = res.filter(r=>r.win==="UCP").length, n23 = N - u23;
+  box.innerHTML = `<div class="scdesc">${desc}</div>
+    <div class="hemis">
+      <figure class="hemi"><figcaption>2023 result</figcaption>
+        <div class="hhrow"><div class="hhd l"><span style="color:var(--ucp)">UCP</span><b class="num" style="color:var(--ucp)">${u23}</b></div><div class="hhd c">${maj} seats<br>for a majority</div><div class="hhd r"><span style="color:var(--ndpc)">NDP</span><b class="num" style="color:var(--ndpc)">${n23}</b></div></div>
+        <svg id="hemi23" viewBox="0 0 200 108"></svg></figure>
+      <figure class="hemi"><figcaption>Forecast</figcaption>
+        <div class="hhrow">${head("l","sep")}<div class="hhd c">${maj} seats<br>for a majority</div>${head("r", last)}</div>
+        <svg id="hemiF" viewBox="0 0 200 108"></svg>
+        <div class="hmid num">${tossN ? `<span class="tossdot"></span>Toss-up ${tossN}` : ""}${parties.length===3 ? ` · <span style="color:var(--modc)">Moderate conservative ${cntP("mod")}</span>` : ""}</div></figure>
+    </div>
+    <div class="ratebar"><div class="rb">${bar}</div><div class="rbmaj" style="left:${(maj-0.5)/N*100}%"></div><div class="rblab"><span>More secure ${esc(SEATC.sep[1])}</span><span>Toss-up</span><span>More secure ${esc(SEATC[last][1])}</span></div><div class="rnote dim">Black line: ${maj} seats, a majority.</div></div>
+    <table class="rtab"><thead><tr><th></th>${TIERS.map(t=>`<th>${TIERLAB[t]}</th>`).join("")}<th>Total</th></tr></thead><tbody>${table}
+      <tr><th><span class="sw2" style="background:var(--mapMid)"></span>Toss-up</th><td colspan="3" class="dim pairs">${Object.entries(pairs).map(([k,n])=>`${k} ${n}`).join(" · ") || "none"}</td><td class="num tot">${tossN}</td></tr></tbody></table>
+    <div class="rnote dim">Safe: ahead by ${LIKELY} or more points. Likely: ${LEAN} to ${LIKELY}. Lean: ${TOSS} to ${LEAN}. Toss-up: top two within ${TOSS}.</div>
+    ${SCN==="B" && ndpPick ? `<div class="scnote">The NDP would take <b>${ndpPick}</b> of the UCP's 2023 seats without gaining a single vote: the UCP's 2023 vote splits between a separatist party and a moderate one, so the NDP's unchanged share is now the largest.</div>` : ""}
+    <div class="sclist" id="scList"></div>`;
+  // headline written from the numbers
+  const sepSeats = cntP("sep"), ndpSeats = cntP("ndp"), modSeats = parties.includes("mod") ? cntP("mod") : 0;
+  const sup = `<sup><a href="#scFoot" class="fn">1</a></sup>`;
+  if (SCN === "B"){
+    $("scH").innerHTML = sepSeats < maj
+      ? `Going separatist hands Alberta to the NDP${sup}`
+      : `A separatist UCP could still hold power${sup}`;
+    $("scDek").innerHTML = `A separatist UCP wins just <b>${sepSeats}</b> of 87 seats. Split the right, and the NDP takes <b>${ndpSeats}</b> without winning over a single new voter. ${maj} seats is a majority.${tossN ? ` <b>${tossN}</b> more are toss-ups, with the top two within ${TOSS} points.` : ""}`;
+  } else {
+    $("scH").innerHTML = sepSeats < maj ? `Run on separation, lose almost everything${sup}` : `A separatist UCP could still hold power${sup}`;
+    $("scDek").innerHTML = `Against a single Remain candidate, a separatist UCP wins <b>${sepSeats}</b> of 87 seats${tossN ? `, with <b>${tossN}</b> toss-up${tossN===1?"":"s"} (top two within ${TOSS} points)` : ""}. Remain candidates take <b>${cntP("rem")}</b>.`;
+  }
+  $("scFoot").innerHTML = `<sup>1</sup> ${SCN==="A" ? "Straight fight: everyone voting Referendum backs a separatist UCP, and everyone voting Remain backs one candidate." : "Three-way race: everyone voting Referendum backs a separatist UCP, the NDP keeps its 2023 share in each seat, and the remaining voters back a moderate conservative party."} Ratings use the first-place lead over second place in each seat: toss-up under ${TOSS} points, lean under ${LEAN}, likely under ${LIKELY}, safe ${LIKELY} or more. Referendum and election turnout differ, and seat shares will move until counting ends.`;
+  // forecast dots ordered left to right: separatist, toss-up, others
+  const dotFill = r => r.o.tier==="toss" ? "var(--mapMid)" : tint(r.o.win, r.o.tier);
+  hemicycle($("hemiF"), res.map(r=>({w:r.w, fill:dotFill(r), title:tip(r)})));
+  const order23 = [...res].sort((a,b)=>(a.win==="UCP"?0:1)-(b.win==="UCP"?0:1) || (a.win==="UCP" ? b.ucp-a.ucp : a.ucp-b.ucp));
+  hemicycle($("hemi23"), order23.map(r=>({w:r.w, fill: r.win==="UCP" ? "var(--ucp)" : "var(--ndpc)", title:`${r.name}: ${r.win} in 2023 (UCP ${r.ucp.toFixed(1)}%, NDP ${r.ndp.toFixed(1)}%)`})));
+  [$("hemiF"), $("hemi23")].forEach(svg=>svg.querySelectorAll("circle").forEach(c=>c.addEventListener("click", ()=>showSeat(c.dataset.w))));
+  const showSeat = w => { const r = res.find(x=>x.w===w);
+    $("scList").innerHTML = `<b>${esc(r.name)}</b>: ${r.o.tier==="toss" ? `Toss-up, ${SEATC[r.o.win][1]} vs ${SEATC[r.o.second][1]}` : `${TIERLAB[r.o.tier]} ${SEATC[r.o.win][1]}`}${r.win==="UCP"?" <span class=\"dim\">(UCP seat in 2023)</span>":""}<br><span class="dim">${Object.entries(r.o.sh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${SEATC[k][1]} ${v.toFixed(1)}%`).join(" · ")} · lead ${r.o.margin.toFixed(1)} points</span> <button type="button" class="link" id="scOpen">Open division &rarr;</button>`;
+    $("scOpen").onclick = () => { setState({view:"division", d:w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }; };
+
 }
 
 /* ---------- maps ---------- */
@@ -347,7 +1141,7 @@ function drawMaps(){
   $("legend").innerHTML = locate ? `<span><span class="sw"><i style="background:var(--locate)"></i></span>Selected division</span><span>Tap any division to see its results</span>` :
     `<div class="grad"><div class="strip" style="background:linear-gradient(90deg,${scaleColor(50-CAP)},${scaleColor(50)},${scaleColor(50+CAP)})">${tickPos!==null?`<span class="abtick" style="left:${tickPos.toFixed(1)}%"></span>`:""}</div>
       <div class="ticks num"><span>${chL} ${50+CAP}%+</span><span>50/50</span><span>${sqL} ${50+CAP}%+</span></div></div>
-     <span><span class="sw"><i style="background:repeating-linear-gradient(45deg,var(--line) 0 2px,var(--panel2) 2px 5px);border:1px solid var(--line)"></i></span>No results yet</span>${tickPos!==null?`<span><i class="refk" aria-hidden="true"></i> Alberta</span>`:""}`;
+     <span><span class="sw"><i style="background:repeating-linear-gradient(45deg,var(--line) 0 2px,var(--panel2) 2px 5px);border:1px solid var(--line)"></i></span>No results yet</span>${tickPos!==null?`<span><i class="refk" aria-hidden="true"></i> Alberta overall</span>`:""}`;
 }
 
 /* ---------- explore panes ---------- */
@@ -360,8 +1154,9 @@ function drawExplore(){
   $("chips").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on", +b.dataset.q===S.q));
   const w = S.d && cur.wards && cur.wards[S.d];
   if (S.view === "question"){
-    $("abRow").innerHTML = S.q === 10 ? "" : rowHTML(S.q, abV(S.q), {sub:"votes"}).replace('class="row ', 'class="row big ');
-    $("abRow").hidden = S.q === 10;
+    const fullOpen = !!($("abRow").querySelector("details.qfull") || {}).open;
+    $("abRow").innerHTML = (S.q === 10 ? "" : rowHTML(S.q, abV(S.q), {sub:"votes"}).replace('class="row ', 'class="row big ')) + `<details class="qfull"${fullOpen ? " open" : ""}><summary>Full wording of Question ${S.q}</summary><p>${esc(QTEXT[S.q])}</p></details>`;
+    $("abRow").hidden = false;
     $("score").hidden = true;
     if (w){
       $("hint").hidden = true;
@@ -372,17 +1167,18 @@ function drawExplore(){
       c.hidden = false; if (wasHidden){ c.classList.remove("rise"); void c.offsetWidth; c.classList.add("rise"); }
       c.querySelector(".x").onclick = () => setState({d:null});
       $("toDiv").onclick = () => { setState({view:"division"}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); };
-    } else { $("callout").hidden = true; $("hint").hidden = false; $("hint").textContent = "Tap a division to see its result. Pinch or use + to zoom."; }
+    } else { $("callout").hidden = true; $("hint").hidden = false; $("hint").textContent = "Tap a division (riding) to see its result. Pinch or use + to zoom."; }
   } else {
     $("callout").hidden = true; $("abRow").hidden = true;
     if (w){
       $("hint").hidden = true;
-      const c = $("score"), wasHidden = c.hidden;
+      const c = $("score"), wasHidden = c.hidden, aboutOpen = !!(c.querySelector("details.about") || {}).open;
       c.innerHTML = `<div class="dhd"><span class="badge num">${S.d}</span><div class="dn"><b>${esc(MAP.names[S.d]||"")}</b><span class="num">${fmt(w.r)} of ${fmt(w.t)} voting places reporting</span><span class="thin"><span style="width:${w.t? (w.r/w.t*100).toFixed(1):0}%"></span></span></div><button type="button" class="x" aria-label="Clear selection">&times;</button></div>
         <div class="rows trunc" style="margin-top:6px">${QORDER.map(n=>rowHTML(n, w.v[n-1], {sub:"ref", ref:abV(n)})).join("")}</div>
-        <div class="legend" style="margin-top:8px"><span><i class="refk" aria-hidden="true"></i> marks the Alberta result</span></div>`;
+        <div class="legend" style="margin-top:8px"><span><i class="refk" aria-hidden="true"></i> marks the Alberta result. The break in the middle of each bar is 50%.</span></div>${aboutHTML(S.d)}`;
       c.hidden = false; if (wasHidden){ c.classList.remove("rise"); void c.offsetWidth; c.classList.add("rise"); }
       c.querySelector(".x").onclick = () => setState({d:null});
+      if (aboutOpen && c.querySelector("details.about")) c.querySelector("details.about").open = true;
       $("q").value = MAP.names[S.d] || "";
     } else { $("score").hidden = true; $("hint").hidden = false; $("hint").textContent = "Search above, or tap the map, to see how a division voted on all 10 questions."; }
   }
@@ -395,7 +1191,7 @@ function setState(patch, {fly=true} = {}){
   Object.assign(S, patch);
   if (S.d !== prevD && S.d && fly && MAP) flyTo(S.d);
   if ("d" in patch && !S.d) $("q").value = "";
-  writeHash(); drawMaps(); drawExplore();
+  writeHash(); drawMaps(); drawExplore(); drawPatterns(); drawButterfly();
 }
 function writeHash(){
   const h = S.view === "division" ? `#view=division${S.d?`&d=${S.d}`:""}` : `#q=${S.q}${S.d?`&d=${S.d}`:""}`;
@@ -506,7 +1302,7 @@ window.addEventListener("hashchange", ()=>{ if (MAP){ const st = readHash(); con
 const POLL_MS = 15000; let nextPoll = Date.now();
 function ago(iso){ const m = Math.floor((Date.now()-Date.parse(iso))/60000); return m<1 ? "checked just now" : m===1 ? "checked 1 min ago" : m<60 ? `checked ${m} min ago` : `checked ${Math.floor(m/60)} h ago`; }
 function tick(){
-  if (cur){ $("age").textContent = ago(cur.fetchedAt); const fresh = Date.now()-Date.parse(cur.fetchedAt) < 5*60000; $("live").classList.toggle("off", !fresh); $("liveTxt").textContent = fresh ? "Live" : "Snapshot"; }
+  if (cur){ $("age").textContent = ago(cur.fetchedAt); const fresh = Date.now()-Date.parse(cur.fetchedAt) < 5*60000; $("live").classList.toggle("off", !fresh); $("liveTxt").textContent = fresh ? "Live" : "Not live"; }
   const rem = Math.max(0, nextPoll-Date.now()); $("arc").style.strokeDashoffset = (100.53*(1-rem/POLL_MS)).toFixed(2);
   if (rem === 0) poll();
 }
@@ -521,6 +1317,13 @@ const BUILD = "__BUILD__";
 setInterval(async ()=>{ if (BUILD.startsWith("__")) return;
   try { const r = await fetch("version.txt?t="+Date.now(), {cache:"no-store"}); if (!r.ok) return; const v = (await r.text()).trim();
     if (v && v !== BUILD) location.replace(location.pathname + "?v=" + v + location.hash); } catch(e){} }, 60000);
+fetch("context.json").then(r=>r.json()).then(c=>{ CTX = c;
+  $("bfTabs").querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ BF = b.dataset.k; drawButterfly(); }));
+  $("scTabs").querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ SCN = b.dataset.k; drawSeats(); }));
+  $("tossTabs").querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ TOSS = +b.dataset.k; drawSeats(); }));
+  $("facChips").innerHTML = FACTORS.map(f=>`<button class="chip" type="button" data-k="${f.k}">${esc(f.short)}</button>`).join("");
+  $("facChips").querySelectorAll(".chip").forEach(b=>b.addEventListener("click", ()=>{ FAC = b.dataset.k; drawPatterns(); }));
+  render(); }).catch(()=>{ ["patterns","seatsPanel"].forEach(id=>$(id).hidden = true); });
 fetch("map.json").then(r=>r.json()).then(m=>{ MAP = m; buildMaps(); render(); }).catch(()=>{ document.querySelectorAll(".maps,#heroMap").forEach(e=>e.style.display="none"); });
 </script>
 </body></html>

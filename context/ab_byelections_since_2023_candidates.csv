@@ -1,0 +1,25 @@
+event_id,election_date,ed_num,ed_name,candidate,party,votes,pct,elected,valid_votes,names_on_list,spoiled,declined,rejected,turnout_pct
+109,2024-12-18,72,Lethbridge-West,John Middleton-Hope,UCP,6093,44.91,0,13568,37828,27,1,46,36.0
+109,2024-12-18,72,Lethbridge-West,Rob Miyashiro,NDP,7238,53.35,1,13568,37828,27,1,46,36.0
+109,2024-12-18,72,Lethbridge-West,Layton Veverka,AP,237,1.75,0,13568,37828,27,1,46,36.0
+114,2025-06-23,31,Edmonton-Ellerslie,Naresh Bhardwaj,UCP,3233,38.0,0,8507,34868,17,1,27,24.5
+114,2025-06-23,31,Edmonton-Ellerslie,Gurtej Singh Brar,NDP,4328,50.88,1,8507,34868,17,1,27,24.5
+114,2025-06-23,31,Edmonton-Ellerslie,Caroline Currie,AP,203,2.39,0,8507,34868,17,1,27,24.5
+114,2025-06-23,31,Edmonton-Ellerslie,Pamela Henson,WLC,41,0.48,0,8507,34868,17,1,27,24.5
+114,2025-06-23,31,Edmonton-Ellerslie,Fred Munn,RPA,292,3.43,0,8507,34868,17,1,27,24.5
+114,2025-06-23,31,Edmonton-Ellerslie,Manpreet Tiwana,LIB,410,4.82,0,8507,34868,17,1,27,24.5
+114,2025-06-23,44,Edmonton-Strathcona,Ravina Chand,RPA,66,0.68,0,9663,30374,33,6,56,32.0
+114,2025-06-23,44,Edmonton-Strathcona,Darby Crouch,UCP,1313,13.59,0,9663,30374,33,6,56,32.0
+114,2025-06-23,44,Edmonton-Strathcona,Naheed K Nenshi,NDP,7949,82.26,1,9663,30374,33,6,56,32.0
+114,2025-06-23,44,Edmonton-Strathcona,Samuel Petrov,AP,116,1.2,0,9663,30374,33,6,56,32.0
+114,2025-06-23,44,Edmonton-Strathcona,Don Slater,LIB,195,2.02,0,9663,30374,33,6,56,32.0
+114,2025-06-23,44,Edmonton-Strathcona,Jesse Stretch,WLC,24,0.25,0,9663,30374,33,6,56,32.0
+114,2025-06-23,76,Olds-Didsbury-Three Hills,Cam Davies,RPA,2708,17.67,0,15322,39592,40,6,35,38.8
+114,2025-06-23,76,Olds-Didsbury-Three Hills,Tara Sawyer,UCP,9362,61.1,1,15322,39592,40,6,35,38.8
+114,2025-06-23,76,Olds-Didsbury-Three Hills,Bev Toews,NDP,3063,19.99,0,15322,39592,40,6,35,38.8
+114,2025-06-23,76,Olds-Didsbury-Three Hills,Bill Tufts,WLC,189,1.23,0,15322,39592,40,6,35,38.8
+130,2026-09-14,23,Calgary-Shaw,Rolly Ashdown,IND,82,0.51,0,15998,45680,84,1,393,35.9
+130,2026-09-14,23,Calgary-Shaw,Kyle Campbell,NDP,7464,46.66,1,15998,45680,84,1,393,35.9
+130,2026-09-14,23,Calgary-Shaw,Mike Derry,UCP,6873,42.96,0,15998,45680,84,1,393,35.9
+130,2026-09-14,23,Calgary-Shaw,Kyle Joseph,TORY,977,6.11,0,15998,45680,84,1,393,35.9
+130,2026-09-14,23,Calgary-Shaw,John Roggeveen,LIB,602,3.76,0,15998,45680,84,1,393,35.9
