@@ -244,6 +244,9 @@ sup .fn{color:var(--accent);text-decoration:none;font-size:.7em;margin-left:2px}
 .chsvg .dbn.hot{fill:var(--anti);font-weight:700}
 .chsvg .dbn.on{font-weight:700}
 .chsvg .dbv{font-size:9px;font-weight:700}
+.chsvg .ub{fill:color-mix(in srgb, var(--ucp) 28%, var(--panel))}
+.lg i.ubk{width:14px;height:10px;border-radius:2px;background:color-mix(in srgb, var(--ucp) 28%, var(--panel))}
+.lg i.rbk{width:14px;height:4px;border-radius:1px;vertical-align:1px;background:var(--anti)}
 .dbkey{max-width:470px;margin-bottom:6px}
 .dbk-ex{display:flex;align-items:center;width:100%;max-width:240px;margin:2px 0 0}
 .dbk-ex .d{flex:none;width:12px;height:12px;border-radius:50%}
@@ -720,28 +723,22 @@ const seatsW = n => n === 0 ? "no seats" : n === 1 ? "one seat" : `${n} seats`;
 const moreW = (n, base) => base === 0 ? (n === 1 ? ` One seat is a toss-up, with the top two within ${TOSS} points.` : ` ${n} seats are toss-ups, with the top two within ${TOSS} points.`) : (n === 1 ? ` One more seat is a toss-up, with the top two within ${TOSS} points.` : ` Another ${n} are toss-ups, with the top two within ${TOSS} points.`);
 const clip = (t, n) => t.length > n ? t.slice(0, n-1) + "…" : t;
 
-/* chapter 2 chart: each UCP seat as a row, named on the left; red dot = Referendum share now, blue dot = UCP share in 2023 */
-function chDumbbell(rows, mU, mR){
-  const W = 300, top = 24, rh = 14, LBL = 118, L = 126, R = 292, n = rows.length, H = top + n*rh + 46;
+/* chapter 2 chart: each UCP seat as a row; light bar = UCP share in 2023, red bar = Referendum share now, both from 0 */
+function chUcpRef(rows){
+  const W = 340, top = 22, rh = 15, LBL = 116, L = 122, R = 314, n = rows.length, H = top + n*rh + 6;
   const X = v => L + v/100*(R-L);
-  let g = "";
-  [0,25,50,75,100].forEach(v=>{ g += `<line x1="${X(v)}" x2="${X(v)}" y1="${top-3}" y2="${top+n*rh}" class="${v===50?"half":"grid"}"/><text x="${X(v)}" y="${top-8}" class="ax" text-anchor="${v===0?"start":v===100?"end":"middle"}">${v}%</text>`; });
-  rows.forEach((r,i)=>{ const y = top + i*rh + rh/2, on = r.w===STSEL, hot = r.ref > 50;
-    const lo = Math.min(r.ref, r.ucp), hi = Math.max(r.ref, r.ucp), loC = r.ref <= r.ucp ? "--anti" : "--ucp", hiC = r.ref <= r.ucp ? "--ucp" : "--anti";
-    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${(y-rh/2).toFixed(1)}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, Referendum ${r.ref.toFixed(1)}% now</title></rect>
-      <text x="${LBL}" y="${(y+3.3).toFixed(1)}" class="dbn${hot?" hot":""}${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text>
-      <line x1="${X(lo).toFixed(1)}" x2="${X(hi).toFixed(1)}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" class="lnk"/>
-      <circle cx="${X(r.ucp).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?4.2:3.4}" fill="var(--ucp)"/><circle cx="${X(r.ref).toFixed(1)}" cy="${y.toFixed(1)}" r="${on?4.2:3.4}" fill="var(--anti)"/>
-      ${(on || hot) ? `<text x="${(X(lo)-6).toFixed(1)}" y="${(y+3.2).toFixed(1)}" class="dbv" text-anchor="end" fill="var(${loC})">${lo.toFixed(0)}%</text><text x="${(X(hi)+6).toFixed(1)}" y="${(y+3.2).toFixed(1)}" class="dbv" fill="var(${hiC})">${hi.toFixed(0)}%</text>` : ""}</g>`; });
-  const yb = top + n*rh + 14;
-  g += `<text x="${X(mR)+4}" y="${yb}" class="dbv" text-anchor="end" fill="var(--anti)">middle seat ${mR.toFixed(0)}% ▲</text><text x="${X(mU)-4}" y="${yb}" class="dbv" fill="var(--ucp)">▲ ${mU.toFixed(0)}%</text>`;
-  g += `<text x="${(L+R)/2}" y="${yb+18}" class="ax" text-anchor="middle">Share of the vote in each seat</text>`;
-  return `<div class="dbkey">
-      <div class="dbk-ex" aria-hidden="true"><span class="d" style="background:var(--anti)"></span><span class="ln"></span><span class="d" style="background:var(--ucp)"></span></div>
-      <div class="dbk-lab"><span style="color:var(--anti)">Referendum share, 2026</span><span style="color:var(--ucp)">UCP share, 2023 election</span></div>
-      <p class="dbk-note">Each row is a seat the UCP won in 2023, sorted by the UCP's 2023 vote share, highest at the top. The grey line is the gap between the two. Triangles mark the middle seat on each measure: half the seats are above it, half below.</p>
-    </div>
-    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: Referendum share and UCP share">${g}</svg>`;
+  let g = [0,25,50,75,100].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="${top-4}" y2="${top+n*rh}" class="grid"/>`).join("");
+  g += `<text x="${X(0)}" y="${top-8}" class="ax">0%</text><text x="${X(100)}" y="${top-8}" class="ax" text-anchor="end">100%</text>`;
+  rows.forEach((r,i)=>{ const y = top + i*rh, on = r.w===STSEL;
+    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, Referendum ${r.ref.toFixed(1)}% now</title></rect>
+      <rect x="${X(0)}" y="${y+2}" width="${(X(r.ucp)-X(0)).toFixed(1)}" height="${rh-4}" class="ub"/>
+      <rect x="${X(0)}" y="${y+5}" width="${(X(r.ref)-X(0)).toFixed(1)}" height="${rh-10}" fill="var(--anti)"/>
+      <text x="${(X(r.ref)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--anti)">${r.ref.toFixed(0)}%</text>
+      <text x="${(X(r.ucp)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--ucp)">${r.ucp.toFixed(0)}%</text>
+      <text x="${LBL}" y="${y+10.5}" class="dbn${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text></g>`; });
+  return `<div class="lg"><span><i class="ubk"></i>UCP share in that seat, 2023</span><span><i class="rbk"></i>Referendum share, 2026</span></div>
+    <p class="dbk-note">One row per seat the United Conservative Party (UCP) won in 2023, highest UCP vote share at the top. Both bars start at 0, so each red bar can be read against its own seat's 2023 result.</p>
+    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and Referendum share now">${g}</svg>`;
 }
 
 /* chapter 3 data: seat ratings under the chosen scenario */
@@ -807,15 +804,14 @@ function renderInsights(){
   let minorityInUcp = false;
   if (ready){
     const all = seatRows(), ucp = all.filter(r=>r.win==="UCP").sort((a,b)=>b.ucp-a.ucp);
-    const lead = ucp.filter(r=>r.rem >= 50).length, mU = median(ucp.map(r=>r.ucp)), mR = median(ucp.map(r=>r.ref)), refLead = all.filter(r=>r.ref > 50);
+    const lead = ucp.filter(r=>r.rem >= 50).length;
     minorityInUcp = ucp.length - lead <= Math.floor(ucp.length*0.1);
-    const ratio = mR/mU, rel = ratio > .4 && ratio < .6 ? "about half" : `${Math.round(ratio*100)}% of`;
+    const fewer = ucp.filter(r=>r.ref < r.ucp), gaps = fewer.map(r=>r.ucp - r.ref);
     const sel = ucp.find(r=>r.w===STSEL);
-    ch.push({h: lead === ucp.length ? "Separatists are a minority in every UCP seat" : minorityInUcp ? "Separatists are a minority in almost every UCP seat" : `Separatists lead in ${ucp.length-lead} of the UCP's ${ucp.length} seats`,
-      chart: chDumbbell(ucp, mU, mR),
+    ch.push({h: fewer.length === ucp.length ? "In every UCP seat, fewer people voted Referendum than voted UCP in 2023" : `In ${fewer.length} of the UCP's ${ucp.length} seats, fewer people voted Referendum than voted UCP in 2023`,
+      chart: chUcpRef(ucp),
       read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Referendum ${sel.ref.toFixed(0)}% now · ${sel.rep.toFixed(0)}% of voting places counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
-      p: `Remain won ${lead} of the ${ucp.length} seats the United Conservative Party (UCP) won in 2023. Ranked by result, the middle UCP seat gives Referendum ${mR.toFixed(0)}%, ${rel} the UCP's middle result of ${mU.toFixed(0)}% in 2023.` +
-         (refLead.length === 1 ? ` ${esc(refLead[0].name)} is the only division where Referendum leads, with ${refLead[0].ref.toFixed(0)}%.` : refLead.length ? ` Referendum leads in ${refLead.length} divisions.` : ` Referendum leads in no division.`),
+      p: gaps.length ? `Out of every 100 voters in these seats, ${Math.min(...gaps).toFixed(0)} to ${Math.max(...gaps).toFixed(0)} fewer chose Referendum than had chosen the UCP.` : "",
       go:"bfly:ucp", goT:"Compare all divisions"});
   } else ch.push({h:"How UCP seats voted", p:later});
 
