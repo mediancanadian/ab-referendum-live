@@ -46,7 +46,10 @@ core = {"sourceUpdated": d.get("lastUpdated"),
         "summary": {"valid": s.get("valid"), "rep": s.get("pollsReporting"), "tot": s.get("totalPolls")},
         "types": types, "questions": qs, "wards": wards}
 
-old = json.load(open(OUT)) if os.path.exists(OUT) else {}
+try:
+    old = json.load(open(OUT))
+except Exception:          # missing or unreadable file: treat as changed
+    old = {}
 changed = {k: old.get(k) for k in core} != core
 out = dict(core, fetchedAt=datetime.datetime.now(datetime.timezone.utc).isoformat())
 json.dump(out, open(OUT, "w"), separators=(",", ":"))
