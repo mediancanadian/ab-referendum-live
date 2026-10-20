@@ -225,7 +225,7 @@ details.count[open] summary::after{content:"\2212"}
     </details>
   </section>
 
-  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every minute. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Official results: October 29, 2026.</div>
+  <div class="foot">Source: <a href="https://results.elections.ab.ca/8400" target="_blank" rel="noopener">Elections Alberta unofficial results</a>, checked every 20 seconds. Boundaries: Provincial Electoral Divisions (2019), Open Government Licence, Alberta. Percentages are each answer's share of votes cast on that question. Green is the status quo answer, red is the change. Official results: October 29, 2026.</div>
 </main>
 
 <script>
@@ -484,7 +484,7 @@ function buildMaps(){
 window.addEventListener("hashchange", ()=>{ if (MAP){ const st = readHash(); const fly = st.d && st.d !== S.d; Object.assign(S, st); if (fly) flyTo(S.d); drawMaps(); drawExplore(); } });
 
 /* ---------- live data: poll data.json (written every minute by GitHub Actions) ---------- */
-const POLL_MS = 30000; let nextPoll = Date.now();
+const POLL_MS = 15000; let nextPoll = Date.now();
 function ago(iso){ const m = Math.floor((Date.now()-Date.parse(iso))/60000); return m<1 ? "checked just now" : m===1 ? "checked 1 min ago" : m<60 ? `checked ${m} min ago` : `checked ${Math.floor(m/60)} h ago`; }
 function tick(){
   if (cur){ $("age").textContent = ago(cur.fetchedAt); const fresh = Date.now()-Date.parse(cur.fetchedAt) < 5*60000; $("live").classList.toggle("off", !fresh); $("liveTxt").textContent = fresh ? "Live" : "Snapshot"; }
