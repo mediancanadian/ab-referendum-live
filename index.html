@@ -730,15 +730,15 @@ function chUcpRef(rows){
   let g = [0,25,50,75,100].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="${top-4}" y2="${top+n*rh}" class="grid"/>`).join("");
   g += `<text x="${X(0)}" y="${top-8}" class="ax">0%</text><text x="${X(100)}" y="${top-8}" class="ax" text-anchor="end">100%</text>`;
   rows.forEach((r,i)=>{ const y = top + i*rh, on = r.w===STSEL;
-    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, Referendum ${r.ref.toFixed(1)}% now</title></rect>
+    g += `<g class="dbr${on?" on":""}" data-w="${r.w}"><rect class="hit" x="0" y="${y}" width="${W}" height="${rh}"><title>${esc(r.name)}: UCP ${r.ucp.toFixed(1)}% in 2023, vote to separate ${r.ref.toFixed(1)}% now</title></rect>
       <rect x="${X(0)}" y="${y+2}" width="${(X(r.ucp)-X(0)).toFixed(1)}" height="${rh-4}" class="ub"/>
       <rect x="${X(0)}" y="${y+5}" width="${(X(r.ref)-X(0)).toFixed(1)}" height="${rh-10}" fill="var(--anti)"/>
       <text x="${(X(r.ref)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--anti)">${r.ref.toFixed(0)}%</text>
       <text x="${(X(r.ucp)+3).toFixed(1)}" y="${y+10.3}" class="dbv" fill="var(--ucp)">${r.ucp.toFixed(0)}%</text>
       <text x="${LBL}" y="${y+10.5}" class="dbn${on?" on":""}" text-anchor="end" data-full="${esc(r.name)}">${esc(r.name)}</text></g>`; });
-  return `<div class="lg"><span><i class="ubk"></i>UCP share in that seat, 2023</span><span><i class="rbk"></i>Referendum share, 2026</span></div>
+  return `<div class="lg"><span><i class="ubk"></i>UCP share in that seat, 2023</span><span><i class="rbk"></i>Vote to separate, 2026</span></div>
     <p class="dbk-note">One row per seat the United Conservative Party (UCP) won in 2023, highest UCP vote share at the top. Both bars start at 0, so each red bar can be read against its own seat's 2023 result.</p>
-    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and Referendum share now">${g}</svg>`;
+    <svg class="chsvg" id="stDb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Seats the UCP won in 2023: UCP share in 2023 and vote to separate now">${g}</svg>`;
 }
 
 /* chapter 3 data: seat ratings under the chosen scenario */
@@ -808,10 +808,10 @@ function renderInsights(){
     minorityInUcp = ucp.length - lead <= Math.floor(ucp.length*0.1);
     const fewer = ucp.filter(r=>r.ref < r.ucp), gaps = fewer.map(r=>r.ucp - r.ref);
     const sel = ucp.find(r=>r.w===STSEL);
-    ch.push({h: fewer.length === ucp.length ? "In every UCP seat, fewer people voted Referendum than voted UCP in 2023" : `In ${fewer.length} of the UCP's ${ucp.length} seats, fewer people voted Referendum than voted UCP in 2023`,
+    ch.push({h: fewer.length === ucp.length ? "In every UCP seat, fewer people voted to separate than voted UCP in 2023" : `In ${fewer.length} of the UCP's ${ucp.length} seats, fewer people voted to separate than voted UCP in 2023`,
       chart: chUcpRef(ucp),
-      read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Referendum ${sel.ref.toFixed(0)}% now · ${sel.rep.toFixed(0)}% of voting places counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
-      p: gaps.length ? `Out of every 100 voters in these seats, ${Math.min(...gaps).toFixed(0)} to ${Math.max(...gaps).toFixed(0)} fewer chose Referendum than had chosen the UCP.` : "",
+      read: sel ? `<b>${esc(sel.name)}</b> · UCP ${sel.ucp.toFixed(0)}% in 2023 · Vote to separate ${sel.ref.toFixed(0)}% now · ${sel.rep.toFixed(0)}% of voting places counted <button type="button" class="chGo in" data-go="div:${sel.w}">Open division &rarr;</button>` : `<span class="dim">Tap a row to see the seat.</span>`,
+      p: gaps.length ? `Out of every 100 voters in these seats, ${Math.min(...gaps).toFixed(0)} to ${Math.max(...gaps).toFixed(0)} fewer voted to separate than had voted UCP.` : "",
       go:"bfly:ucp", goT:"Compare all divisions"});
   } else ch.push({h:"How UCP seats voted", p:later});
 
