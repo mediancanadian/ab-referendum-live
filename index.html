@@ -170,6 +170,7 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .bfl::before,.bfrr::before{content:"";position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--line)}
 .bfl::before{left:50%}.bfrr::before{left:50%}
 .scdesc{font-size:.8rem;margin-top:10px;line-height:1.45}
+.scnote{margin-top:8px;font-size:.8rem;line-height:1.45;background:var(--panel2);border-radius:10px;padding:8px 10px}
 .schead{margin-top:8px;font-size:.9rem}.schead b{font-size:1.4rem}
 .grid87{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:10px;max-width:420px}
 .grid87 i{aspect-ratio:1;border-radius:3px;cursor:pointer;display:block}
@@ -656,6 +657,7 @@ function drawSeats(){
     : `A separatist UCP gets the Referendum vote, the NDP keeps its 2023 share, and the remaining voters back a moderate conservative party.`;
   box.innerHTML = `<div class="scdesc">${desc}</div>
     <div class="schead"><b class="num">${ucpKept}</b> of the UCP's ${ucpTot} seats survive<span class="dim"> · ${maj} needed for a majority</span></div>
+    ${SCN==="B" && (cnt.ndp||0) > res.filter(r=>r.win==="NDP").length ? `<div class="scnote">The NDP gains <b>${cnt.ndp - res.filter(r=>r.win==="NDP").length}</b> seats without gaining a single vote. The UCP's 2023 vote splits between a separatist party and a moderate one, so in many seats the NDP's unchanged share is now the largest. This is how first-past-the-post rewards a split on one side.</div>` : ""}
     <div class="grid87">${res.map(r=>`<i title="${esc(r.name)}: ${SEATC[r.s][1]}${r.win==="UCP"?" (UCP seat in 2023)":""}" class="${r.win==="UCP"?"was":""}" style="background:var(${SEATC[r.s][0]})" data-w="${r.w}"></i>`).join("")}</div>
     <div class="sclegend">${order.filter(k=>cnt[k]).map(k=>`<span><i style="background:var(${SEATC[k][0]})"></i>${SEATC[k][1]} <b class="num">${cnt[k]}</b></span>`).join("")}<span><i class="wasK"></i>UCP seat in 2023</span></div>`;
   box.querySelectorAll(".grid87 i").forEach(i=>i.addEventListener("click", ()=>{ setState({view:"division", d:i.dataset.w}); $("explore").scrollIntoView({behavior:"smooth", block:"start"}); }));
