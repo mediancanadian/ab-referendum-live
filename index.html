@@ -45,9 +45,7 @@ h1{font-size:clamp(1.35rem,4vw,1.9rem);margin:4px 0 0;letter-spacing:-.02em}
 .stamp{display:flex;align-items:center;gap:10px;font-size:.78rem;color:var(--muted)}
 .stamp b{color:var(--text);font-weight:600}
 .brandrow{margin-bottom:8px}
-.brandrow img{display:block;height:46px;width:auto;margin-left:-10px;mix-blend-mode:multiply}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .brandrow img{mix-blend-mode:normal;margin-left:0;border-radius:8px}}
-:root[data-theme="dark"] .brandrow img{mix-blend-mode:normal;margin-left:0;border-radius:8px}
+.brandrow img{display:block;height:46px;width:auto;margin-left:-10px}
 .foot .sig2{display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--text)}
 .foot .sig2 img{height:20px;width:auto;flex:none;display:block}
 
@@ -459,7 +457,7 @@ details.qfull p{margin:6px 0 0;line-height:1.45}
 <main>
   <header class="top">
     <div>
-      <div class="brandrow"><img src="logo.png" alt="The Median Canadian" width="2216" height="709"></div>
+      <div class="brandrow"><picture><source srcset="logo-dark.png" media="(prefers-color-scheme: dark)"><img src="logo.png" alt="The Median Canadian" width="1536" height="491"></picture></div>
       <span class="live" id="live"><i></i><span id="liveTxt">Live</span></span>
       <h1>Alberta Referendum 2026</h1>
     </div>
