@@ -17,4 +17,4 @@ Elections Canada (2025 federal results), Statistics Canada (2021 Census, Statist
 and the Government of Alberta (electoral division boundaries, Open Government Licence – Alberta).
 Full sources are in context/SOURCES.md.
 
-Made with Claude. Claude did the math. A human did the nagging.
+The Median Canadian. A curious Canadian explaining Canada through numbers, every week.
