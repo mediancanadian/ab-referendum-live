@@ -832,15 +832,14 @@ function renderInsights(){
   if (qs.length === 9){
     const g1 = qs.filter(x=>x.n<=5), g2 = qs.filter(x=>x.n>=6), ya = g => g.map(x=>x.p.a);
     const pass1 = g1.filter(x=>x.p.a > 50).length, lo1 = Math.min(...ya(g1)), hi1 = Math.max(...ya(g1)), lo2 = Math.min(...ya(g2)), hi2 = Math.max(...ya(g2));
-    const split = lo2 > 46 && hi2 < 54, back = lo2 >= 54, rej = hi2 <= 46;
-    const h4 = pass1 === 5 ? (split ? "Albertans want tighter immigration rules but are split on changing the constitution"
-                               : back ? "Albertans want tighter immigration rules and constitutional change"
-                               : rej ? "Albertans want tighter immigration rules but reject constitutional change"
-                               : "Albertans want tighter immigration rules but are divided on the constitution")
+    const pass2 = g2.filter(x=>x.p.a > 50).length;
+    const h4 = pass1 === 5 ? (pass2 === 0 ? "Albertans want tighter immigration rules but reject constitutional change"
+                               : pass2 === 4 ? "Albertans want tighter immigration rules and constitutional change"
+                               : "Albertans want tighter immigration rules but are split on changing the constitution")
              : pass1 === 0 ? "Albertans reject the immigration questions" : "Albertans are divided on immigration rules";
     const q9 = qs.find(x=>x.n===9), q9w = q9 ? shareWords(q9.p.t/res10.t*100) : "";
     ch.push({h:h4, chart:chQuestions(qs),
-      p: `${pass1 === 5 ? `All five immigration and citizenship questions pass, with ${lo1.toFixed(0)}% to ${hi1.toFixed(0)}% Yes.` : `${NUMW[pass1][0].toUpperCase()+NUMW[pass1].slice(1)} of five immigration and citizenship questions pass.`} The four constitutional questions are between ${lo2.toFixed(0)}% and ${hi2.toFixed(0)}% Yes.${q9w && q9.p.t < res10.t*0.95 ? ` Questions 1 to 9 are counted after Question 10, in order: in this count, Question 9 has ${q9w} as many votes as Question 10.` : ""}`});
+      p: `${pass1 === 5 ? `All five immigration and citizenship questions pass, with ${lo1.toFixed(0)}% to ${hi1.toFixed(0)}% Yes.` : `${NUMW[pass1][0].toUpperCase()+NUMW[pass1].slice(1)} of five immigration and citizenship questions pass.`} ${pass2 === 0 ? `All four constitutional questions fail, with ${lo2.toFixed(0)}% to ${hi2.toFixed(0)}% Yes.` : pass2 === 4 ? `All four constitutional questions pass, with ${lo2.toFixed(0)}% to ${hi2.toFixed(0)}% Yes.` : `${NUMW[pass2][0].toUpperCase()+NUMW[pass2].slice(1)} of four constitutional questions pass, with ${lo2.toFixed(0)}% to ${hi2.toFixed(0)}% Yes.`}${q9w && q9.p.t < res10.t*0.95 ? ` Questions 1 to 9 are counted after Question 10, in order: in this count, Question 9 has ${q9w} as many votes as Question 10.` : ""}`});
   }
 
   // 5. polls
