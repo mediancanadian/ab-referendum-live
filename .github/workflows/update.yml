@@ -2,9 +2,8 @@ name: Update results
 
 # One long run fetches every 20 seconds for up to ~5h50m.
 # The 5-minute schedule only restarts it if it has stopped (concurrency keeps one at a time).
+# Counting finished, so the schedule is off. Run it by hand from the Actions tab if needed.
 on:
-  schedule:
-    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 concurrency:
